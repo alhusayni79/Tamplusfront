@@ -1,0 +1,35 @@
+{
+  "navbar": {
+    "home": " الرئيسية",
+    "about": " عن المنصة",
+    "contactus": " تواصل معنا",
+    "services": "خدماتنا",
+    "News": "آخر الأخبار",
+    "search":"البحث",
+    "reviews":"التقييمات"
+  },
+  "buttons": {
+    "start_now": "ابدأ الآن",
+    "learn_more": "اعرف المزيد",
+    "more_info": "معرفة المزيد",
+    "browse_all_services": "تصفح كل الخدمات",
+    "take_first_step": "ابدأ خطوتك الأولى الآن",
+    "join_now": "انضم الآن",
+    "more_articles": "المزيد من المقالات",
+    "start_service": "ابدأ الخدمة الآن",
+    "pay_now": "ادفع الآن",
+    "send": "إرسال",
+    "add_reply": "إضافة رد",
+    "login": "التسجيل / إنشاء حساب"
+  },
+  "footer": {
+    "copyright": "© ٢٠٢٤ موقعي. جميع الحقوق محفوظة."
+  },
+  "email": "البريد الإلكتروني",
+  "subscribeNow": "اشترك الآن",
+  "newsletter": {
+    "title": "اشترك في النشرة الإخبارية لدينا",
+    "description": "كن أول من يعرف عن آخر الأخبار والرؤى.",
+    "button": "newsletterButton"
+  }
+}
