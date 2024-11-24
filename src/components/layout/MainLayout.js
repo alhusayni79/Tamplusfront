@@ -19,7 +19,7 @@ const MainLayout = ({ children }) => {
        sx={{
         position: "sticky",
         top: -1,  
-        zIndex: 50,  
+        zIndex: 10,  
         mb: 5,
       }}
       >

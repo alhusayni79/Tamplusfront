@@ -208,7 +208,7 @@ function ResponsiveAppBar() {
                 {page.label}
               </Button>
             ))}
-            <SearchComponent />
+            {/* <SearchComponent /> */}
             <Button
               onClick={handleProfileRoute}
               variant="outlined"

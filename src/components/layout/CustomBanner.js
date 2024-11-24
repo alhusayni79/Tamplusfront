@@ -71,7 +71,7 @@ const CustomBanner = ({
           position: "absolute",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          zIndex: 111,
+          zIndex: 9,
           margin: "0px auto",
           width: "100%",
           mt:6

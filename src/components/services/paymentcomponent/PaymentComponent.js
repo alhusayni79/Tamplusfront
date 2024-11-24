@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import CustomButton from "../../shared/CustomButton";
 
 const PaymentComponent = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -128,9 +129,16 @@ const PaymentComponent = ({ id }) => {
   return (
     <div style={{ width: "400px",height:"auto" }}>
       <div id="card-element"></div>
-      <button onClick={submitPayment} disabled={!configData || isLoading}>
+      
+                <CustomButton
+                  backgroundColor="#07489D"
+                  onClick={submitPayment}
+                >
+                  ادفع الآن
+                </CustomButton>
+      {/* <button onClick={submitPayment} disabled={!configData || isLoading}>
         {isLoading ? "Processing..." : "Pay Now"}
-      </button>
+      </button> */}
     </div>
   );
 };

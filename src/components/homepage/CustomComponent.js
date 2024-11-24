@@ -36,6 +36,7 @@ const CustomComponent = ({ data }) => {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                  borderRadius:"8px"
                 }}
               />
             </Box>

@@ -17,7 +17,7 @@ const ContactWithUs = () => {
 
   const handleSubscribe = async () => {
     if (!email) {
-      toast.error(t("pleaseEnterValidEmail"));
+      toast.error("sjlkjdkl");
       return;
     }
 
@@ -32,13 +32,13 @@ const ContactWithUs = () => {
       );
 
       if (response.status === 200) {
-        toast.success(t("subscribedSuccessfully"));
+        toast.success("تم ارسال البريد الالكتروني بنجاح");
         setEmail("");
       }
     } catch (err) {
       const errorMessage =
         err.response?.data?.message || t("subscriptionFailed");
-      toast.error(errorMessage);
+      toast.error("برجاء ادخال بريد الكتروني صحيح");
     } finally {
       setLoading(false);
     }
