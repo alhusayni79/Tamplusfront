@@ -215,7 +215,7 @@ function ResponsiveAppBar({ user }) {
             ))}
             {/* <SearchComponent /> */}
 
-            {/* {token ? (
+            {token ? (
              <Box
              onClick={handleUserRoute}
              sx={{
@@ -267,7 +267,7 @@ function ResponsiveAppBar({ user }) {
               >
                 {t("buttons.login")}
               </Button>
-            )} */}
+            )}
 
             <LanguageToggleButton />
           </Box>
