@@ -215,13 +215,13 @@ function ResponsiveAppBar({ user }) {
             ))}
             {/* <SearchComponent /> */}
 
-            {token ? (
+            {/* {token ? (
              <Box
              onClick={handleUserRoute}
              sx={{
                cursor: "pointer",
                display: "flex",
-               alignItems: "center", // Align text and arrow horizontally
+               alignItems: "center", 
                color: "white",
                "&:hover": {
                  textDecoration: "underline",
@@ -239,8 +239,8 @@ function ResponsiveAppBar({ user }) {
              >
               <KeyboardArrowDownIcon
                sx={{
-                 marginRight: "1px", // Space between name and arrow
-                 fontSize: "20px", // Adjust size as needed
+                 marginRight: "1px", 
+                 fontSize: "20px", 
                }}
              />
                <Typography>{user?.response?.last_name}</Typography>
@@ -267,7 +267,7 @@ function ResponsiveAppBar({ user }) {
               >
                 {t("buttons.login")}
               </Button>
-            )}
+            )} */}
 
             <LanguageToggleButton />
           </Box>

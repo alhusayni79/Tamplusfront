@@ -23,12 +23,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import CustomBanner from "../layout/CustomBanner";
 import frambanner from "../../assets/image/frambanner.png";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import UpdateProfile from "./UpdateProfile";
 
 const Profile = () => {
   const location = useLocation();
-  const { user } = location.state || {}; 
-  
+  const { user } = location.state || {};
+
   const theme = useTheme();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -37,6 +37,9 @@ const Profile = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories = [
+    {
+      category: "معلومات الحساب",
+    },
     {
       category: "الخدمات السابقة",
     },
@@ -138,14 +141,13 @@ const Profile = () => {
   };
 
   const handleRowClick = (row) => {
-    navigate(`/profile/${row.serviceDescription}`, { 
-      state: { 
-        row, 
-        user 
-      } 
+    navigate(`/profile/${row.serviceDescription}`, {
+      state: {
+        row,
+        user,
+      },
     });
   };
-  
 
   const filteredRows = rows.filter((row) =>
     row.serviceDescription.toLowerCase().includes(searchQuery.toLowerCase())
@@ -203,18 +205,7 @@ const Profile = () => {
                     right: 0,
                   }}
                 ></Box>
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: "500",
-                    color: theme.palette.primary.body,
-                    pb: 2,
-                    pt: 2,
-                  }}
-                  textAlign={"center"}
-                >
-                  معلومات الحساب
-                </Typography>
+
                 <List>
                   {categories.map((category, index) => (
                     <ListItem
@@ -544,6 +535,20 @@ const Profile = () => {
                   <Typography variant="body1">
                     آخر عملية: إضافة 2000 جنيه بتاريخ 10/02/2023
                   </Typography>
+                </Box>
+              ) : selectedCategory === "معلومات الحساب" ? (
+                <Box
+                  sx={{
+                    padding: "20px",
+                    borderRadius: "12px",
+                    boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+                    backgroundColor: "#f9f9f9",
+                  }}
+                >
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    معلومات الحساب
+                  </Typography>
+                  <UpdateProfile />
                 </Box>
               ) : null}
             </Grid>

@@ -4,26 +4,25 @@ import Footer from "./footer/Footer";
 import { Box } from "@mui/material";
 import ContactWithUs from "../shared/ContactWithUs";
 import Framfooter from "../../assets/image/framfooter.png";
-import { Outlet } from "react-router-dom"; 
+import { Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../redux/Slices/userdata/userSlice";
 
 const MainLayout = ({ children }) => {
-  const dispatch = useDispatch();
-  const { user, loading, error } = useSelector((state) => state.user);
+  // const dispatch = useDispatch();
+  // const { user, loading, error } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    dispatch(fetchUserData());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchUserData());
+  // }, [dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-  
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
   return (
     <Box
@@ -34,24 +33,26 @@ const MainLayout = ({ children }) => {
       }}
     >
       <Box
-       sx={{
-        position: "sticky",
-        top: -1,  
-        zIndex: 10,  
-        mb: 5,
-      }}
+        sx={{
+          position: "sticky",
+          top: -1,
+          zIndex: 10,
+          mb: 5,
+        }}
       >
-        <Header  user={user}/>
+        {/* Pass user to Header, fallback to empty object if null */}
+        <Header user={"jsldj"} />
       </Box>
-      
-       <main style={{
+
+      <main
+        style={{
           flex: 1,
           marginTop: "40px",
-        
-       }}>
+        }}
+      >
         <Outlet />
       </main>
-     
+
       <Box
         sx={{
           position: "relative",
