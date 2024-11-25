@@ -18,7 +18,7 @@ import {
 import CustomButton from "../shared/CustomButton";
 import StatusChip from "../shared/getStatusStyles";
 
-export default function ServiceDetails({ ServiceNumber, Status, serviceDescription }) {
+export default function ServiceDetails({ ServiceNumber, Status, serviceDescription,user }) {
   const theme = useTheme();
 
   const [cardsData, setCardsData] = useState([
@@ -69,7 +69,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
     if (newComment.trim() !== "") {
       const newEntry = {
         id: cardsData.length + 1,
-        name: "مستخدم جديد",
+        name:user?.response?.first_name,
         role: "معلق",
         date: new Date().toLocaleString("ar-EG"), 
         content: newComment,
@@ -209,7 +209,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  أحمد
+                  {user?.response?.first_name}
                 </Typography>
               </Grid>
               <Grid

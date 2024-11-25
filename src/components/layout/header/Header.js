@@ -21,26 +21,29 @@ import CustomButton from "../../shared/CustomButton";
 import LanguageToggleButton from "../../shared/toggleLanguage";
 import { useTranslation } from "react-i18next";
 import SearchComponent from "./SearchComponent";
-
-
-function ResponsiveAppBar() {
-  const { i18n,t } = useTranslation();
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../../../redux/Slices/userdata/userSlice";
+import Cookies from "js-cookie";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
+function ResponsiveAppBar({ user }) {
+  const { i18n, t } = useTranslation();
   const pages = [
-    { label: t('navbar.home'), path: '/' },
-    { label: t('navbar.about'), path: '/about' },
+    { label: t("navbar.home"), path: "/" },
+    { label: t("navbar.about"), path: "/about" },
     {
-      label: t('navbar.services'),
-      path: '/services',
-      subpages: ['/services', '/services/:label', '/services/:label/payment'],
+      label: t("navbar.services"),
+      path: "/services",
+      subpages: ["/services", "/services/:label", "/services/:label/payment"],
     },
-    { label: t('navbar.reviews'), path: '/#reviews' },
+    { label: t("navbar.reviews"), path: "/#reviews" },
     {
-      label: t('navbar.News'),
-      path: '/lastnews',
-      subpages: ['/lastnews/:title'],
+      label: t("navbar.News"),
+      path: "/lastnews",
+      subpages: ["/lastnews/:title"],
     },
-    { label: t('navbar.contactus'), path: '/contactus' },
+    { label: t("navbar.contactus"), path: "/contactus" },
   ];
+  const token = Cookies.get("auth_token");
   const [anchorElNav, setAnchorElNav] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,10 +53,8 @@ function ResponsiveAppBar() {
   const [bgColor, setBgColor] = useState("transparent");
   const [activePage, setActivePage] = useState(pages[0].label);
   const [lastActiveMainPage, setLastActiveMainPage] = useState(pages[0].label);
-
-
   const findActivePage = (pathname, hash) => {
-    const normalizedPath = pathname + (hash || ""); 
+    const normalizedPath = pathname + (hash || "");
 
     const currentPage = pages.find((page) => {
       if (page.path === normalizedPath) {
@@ -86,7 +87,7 @@ function ResponsiveAppBar() {
     } else {
       setActivePage(null);
     }
-  }, [location.pathname, location.hash]); 
+  }, [location.pathname, location.hash]);
 
   const handleHomeRoute = () => {
     navigate("/");
@@ -114,7 +115,11 @@ function ResponsiveAppBar() {
     setActivePage("");
     handleCloseNavMenu();
   };
-
+  const handleUserRoute = () => {
+    navigate("/profile", { state: { user } }); // Pass user as state
+    setActivePage("");
+    handleCloseNavMenu();
+  };
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -209,24 +214,61 @@ function ResponsiveAppBar() {
               </Button>
             ))}
             {/* <SearchComponent /> */}
-            <Button
-              onClick={handleProfileRoute}
-              variant="outlined"
-              sx={{
-                fontSize: { md: "10px", lg: "16px" },
-                padding: { xs: "8px 16px", md: "8px 10px" },
-                color: "white",
-                borderColor: "white",
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+
+            {token ? (
+             <Box
+             onClick={handleUserRoute}
+             sx={{
+               cursor: "pointer",
+               display: "flex",
+               alignItems: "center", // Align text and arrow horizontally
+               color: "white",
+               "&:hover": {
+                 textDecoration: "underline",
+               },
+             }}
+           >
+             <Box
+               sx={{
+                 display: "flex",
+                 flexDirection: "row",
+                 alignItems: "center",
+                 justifyContent:"center",
+                 gap:.2
+               }}
+             >
+              <KeyboardArrowDownIcon
+               sx={{
+                 marginRight: "1px", // Space between name and arrow
+                 fontSize: "20px", // Adjust size as needed
+               }}
+             />
+               <Typography>{user?.response?.last_name}</Typography>
+               <Typography>{user?.response?.first_name}</Typography>
+             </Box>
+             
+           </Box>
+            ) : (
+              <Button
+                onClick={handleProfileRoute}
+                variant="outlined"
+                sx={{
+                  fontSize: { md: "10px", lg: "16px" },
+                  padding: { xs: "8px 16px", md: "8px 10px" },
+                  color: "white",
                   borderColor: "white",
-                },
-                width: "fit-content",
-                margin: "initial",
-              }}
-            >
-              {t("buttons.login")}
-            </Button>
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderColor: "white",
+                  },
+                  width: "fit-content",
+                  margin: "initial",
+                }}
+              >
+                {t("buttons.login")}
+              </Button>
+            )}
+
             <LanguageToggleButton />
           </Box>
           <Box sx={{ flexGrow: { xs: 1, sm: 1, md: 0 } }}></Box>
@@ -291,24 +333,44 @@ function ResponsiveAppBar() {
                 </MenuItem>
               ))}
               <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-                <Button
-                  onClick={handleProfileRoute}
-                  sx={{
-                    backgroundColor: "#07489D",
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                    padding: "10px 20px",
-                    borderRadius: "8px",
-                    textTransform: "none",
-                    transition: "background-color 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: "#052D6D",
-                    },
-                  }}
-                >
-                  التسجيل / إنشاء حساب
-                </Button>
+              {token ? (
+              <Box
+                onClick={handleUserRoute} 
+                sx={{
+                  cursor: "pointer", 
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                  color: "#000",
+                  gap:1,
+                  "&:hover": {
+                    textDecoration: "underline", 
+                  },
+                }}
+              >
+                <Typography>{user?.response?.last_name}</Typography>
+                <Typography>{user?.response?.first_name}</Typography>
+              </Box>
+            ) : (
+              <Button
+                onClick={handleProfileRoute}
+                variant="outlined"
+                sx={{
+                  fontSize: { md: "10px", lg: "16px" },
+                  padding: { xs: "8px 16px", md: "8px 10px" },
+                  color: "white",
+                  borderColor: "white",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderColor: "white",
+                  },
+                  width: "fit-content",
+                  margin: "initial",
+                }}
+              >
+                {t("buttons.login")}
+              </Button>
+            )}
               </Box>
             </Menu>
           </Box>

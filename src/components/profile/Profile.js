@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -22,9 +22,13 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import CustomBanner from "../layout/CustomBanner";
 import frambanner from "../../assets/image/frambanner.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const Profile = () => {
+  const location = useLocation();
+  const { user } = location.state || {}; 
+  
   const theme = useTheme();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -134,8 +138,14 @@ const Profile = () => {
   };
 
   const handleRowClick = (row) => {
-    navigate(`/profile/${row.serviceDescription}`, { state: row });
+    navigate(`/profile/${row.serviceDescription}`, { 
+      state: { 
+        row, 
+        user 
+      } 
+    });
   };
+  
 
   const filteredRows = rows.filter((row) =>
     row.serviceDescription.toLowerCase().includes(searchQuery.toLowerCase())
@@ -143,7 +153,7 @@ const Profile = () => {
 
   return (
     <Box sx={{ pt: "64px" }}>
-      <CustomBanner title="مرحباً, أحمد!" />
+      <CustomBanner title={`مرحباً, ${user?.response?.first_name || "ضيف"}!`} />
       <Box
         sx={{
           pr: { xs: 1, sm: 3, md: 18 },

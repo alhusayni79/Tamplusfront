@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import { Box } from "@mui/material";
 import ContactWithUs from "../shared/ContactWithUs";
 import Framfooter from "../../assets/image/framfooter.png";
 import { Outlet } from "react-router-dom"; 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../../redux/Slices/userdata/userSlice";
 
 const MainLayout = ({ children }) => {
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+  
+
   return (
     <Box
       sx={{
@@ -23,7 +41,7 @@ const MainLayout = ({ children }) => {
         mb: 5,
       }}
       >
-        <Header />
+        <Header  user={user}/>
       </Box>
       
        <main style={{

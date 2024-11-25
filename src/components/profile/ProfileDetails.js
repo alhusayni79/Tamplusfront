@@ -5,9 +5,11 @@ import CustomBanner from "../layout/CustomBanner";
 import { useParams, useLocation } from "react-router-dom";
 import frambanner from "../../assets/image/frambanner.png";
 const ProfileDetails = () => {
-  const { id, serviceDescription } = useParams();
   const location = useLocation();
   const [rowData, setRowData] = useState(null);
+  const { row, user } = location.state || {};
+
+  console.log("user de", user);
 
   useEffect(() => {
     if (location.state) {
@@ -22,9 +24,9 @@ const ProfileDetails = () => {
   return (
     <>
       <CustomBanner
-        title="مرحباً, أحمد!"
-        subtitle={rowData.serviceNumber}
-        service={rowData.serviceDescription}
+        title={`مرحباً, ${user?.response?.first_name || "ضيف"}!`}
+        subtitle={row.serviceNumber}
+        service={row.serviceDescription}
       />
       <Box
         sx={{
@@ -50,9 +52,10 @@ const ProfileDetails = () => {
 
         <Box sx={{ pt: "64px" }}>
           <ServiceDetails
-            ServiceNumber={rowData.serviceNumber}
-            Status={rowData.status}
-            serviceDescription={rowData.serviceDescription}
+            ServiceNumber={row.serviceNumber}
+            Status={row.status}
+            serviceDescription={row.serviceDescription}
+            user={user}
           />
         </Box>
       </Box>

@@ -6,6 +6,8 @@ import designReducer from "./Slices/home/homeSlice";
 import blogsReducer from "./Slices/blogsData/blogSlice";
 import ministryReducer from "./Slices/ministrySlice/ministrySlice";
 import statisticsReducer from "./Slices/staticsSlice/statisticsSlice";
+import userReducer from "./Slices/userdata/userSlice";
+
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +18,8 @@ export const store = configureStore({
     blogs: blogsReducer,
     ministry: ministryReducer,
     statistics: statisticsReducer,
+    user: userReducer,
+
   },
 });
 
