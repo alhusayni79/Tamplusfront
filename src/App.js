@@ -1,8 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { englishTheme, arabicTheme } from "./styles/theme.js";
@@ -68,7 +64,6 @@ function App() {
             <Route path="/maintenance" element={<Maintenance />} />
             <Route path="payment/succespayment" element={<PaymentSuccess />} />
             <Route path="payment/faildpayment" element={<FaildPayment />} />
-
           </Routes>
         </Router>
         <ToastNotification />

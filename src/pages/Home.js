@@ -16,14 +16,23 @@ import LastNewsComponent from "../components/homepage/LastNewsComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDesignData } from "../redux/Slices/home/homeSlice";
 import fram111 from "../assets/image/Frame111.png";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const { design, loading, error } = useSelector((state) => state.design);
 
   useEffect(() => {
-    dispatch(fetchDesignData());
-  }, [dispatch]);
+    const authToken = Cookies.get("auth_token");
+    if (!authToken) {
+      navigate("/login");
+    } else {
+      dispatch(fetchDesignData());
+    }
+  }, [dispatch, navigate]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -64,7 +73,7 @@ const Home = () => {
             top: 0,
             left: 0,
             zIndex: -1,
-            display: { xs: "none", sm: "none", md: "block" }, 
+            display: { xs: "none", sm: "none", md: "block" },
           }}
         />
       </Box>

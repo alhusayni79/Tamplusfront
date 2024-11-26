@@ -6,7 +6,7 @@ import CustomButton from "../../shared/CustomButton";
 const PaymentComponent = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [configData, setConfigData] = useState(null);
-  const sessionIdRef = useRef(null); 
+  const sessionIdRef = useRef(null);
 
   useEffect(() => {
     const fetchConfigData = async () => {
@@ -25,7 +25,7 @@ const PaymentComponent = ({ id }) => {
 
         const { SessionId, CountryCode } = response.data.response;
         if (!sessionIdRef.current) {
-          sessionIdRef.current = SessionId; 
+          sessionIdRef.current = SessionId;
           console.log("Fetched SessionId:", SessionId);
           setConfigData({
             sessionId: SessionId,
@@ -45,7 +45,11 @@ const PaymentComponent = ({ id }) => {
   useEffect(() => {
     if (!configData) return;
 
-    if (!document.querySelector("script[src='https://demo.myfatoorah.com/cardview/v2/session.js']")) {
+    if (
+      !document.querySelector(
+        "script[src='https://demo.myfatoorah.com/cardview/v2/session.js']"
+      )
+    ) {
       const script = document.createElement("script");
       script.src = "https://demo.myfatoorah.com/cardview/v2/session.js";
       script.async = true;
@@ -71,7 +75,7 @@ const PaymentComponent = ({ id }) => {
               borderColor: "c7c7c7",
               borderWidth: "1px",
               borderRadius: "8px",
-              
+
               placeHolder: {
                 holderName: "Name On Card",
                 cardNumber: "Number",
@@ -88,57 +92,57 @@ const PaymentComponent = ({ id }) => {
     }
   }, [configData]);
 
-  const submitPayment = async () => {
-    try {
-      console.log("Preparing form data...");
-      const formData = new FormData();
-      formData.append("sessionId", configData?.sessionId); 
-      formData.append("service_id", id); 
+  const handleSubmit = async () => {
+    if (window.myFatoorah) {
+      try {
+        const response = await window.myFatoorah.submit();
+        console.log("myFatoorah Response:", response);
   
-      console.log("Form data:", {
-        sessionId: configData?.sessionId,
-        service_id: id,
-      });
+        const { sessionId, cardBrand, cardIdentifier } = response;
+        console.log("Response details:", { sessionId, cardBrand, cardIdentifier });
   
-      const token = Cookies.get("auth_token");
-      if (!token) {
-        throw new Error("Token is missing. Cannot proceed with payment.");
+        const formData = new FormData();
+        formData.append("sessionId", sessionId);
+        formData.append("service_id", id); 
+          const token = Cookies.get("auth_token");
+        if (!token) {
+          console.error("Token is missing. Cannot proceed with payment.");
+          return;
+        }
+          const baseURL = process.env.REACT_APP_BASE_URL;
+        const postResponse = await axios.post(
+          `${baseURL}/user/order/pay`, 
+          formData, 
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Post request success:", postResponse.data);
+      } catch (error) {
+        console.error("Error in payment submission or POST request:", error);
       }
-        console.log("Sending request to server...");
-      const baseURL = process.env.REACT_APP_BASE_URL;
-      const response = await axios.post(`${baseURL}/user/order/pay`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      // Log response
-      console.log("Server response:", response.data);
-    } catch (error) {
-      console.error("Error during payment submission:", error);
+    } else {
+      console.error("myFatoorah library is not initialized.");
     }
   };
   
   
-  
-  
+
   const handleBinChanges = (bin) => {
     console.log("BIN changed:", bin);
   };
 
   return (
-    <div style={{ width: "400px",height:"auto" }}>
+    <div style={{ width: "400px", height: "auto" }}>
       <div id="card-element"></div>
-      
-                <CustomButton
-                  backgroundColor="#07489D"
-                  onClick={submitPayment}
-                >
-                  ادفع الآن
-                </CustomButton>
-      {/* <button onClick={submitPayment} disabled={!configData || isLoading}>
-        {isLoading ? "Processing..." : "Pay Now"}
-      </button> */}
+
+      <CustomButton backgroundColor="#07489D" onClick={handleSubmit}>
+        ادفع الآن
+      </CustomButton>
+     
     </div>
   );
 };

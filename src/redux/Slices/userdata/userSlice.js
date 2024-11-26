@@ -8,10 +8,15 @@ export const fetchUserData = createAsyncThunk(
     try {
       const token = Cookies.get("auth_token");
       if (!token) {
+        console.error("Authentication token is missing");
         return thunkAPI.rejectWithValue("Authentication token is missing");
       }
 
       const baseURL = process.env.REACT_APP_BASE_URL;
+      if (!baseURL) {
+        console.error("Base URL is not defined in .env file");
+        return thunkAPI.rejectWithValue("Base URL is missing");
+      }
 
       const response = await axios.get(`${baseURL}/user/profile`, {
         headers: {
@@ -20,8 +25,10 @@ export const fetchUserData = createAsyncThunk(
         },
       });
 
+      console.log("User data fetched successfully:", response.data);
       return response.data;
     } catch (error) {
+      console.error("Error fetching user data:", error);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
@@ -30,6 +37,7 @@ export const fetchUserData = createAsyncThunk(
     }
   }
 );
+
 
 const userSlice = createSlice({
   name: "user",

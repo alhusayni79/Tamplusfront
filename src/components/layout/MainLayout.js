@@ -9,20 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../redux/Slices/userdata/userSlice";
 
 const MainLayout = ({ children }) => {
-  const dispatch = useDispatch();
-  const { user, loading, error } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    dispatch(fetchUserData());
-  }, [dispatch]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
 
   return (
     <Box
@@ -41,7 +28,7 @@ const MainLayout = ({ children }) => {
         }}
       >
         {/* Pass user to Header, fallback to empty object if null */}
-        <Header user={user} />
+        <Header user={"user"} />
       </Box>
 
       <main
