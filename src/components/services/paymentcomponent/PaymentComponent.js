@@ -93,41 +93,40 @@ const PaymentComponent = ({ id }) => {
   }, [configData]);
 
   const handleSubmit = async () => {
-    if (window.myFatoorah) {
-      try {
-        const response = await window.myFatoorah.submit();
-        console.log("myFatoorah Response:", response);
+    try {
+      const response = await window.myFatoorah.submit();
+      console.log("myFatoorah Response:", response);
   
-        const { sessionId, cardBrand, cardIdentifier } = response;
-        console.log("Response details:", { sessionId, cardBrand, cardIdentifier });
+      const { sessionId, cardBrand, cardIdentifier } = response;
+      console.log("Response details:", { sessionId, cardBrand, cardIdentifier });
   
-        const formData = new FormData();
-        formData.append("sessionId", sessionId);
-        formData.append("service_id", id); 
-          const token = Cookies.get("auth_token");
-        if (!token) {
-          console.error("Token is missing. Cannot proceed with payment.");
-          return;
-        }
-          const baseURL = process.env.REACT_APP_BASE_URL;
-        const postResponse = await axios.post(
-          `${baseURL}/user/order/pay`, 
-          formData, 
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Post request success:", postResponse.data);
-      } catch (error) {
-        console.error("Error in payment submission or POST request:", error);
+      const formData = new FormData();
+      formData.append("sessionId", sessionId);
+      formData.append("service_id", id);
+  
+      const token = Cookies.get("auth_token");
+      if (!token) {
+        console.error("Token is missing. Cannot proceed with payment.");
+        return;
       }
-    } else {
-      console.error("myFatoorah library is not initialized.");
+  
+      const baseURL = process.env.REACT_APP_BASE_URL;
+      const postResponse = await axios.post(
+        `${baseURL}/user/order/pay`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Post request success:", postResponse.data);
+    } catch (error) {
+      console.error("Error in payment submission or POST request:", error);
     }
   };
+  
   
   
 
