@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Grid, Link, Typography } from "@mui/material";
 import { useTheme } from "@mui/system";
 import Footer2 from "../../../assets/image/footer2.png";
 import Logofooter1 from "../../../assets/image/logofooter1.png";
@@ -15,18 +15,20 @@ import Wazin from "../../../assets/image/wazin.png";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFooter } from "../../../redux/Slices/FooterData/footerSlice";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function ResponsiveFooter() {
   const theme = useTheme();
   const { i18n, t } = useTranslation();
-  const currentLang = i18n.language;
+  const currentLang = i18n.language; 
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { footer, loading, error } = useSelector((state) => state.footer);
 
   useEffect(() => {
     dispatch(fetchFooter());
-  }, [dispatch]);
+  }, [dispatch, currentLang]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -35,6 +37,11 @@ export default function ResponsiveFooter() {
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  const handleTypographyClick = (route, contentKey) => {
+    navigate(route, { state: { contentKey } });
+  };
+
   return (
     <Box
       sx={{
@@ -160,14 +167,14 @@ export default function ResponsiveFooter() {
               style={{ maxWidth: "150px" }}
             />
             <Typography
-              component="a" 
-              href={`tel:${footer?.response?.phone}`} 
+              component="a"
+              href={`tel:${footer?.response?.phone}`}
               sx={{
                 color: theme.palette.primary.body,
                 fontWeight: "400",
-                textDecoration: "none", 
+                textDecoration: "none",
                 "&:hover": {
-                  textDecoration: "underline", 
+                  textDecoration: "underline",
                 },
               }}
             >
@@ -183,14 +190,14 @@ export default function ResponsiveFooter() {
               style={{ maxWidth: "150px" }}
             />
             <Typography
-              component="a" 
-              href={`mailto:${footer?.response?.email}`} 
+              component="a"
+              href={`mailto:${footer?.response?.email}`}
               sx={{
                 color: theme.palette.primary.body,
                 fontWeight: "400",
-                textDecoration: "none", 
+                textDecoration: "none",
                 "&:hover": {
-                  textDecoration: "underline", 
+                  textDecoration: "underline",
                 },
               }}
             >
@@ -208,14 +215,14 @@ export default function ResponsiveFooter() {
             <Typography
               component="a"
               href={`https://www.google.com/maps?q=:${footer?.response?.address}`}
-              target="_blank" 
-              rel="noopener noreferrer" 
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{
                 color: theme.palette.primary.body,
                 fontWeight: "400",
-                textDecoration: "none", 
+                textDecoration: "none",
                 "&:hover": {
-                  textDecoration: "underline", 
+                  textDecoration: "underline",
                 },
               }}
             >
@@ -245,16 +252,40 @@ export default function ResponsiveFooter() {
           >
             مصادر اخرى
           </Typography>
-          <Typography
-            sx={{ color: theme.palette.primary.body, fontWeight: "400" }}
-          >
-            سياسة الخصوصية{" "}
-          </Typography>
-          <Typography
-            sx={{ color: theme.palette.primary.body, fontWeight: "400" }}
-          >
-            الشروط والأحكام{" "}
-          </Typography>
+          <>
+            <Typography
+              onClick={() =>
+                handleTypographyClick(
+                  "/PrivacyPolicy",
+                  "privacy_policy_content"
+                )
+              }
+              sx={{
+                color: "primary",
+                fontWeight: "400",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              {footer?.response?.privacy_policy_content[currentLang]}
+            </Typography>
+            <Typography
+              onClick={() =>
+                handleTypographyClick(
+                  "/TermsConditions",
+                  "terms_and_conditions_content"
+                )
+              }
+              sx={{
+                color: "primary",
+                fontWeight: "400",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              {footer?.response?.terms_and_conditions_content[currentLang]}
+            </Typography>
+          </>
         </Grid>
         <Grid
           item

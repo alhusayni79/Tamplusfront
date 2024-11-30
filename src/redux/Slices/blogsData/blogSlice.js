@@ -4,29 +4,26 @@ import axios from 'axios';
 
 export const fetchBlogs = createAsyncThunk(
   'blogs/fetchBlogs',
-  async (_, thunkAPI) => {
+  async (lang, thunkAPI) => {
     try {
-      const token = Cookies.get('auth_token');  
-      if (!token) {
-        return thunkAPI.rejectWithValue("Authentication token is missing");
-      }
+      const token = Cookies.get('auth_token');
+      const baseURL = process.env.REACT_APP_BASE_URL;
 
-      const baseURL = process.env.REACT_APP_BASE_URL;  
-
-      const response = await axios.get(`${baseURL}/user/blog`, {
+      const response = await axios.get(`${baseURL}/user/blog?lang=${lang}`, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  
+          'Authorization': `Bearer ${token}`,
         },
       });
 
       return response.data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
-      return thunkAPI.rejectWithValue(errorMessage);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch blogs'
+      );
     }
   }
 );
+
 
 const blogSlice = createSlice({
   name: 'blogs',

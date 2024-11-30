@@ -25,7 +25,6 @@ export const fetchUserData = createAsyncThunk(
         },
       });
 
-      console.log("User data fetched successfully:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching user data:", error);

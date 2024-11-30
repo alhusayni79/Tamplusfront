@@ -1,5 +1,13 @@
 import { useParams, useLocation } from "react-router-dom";
-import { Card, Typography, Grid, Box, Tabs, Tab, Container } from "@mui/material";
+import {
+  Card,
+  Typography,
+  Grid,
+  Box,
+  Tabs,
+  Tab,
+  Container,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { useTheme } from "@emotion/react";
 import CustomBanner from "../layout/CustomBanner";
@@ -16,14 +24,14 @@ export default function ServicePage() {
   const currentLang = i18n.language;
   const { label } = useParams();
   const location = useLocation();
-  const { mainTitle, price, description, id, title, requiredDocuments,
-    terms } = location.state || {};
+  const { mainTitle, price, description, id, title, requiredDocuments, terms } =
+    location.state || {};
 
   const navigate = useNavigate();
 
   const handleNavigate = () => {
     navigate(`/services/${label}/Payment`, {
-      state: { price, description, id ,requiredDocuments,terms},
+      state: { price, description, id, requiredDocuments, terms },
     });
   };
 
@@ -67,9 +75,9 @@ export default function ServicePage() {
         subtitle={mainTitle}
         service={title[currentLang]}
       />
-      <Container maxWidth="lg"
+      <Container
+        maxWidth="lg"
         sx={{
-          
           mt: "-100px",
           paddingTop: "450px",
         }}
@@ -253,7 +261,11 @@ export default function ServicePage() {
           </Grid>
 
           <Grid item xs={12} md={12} lg={8}>
-            <ServiceInfoTabs description={description} requiredDocuments={requiredDocuments}  terms={terms} />
+            <ServiceInfoTabs
+              description={description}
+              requiredDocuments={requiredDocuments}
+              terms={terms}
+            />
           </Grid>
         </Grid>
       </Container>

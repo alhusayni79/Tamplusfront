@@ -30,7 +30,7 @@ const Banner = ({ data }) => {
         }}
       >
         <img
-          src={bannerBg}
+          src={data?.image}
           alt="Background"
           style={{
             width: "100%",

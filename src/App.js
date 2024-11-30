@@ -25,6 +25,8 @@ import RequestPage from "./components/newrequest/RequestPage.js";
 import ServicePageActive from "./components/newrequest/ServicePageActive.js";
 import PaymentSuccess from "./components/shared/PaymentSuccess.js";
 import FaildPayment from "./components/shared/FaildPayment.js";
+import TermsConditions from "./components/footerpage/TermsConditions.js";
+import PrivacyPolicy from "./components/footerpage/PrivacyPolicy.js";
 
 function App() {
   const { i18n } = useTranslation();
@@ -47,6 +49,10 @@ function App() {
               <Route path="contactus" element={<Contact />} />
               <Route path="login" element={<Login />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="PrivacyPolicy" element={<PrivacyPolicy />} />
+              <Route path="TermsConditions" element={<TermsConditions />} />
+
+
               <Route
                 path="profile/:serviceDescription"
                 element={<ProfileDetails />}

@@ -37,7 +37,7 @@ const LastNewsComponent = ({ displayCount }) => {
   const displayedBlogs = blogs?.response?.data?.slice(0, displayCount) || [];
 
   const handleCardClick = (news) => {
-    navigate(`/lastnews/${news.slug[currentLang]}`, {
+    navigate(`/lastnews/blog`, {
       state: {
         id: news.id,
         title: news.title[currentLang],
