@@ -7,23 +7,21 @@ import {
   Avatar,
   CardContent,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
-const Chat = ({cardsData}) => {
+const Chat = ({ cardsData = [] }) => {
   const theme = useTheme();
-
-  
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   return (
-    <Card sx={{ p: {xs:1.5,sm:4}}}>
-      <Typography sx={{ mb: 4 ,fontSize:"16px",fontWeight:"500"}}>المحادثة</Typography>
-      {cardsData.map((card, index) => (
+    <Card sx={{ p: { xs: 1.5, sm: 4 } }}>
+      <Typography sx={{ mb: 4, fontSize: "16px", fontWeight: "500" }}>
+        المحادثة
+      </Typography>
+      {(cardsData || []).map((card, index) => (
         <Grid item xs={12} key={card.id}>
           <Card
-            sx={{
-              maxWidth: "100%",
-              height:"auto",
-              margin: "auto",
-              mb: "24px",
-            }}
+            sx={{ maxWidth: "100%", height: "196px", margin: "auto", mb: 2 }}
           >
             <Box
               sx={{
@@ -35,7 +33,19 @@ const Chat = ({cardsData}) => {
               }}
             >
               <Box display="flex" alignItems="center" gap={2}>
-                <Avatar alt={card.name} />
+                <Avatar
+                  alt={card.name || "User Avatar"}
+                  src={card.image || null}
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    border: "2px solid #07489D",
+                    "&:hover": {
+                      cursor: "pointer",
+                      opacity: 0.9,
+                    },
+                  }}
+                />{" "}
                 <Box ml={2}>
                   <Typography
                     sx={{
@@ -44,7 +54,7 @@ const Chat = ({cardsData}) => {
                       color: theme.palette.primary.dark,
                     }}
                   >
-                    {card.name}
+                    {card.first_name}
                   </Typography>
                   <Typography
                     sx={{
@@ -53,7 +63,7 @@ const Chat = ({cardsData}) => {
                       color: theme.palette.primary.dark,
                     }}
                   >
-                    {card.role}
+                    {card.role?.[currentLang]}
                   </Typography>
                 </Box>
               </Box>
@@ -64,7 +74,7 @@ const Chat = ({cardsData}) => {
                   color: theme.palette.primary.dark,
                 }}
               >
-                {card.date}
+                {card.created_at}
               </Typography>
             </Box>
 
@@ -76,8 +86,28 @@ const Chat = ({cardsData}) => {
                   color: theme.palette.primary.body,
                 }}
               >
-                {card.content}
+                {card.message}
               </Typography>
+              {card.file && (
+                <Box mt={2}>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: theme.palette.primary.dark,
+                    }}
+                  >
+                    مرفق:
+                    <a
+                      href={URL.createObjectURL(card.file)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {card.file.name}
+                    </a>
+                  </Typography>
+                </Box>
+              )}
             </CardContent>
           </Card>
         </Grid>

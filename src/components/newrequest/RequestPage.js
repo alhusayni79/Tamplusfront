@@ -16,7 +16,14 @@ import CustomButton from "../shared/CustomButton";
 import StatusChip from "../shared/getStatusStyles";
 import ServiceTabs from "./ServiceTabs";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-const RequestDetails = ({ rowData, handleAcceptServiceClick }) => {
+import axios from "axios";
+import Cookies from "js-cookie";
+
+const RequestDetails = ({
+  rowData,
+  handleAcceptServiceClick,
+  selectedCategory,
+}) => {
   return (
     <Box sx={{ maxWidth: "832px", margin: "0 auto" }}>
       <Grid container spacing={2} direction="column">
@@ -29,28 +36,32 @@ const RequestDetails = ({ rowData, handleAcceptServiceClick }) => {
               alignItems: "center",
             }}
           >
-            <CustomButton
-              backgroundColor="#07489D"
-              width="256px"
-              maxWidth="256px"
-              onClick={handleAcceptServiceClick}
-            >
-              قبول الخدمة
-            </CustomButton>
-
+            {selectedCategory === "الطلبات الجديدة" && (
+              <CustomButton
+                backgroundColor="#07489D"
+                width="256px"
+                maxWidth="256px"
+                onClick={handleAcceptServiceClick}
+              >
+                قبول الخدمة
+              </CustomButton>
+            )}
+           
+            <Box></Box>
             <Typography
               sx={{
-                fontSize: { xs: "16px", sm: "20px", md: "24px" }, 
+                fontSize: { xs: "16px", sm: "20px", md: "24px" },
                 fontWeight: 500,
                 color: "#595F69",
               }}
             >
-              الطلبات الجديدة
+              {/* الطلبات الجديدة */}
+              {selectedCategory}
               <ArrowBackIosIcon
                 sx={{
                   verticalAlign: "middle",
                   color: "#595F69",
-                  fontSize: { xs: "16px", sm: "18px", md: "20px" }, 
+                  fontSize: { xs: "16px", sm: "18px", md: "20px" },
                 }}
               />
               <span
@@ -58,10 +69,10 @@ const RequestDetails = ({ rowData, handleAcceptServiceClick }) => {
                   fontWeight: "bold",
                   color: "#1E2124",
                   marginRight: "5px",
-                  fontSize: { xs: "14px", sm: "16px", md: "18px" }, 
+                  fontSize: { xs: "14px", sm: "16px", md: "18px" },
                 }}
               >
-                {rowData.serviceNumber}
+                #{rowData.id}
               </span>
             </Typography>
           </Box>
@@ -80,15 +91,30 @@ const RequestPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const handleAcceptServiceClick = () => {
-    const updatedRowData = { ...rowData, status: "نشطة" };
+const handleAcceptServiceClick = async () => {
+    const updatedRowData = { ...rowData };
+    const baseURL = process.env.REACT_APP_BASE_URL;
+    const token = Cookies.get("authemployee");
 
-    navigate(
-      `/employee/${updatedRowData.serviceDescription}/servicePageActive`,
-      {
-        state: updatedRowData,
-      }
-    );
+    try {
+      const formData = new FormData();
+      formData.append("order_id", rowData.id);
+
+      await axios.post(`${baseURL}/employee/reserve-order`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      navigate(
+        `/employee/${updatedRowData.serviceDescription}/servicePageActive`,
+        {
+          state: updatedRowData,
+        }
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const rowData = location.state || {
@@ -99,6 +125,7 @@ const RequestPage = () => {
     customerName: "محمد علي",
     requestDate: "11/8/2024 (18:20)",
   };
+  const selectedCategory = rowData.selectedCategory;
 
   return (
     <Container maxWidth="lg" sx={{ py: 10 }}>
@@ -107,6 +134,7 @@ const RequestPage = () => {
           <RequestDetails
             rowData={rowData}
             handleAcceptServiceClick={handleAcceptServiceClick}
+            selectedCategory={selectedCategory}
           />
         </Grid>
         <Grid item xs={12} md={3}>
@@ -150,7 +178,7 @@ const RequestPage = () => {
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  {rowData.customerName || "محمد علي"}
+                  {rowData?.user?.fullname || "محمد علي"}
                 </Typography>
               </Grid>
 
@@ -175,7 +203,7 @@ const RequestPage = () => {
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  {rowData.requestDate}
+                  {rowData.created_at}
                 </Typography>
               </Grid>
 
@@ -212,7 +240,7 @@ const RequestPage = () => {
                 color: theme.palette.primary.main,
               }}
             >
-              {rowData.price}
+              {rowData.total}
               <Typography
                 component="span"
                 variant="subtitle2"

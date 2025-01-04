@@ -6,8 +6,12 @@ export const fetchFooter = createAsyncThunk(
   'footer/fetchFooter',
   async (_, thunkAPI) => {
     try {
-      const token = Cookies.get('auth_token');  
-      if (!token) {
+      const authToken = Cookies.get('auth_token');  
+      const anotherToken = Cookies.get('authemployee');  
+
+      const tokenToUse = authToken || anotherToken;  // استخدام المتوفر
+
+      if (!tokenToUse) {
         return thunkAPI.rejectWithValue("Authentication token is missing");
       }
 
@@ -16,7 +20,7 @@ export const fetchFooter = createAsyncThunk(
       const response = await axios.get(`${baseURL}/user/footer-info`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  
+          'Authorization': `Bearer ${tokenToUse}`,  // إرسال التوكين المتوفر فقط
         },
       });
 
@@ -27,6 +31,8 @@ export const fetchFooter = createAsyncThunk(
     }
   }
 );
+
+
 
 const footerSlice = createSlice({
   name: 'footer',

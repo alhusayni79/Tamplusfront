@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, useTheme } from "@mui/material";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 
 const CustomButton = ({
   children,
@@ -18,6 +18,7 @@ const CustomButton = ({
   const theme = useTheme();
   const { i18n } = useTranslation();
   const locale = i18n.language;
+
   return (
     <Button
       {...props}
@@ -29,13 +30,15 @@ const CustomButton = ({
         border: border ? `1px solid ${borderColor}` : "none",
         display: "flex",
         alignItems: "center",
-        flexDirection: locale === "en" ? "row" : "row-reverse", 
-        textTransform:"capitalize",
+        flexDirection: locale === "en" ? "row" : "row-reverse",
+        textTransform: "capitalize",
         width,
         fontSize: "18px",
-        transition: "background-color 0.3s ease",
+        transition: "all 0.3s ease",
+        transform: "scale(1)",
         "&:hover": {
           backgroundColor: hoverColor,
+          transform: "scale(1.05)",
         },
         [theme.breakpoints.up("md")]: {
           padding: "7px 20px",
@@ -47,7 +50,7 @@ const CustomButton = ({
           style={{
             marginRight: locale === "en" ? 8 : 0,
             marginLeft: locale === "en" ? 0 : 8,
-          }}
+        }}
         />
       )}
       {children}
@@ -65,7 +68,7 @@ CustomButton.propTypes = {
   icon: PropTypes.elementType,
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   fontWeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  locale: PropTypes.string, 
+  locale: PropTypes.string,
 };
 
 export default CustomButton;

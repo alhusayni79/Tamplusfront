@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -15,6 +15,12 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import NewRequesttable from "../components/newrequest/NewRequesttable";
 import PaymentInfoForm from "../components/newrequest/PaymentInfoForm";
 import AccountInfoForm from "../components/newrequest/AccountInfoForm";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCompletedRequest } from "../redux/Slices/employeeRequest/completedRequestSlice";
+import { fetchNewRequest } from "../redux/Slices/employeeRequest/newRequestSlice";
+import { fetchReservedRequest } from "../redux/Slices/employeeRequest/reservedRequestSlice";
+import { fetchCanceledRequest } from "../redux/Slices/employeeRequest/canceledReuwstSlice";
+
 
 const Employee = () => {
   const theme = useTheme();
@@ -45,11 +51,78 @@ const Employee = () => {
     {
       category: "معلومات الدفع",
     },
-  ];
+    { category: " تسجيل الخروج" },
 
+  ];
+  const dispatch = useDispatch();
+
+  // Destructure state
+  const {
+    completedRequest,
+    loading: completedLoading,
+    error: completedError
+  } = useSelector((state) => state.completedRequest);
+  
+  const {
+    newRequest,
+    loading: newLoading, 
+    error: newError
+  } = useSelector((state) => state.newRequest);
+  
+  const {
+    reservedRequest, 
+    loading: reservedLoading, 
+    error: reservedError
+  } = useSelector((state) => state.reservedRequest);
+  
+  const {
+    canceledRequest,
+    loading: canceledLoading,
+    error: canceledError
+  } = useSelector((state) => state.canceledRequest);
+  
+  useEffect(() => {
+    dispatch(fetchCompletedRequest());
+    dispatch(fetchNewRequest());
+    dispatch(fetchReservedRequest()); 
+    dispatch(fetchCanceledRequest()); 
+  }, [dispatch]);
+  
+  if (completedLoading || newLoading || reservedLoading || canceledLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  if (completedError || newError || reservedError || canceledError) {
+    return (
+      <div>
+        {completedError && <div>Completed Request Error: {completedError}</div>}
+        {newError && <div>New Request Error: {newError}</div>}
+        {reservedError && <div>Reserved Request Error: {reservedError}</div>}
+        {canceledError && <div>Canceled Request Error: {canceledError}</div>}
+      </div>
+    );
+  }
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-    setSelectedSubcategory(null);
+    if (category === " تسجيل الخروج") {
+      // Clear auth token cookie
+      document.cookie = "authemployee=;expires=" + new Date(0).toUTCString() + ";path=/";
+  
+      // Clear all cookies
+      document.cookie
+        .split(";")
+        .forEach(
+          (cookie) =>
+            (document.cookie = cookie
+              .replace(/^ +/, "")
+              .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
+        );
+  
+      // Redirect to login page
+      window.location.href = "/login";
+    } else {
+      setSelectedCategory(category);
+      setSelectedSubcategory(null);
+    }
   };
 
   const handleSubcategoryClick = (category, subcategory) => {
@@ -57,89 +130,14 @@ const Employee = () => {
     setSelectedSubcategory(subcategory);
   };
 
-  const rows = [
-    {
-      id: 1,
-      price: "100 ",
-      status: "قيد الانتظار",
-      serviceNumber: "#343234",
-      serviceDescription: "تعديل المهنة للعمالة",
-    },
-    {
-      id: 2,
-      price: "150 ",
-      status: "تم الإلغاء",
-      serviceNumber: "#5454",
-      serviceDescription: "إصدار وإلغاء تأشيرات الخروج والعودة",
-    },
-    {
-      id: 3,
-      price: "200 ",
-      status: "نشطة",
-      serviceNumber: "#123456",
-      serviceDescription: "تفصيل جديد للعميل",
-    },
-    {
-      id: 4,
-      price: "250 ",
-      status: "قيد الانتظار",
-      serviceNumber: "#343234",
-      serviceDescription: "تفصيل جديد للعميل",
-    },
-    {
-      id: 5,
-      price: "300 ",
-      status: "قيد الانتظار",
-      serviceNumber: "#987654",
-      serviceDescription: "تفصيل جديد للعميل",
-    },
-    {
-      id: 6,
-      price: "350 ",
-      status: "قيد الانتظار",
-      serviceNumber: "#5787",
-      serviceDescription: "تعديل المهنة للعمالة",
-    },
-    {
-      id: 7,
-      price: "400 ",
-      status: "تم الإلغاء",
-      serviceNumber: "#54787854",
-      serviceDescription: "إصدار وإلغاء تأشيرات الخروج والعودة",
-    },
-    {
-      id: 8,
-      price: "450 ",
-      status: "قيد الانتظار",
-      serviceNumber: "#123154456",
-      serviceDescription: "تفصيل جديد للعميل",
-    },
-    {
-      id: 9,
-      price: "500 ",
-      status: "نشطة",
-      serviceNumber: "#3432454534",
-      serviceDescription: "تفصيل جديد للعميل",
-    },
-    {
-      id: 10,
-      price: "550 ",
-      status: "مكتملة",
-      serviceNumber: "#987654",
-      serviceDescription: "تفصيل جديد للعميل",
-    },
-  ];
-  const newRequests = rows.filter((row) => row.status === "قيد الانتظار");
-  const inProgressRequests = rows.filter((row) => row.status === "نشطة");
-  const completedRequests = rows.filter((row) => row.status === "مكتملة");
-  const canceledRequests = rows.filter((row) => row.status === "تم الإلغاء");
+ 
 
   return (
     <Container maxWidth="lg">
       <Box sx={{ mt: "80px", mb: 4, position: "relative" }}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={{ xs: 0, sm: 1, md: 2 }}>
-            <Grid item xs={12} sm={12} md={3} sx={{mb:{xs:2,sm:0}}}>
+            <Grid item xs={12} sm={12} md={3} sx={{mbش:{xs:2,sm:0}}}>
               <Paper
                 elevation={1}
                 style={{
@@ -322,25 +320,25 @@ const Employee = () => {
             <Grid item xs={12} sm={12} md={9}>
               {selectedSubcategory === "الطلبات الجديدة" && (
                 <NewRequesttable
-                  rows={newRequests}
+                  rows={newRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
               {selectedSubcategory === "الطلبات قيد التنفيذ" && (
                 <NewRequesttable
-                  rows={inProgressRequests}
+                  rows={reservedRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
               {selectedSubcategory === "الطلبات المكتملة" && (
                 <NewRequesttable
-                  rows={completedRequests}
+                  rows={completedRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
               {selectedSubcategory === "الطلبات الملغاة" && (
                 <NewRequesttable
-                  rows={canceledRequests}
+                  rows={canceledRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}

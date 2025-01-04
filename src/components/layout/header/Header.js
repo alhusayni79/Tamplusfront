@@ -259,14 +259,14 @@ function ResponsiveAppBar() {
                }}
              />
              
-             <Typography>{user?.response?.last_name}</Typography>
+             {/* <Typography>{user?.response?.last_name}</Typography> */}
              <Typography>{user?.response?.first_name}</Typography>
-             <KeyboardArrowDownIcon
+             {/* <KeyboardArrowDownIcon
                sx={{
                  marginRight: "1px",
                  fontSize: "20px",
                }}
-             />
+             /> */}
            </Box>
          </Box>
          
@@ -391,12 +391,12 @@ function ResponsiveAppBar() {
              
              <Typography>{user?.response?.last_name}</Typography>
              <Typography>{user?.response?.first_name}</Typography>
-             <KeyboardArrowDownIcon
+             {/* <KeyboardArrowDownIcon
                sx={{
                  marginRight: "1px",
                  fontSize: "20px",
                }}
-             />
+             /> */}
            </Box>
          </Box>
          

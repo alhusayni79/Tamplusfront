@@ -100,7 +100,8 @@ const ContactWithUs = () => {
               onClick={handleSubscribe}
               backgroundColor="#07489D"
               textColor="white"
-              border="1px solid white"
+              border={true} 
+              borderColor="white" 
               sx={{
                 zIndex: 100,
                 width: "100%",
@@ -116,7 +117,7 @@ const ContactWithUs = () => {
           xs={12}
           md={6}
           order={{ xs: 1, md: 2 }}
-          sx={{ textAlign: { xs: "center", md: "right", zIndex: 1111 } }}
+          sx={{ textAlign: { xs: "center", md: "right", zIndex: 1 } }}
         >
           <Typography
             sx={{

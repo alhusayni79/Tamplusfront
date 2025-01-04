@@ -14,6 +14,11 @@ function ServiceCard({
   slug,
   requiredDocuments,
   terms,
+  period,
+  price_without_vat,
+  government_fees_without_vat,
+  government_fees_with_vat
+
 }) {
   const { i18n, t } = useTranslation();
   const currentLang = i18n.language;
@@ -31,6 +36,10 @@ function ServiceCard({
         mainTitle,
         requiredDocuments,
         terms,
+        period,
+        price_without_vat,
+        government_fees_without_vat,
+        government_fees_with_vat
       },
     });
   };

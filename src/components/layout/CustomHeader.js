@@ -1,12 +1,19 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import LanguageToggleButton from "../shared/toggleLanguage";
 import Tamplus from "../../assets/image/tampluslogo.png";
-import { useMediaQuery } from '@mui/material';
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmpolyeeUData } from "../../redux/Slices/empolyeeData/empolyeeSlice";
 
 const CustomHeader = () => {
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+  const dispatch = useDispatch();
+  const { empolyee, loading, error } = useSelector((state) => state.empolyee);
 
+  useEffect(() => {
+    dispatch(fetchEmpolyeeUData());
+  }, [dispatch]);  
   return (
     <Box
       sx={{
@@ -17,33 +24,29 @@ const CustomHeader = () => {
         backgroundColor: "white",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-      <img
-      src={Tamplus}
-      alt="Description"
-      style={{
-        width: isSmallScreen ? "50px" : "80px",
-        height: isSmallScreen ? "41px" : "64px",
-      }}
-    />
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Link to="/employee" style={{ textDecoration: "none" }}>
+          <img
+            src={Tamplus}
+            alt="Description"
+            style={{
+              width: isSmallScreen ? "50px" : "80px",
+              height: isSmallScreen ? "41px" : "64px",
+              cursor: "pointer",
+            }}
+          />
+        </Link>
       </Box>
-
       <Typography
-        variant="h6"
+        variant={isSmallScreen ? "body1" : "h6"}
         sx={{
-          fontWeight: 700,
-          fontSize: {
-            xs: "18px",
-            sm: "22px",
-            md: "26px",
-            lg: "28px",
-          },
-          color: "#1F180F",
+          color: "#000",
+          fontWeight: "bold",
+          ml: 1,
         }}
       >
-        مرحباً، أحمد
+        مرحباً, {empolyee?.response?.first_name}
       </Typography>
-
       <LanguageToggleButton backgroundColor="#DDEBFD" />
     </Box>
   );

@@ -15,7 +15,7 @@ const Banner = ({ data }) => {
     <Box
       sx={{
         width: "100%",
-        height: { xs: "88vh", sm: "90vh", md: "90vh", lg: "85vh" },
+        height: { xs: "85vh", sm: "90vh", md: "90vh", lg: "83vh" },
       }}
     >
       {/* Background Image */}
@@ -106,7 +106,6 @@ const Banner = ({ data }) => {
             onClick={() => alert("Button Clicked!")}
             backgroundColor="white"
             textColor="#07489D"
-            border={"1px solid white"}
             sx={{ zIndex: 100 }}
           >
            {t("buttons.start_now")}
@@ -114,7 +113,9 @@ const Banner = ({ data }) => {
           <CustomButton
             onClick={() => alert("Button Clicked!")}
             backgroundColor="transparent"
-            border={"1px solid white"}
+            border={true} 
+            borderColor="white" 
+     
             sx={{ display: "flex", alignItems: "center", zIndex: 100 }}
           >
             <KeyboardArrowDownIcon sx={{ mr: 1, color: "white" }} />

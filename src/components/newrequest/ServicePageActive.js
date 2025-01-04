@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import {
   Typography,
@@ -21,41 +21,122 @@ import StatusChip from "../shared/getStatusStyles";
 import ServiceTabs from "./ServiceTabs";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Chat from "./Chat";
-const RequestDetails = ({ rowData, handleAcceptServiceClick }) => {
-  const cardsData = [
-    {
-      id: 1,
-      name: "محمد",
-      role: "مقدم الخدمة",
-      date: "11/8/2024 (18:20)",
-      content:
-        "لوريم إيبسوم هو نموذج افتراضي يضعه في التصاميم لتعرض على العميل ليتمكن من تصور طريقة النصوص بالتزامن سواء كانت تصاميم مطبوعة ... بروشور أو فلاير على سبيل المثال ... أو نماذج مواقع الانترنت ...",
-    },
-    {
-      id: 2,
-      name: "علي",
-      role: "مقدم الخدمة",
-      date: "10/8/2024 (14:00)",
-      content:
-        "لوريم إيبسوم هو نموذج افتراضي يستخدم في التصميمات لإظهار النصوص وتوزيعها بشكل مؤقت للتصميمات سواء كانت مطبوعة أو مواقع الإنترنت.",
-    },
-    {
-      id: 3,
-      name: "سارة",
-      role: "مقدمة الخدمة",
-      date: "9/8/2024 (16:45)",
-      content:
-        "هذا النص هو مجرد مثال لاختبار الشكل والتصميم. يتم استخدامه لمساعدة المصممين في التركيز على عناصر التصميم بدلاً من محتوى النص نفسه.",
-    },
-    {
-      id: 4,
-      name: "سارة",
-      role: "مقدمة الخدمة",
-      date: "9/8/2024 (16:45)",
-      content:
-        "هذا النص هو مجرد مثال لاختبار الشكل والتصميم. يتم استخدامه لمساعدة المصممين في التركيز على عناصر التصميم بدلاً من محتوى النص نفسه.",
-    },
-  ];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllMessage } from "../../redux/Slices/chat/allMessageRequestSlice";
+import { fetchAllMedia } from "../../redux/Slices/chat/allMediaRequestSlice";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { CloudUpload } from "@mui/icons-material";
+import { CancelOrderButton } from "./employee/CancelOrderButton";
+
+const RequestDetails = ({ rowData, handleAcceptServiceClick, orderId }) => {
+  const dispatch = useDispatch();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newComment, setNewComment] = useState("");
+
+  const { allMessage, messageLoading, messageError } = useSelector(
+    (state) => state.allMessage
+  );
+  const { allMedia, mediaLoading, mediaError } = useSelector(
+    (state) => state.allMedia
+  );
+
+  useEffect(() => {
+    dispatch(fetchAllMessage(orderId));
+    dispatch(fetchAllMedia(orderId));
+  }, [dispatch, orderId]);
+
+  if (messageLoading || mediaLoading) return <div>Loading...</div>;
+  if (messageError || mediaError)
+    return <div>{messageError || mediaError}</div>;
+
+  const mediaUrls =
+    allMedia?.response?.user_media?.map((media) => media.url) ?? [];
+  const fileNames = mediaUrls.map((url) => url.split("/").pop());
+
+  const handleAddReply = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setNewComment("");
+  };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("File selected:", {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+      });
+      setSelectedFile(file);
+    }
+  };
+  const handleSaveReply = async () => {
+    if (newComment.trim() === "") return;
+
+    try {
+      const baseURL = process.env.REACT_APP_BASE_URL;
+      const authToken = Cookies.get("auth_token");
+      const empolyeeToken = Cookies.get("authemployee");
+      const tokenToUse = authToken || empolyeeToken;
+
+      // أولاً - رفع الصورة إذا كانت موجودة
+      let mediaId = null;
+      if (selectedFile) {
+        const mediaFormData = new FormData();
+        mediaFormData.append("order_id", orderId);
+        mediaFormData.append("media[]", selectedFile);
+
+        const mediaResponse = await axios.post(
+          `${baseURL}/share/chat/upload-media`,
+          mediaFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${tokenToUse}`,
+            },
+          }
+        );
+        mediaId = mediaResponse.data.media_id;
+      }
+
+      // ثانياً - إرسال الرسالة
+      const messageFormData = new FormData();
+      messageFormData.append("order_id", orderId);
+      messageFormData.append("message", newComment);
+      if (mediaId) {
+        messageFormData.append("media_id", mediaId);
+      }
+
+      const messageResponse = await axios.post(
+        `${baseURL}/share/chat`,
+        messageFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${tokenToUse}`,
+          },
+        }
+      );
+
+      dispatch(fetchAllMessage(orderId));
+      dispatch(fetchAllMedia(orderId));
+
+      handleDialogClose();
+      setSelectedFile(null);
+      setNewComment("");
+    } catch (error) {
+      console.error("Error:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+    }
+  };
+  const cardsData = allMessage?.response || [];
   return (
     <Box sx={{ maxWidth: "832px", margin: "0 auto" }}>
       <Grid container spacing={2} direction="column">
@@ -83,7 +164,7 @@ const RequestDetails = ({ rowData, handleAcceptServiceClick }) => {
                 color: "#595F69",
               }}
             >
-              الطلبات الجديدة
+              الطلبات قيد التنفيذ
               <ArrowBackIosIcon
                 sx={{
                   verticalAlign: "middle",
@@ -99,7 +180,7 @@ const RequestDetails = ({ rowData, handleAcceptServiceClick }) => {
                   fontSize: { xs: "14px", sm: "16px", md: "18px" },
                 }}
               >
-                {rowData.serviceNumber}
+                #{rowData.id}
               </span>
             </Typography>
           </Box>
@@ -118,39 +199,143 @@ const ServicePageActive = () => {
   const location = useLocation();
   const theme = useTheme();
   const navigate = useNavigate();
+  const rowData = location.state;
+  const dispatch = useDispatch();
+  const orderId = rowData?.id;
+
   const [selectedFile, setSelectedFile] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [photo, setPhoto] = useState(null);
-  const handleAcceptServiceClick = () => {
-    navigate(`/employee/${rowData.serviceDescription}/servicePageActive`, {
-      state: rowData,
-    });
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newComment, setNewComment] = useState("");
+
+  const { allMessage, messageLoading, messageError } = useSelector(
+    (state) => state.allMessage
+  );
+  const { allMedia, mediaLoading, mediaError } = useSelector(
+    (state) => state.allMedia
+  );
+
+  useEffect(() => {
+    if (orderId) {
+      // التحديث الأولي
+      dispatch(fetchAllMessage(orderId));
+      dispatch(fetchAllMedia(orderId));
+
+      // إنشاء interval للتحديث الدوري
+      const interval = setInterval(() => {
+        dispatch(fetchAllMessage(orderId));
+        dispatch(fetchAllMedia(orderId));
+      }, 15000); // كل 3 ثواني
+
+      // cleanup عند unmount
+      return () => clearInterval(interval);
+    }
+  }, [dispatch, orderId]);
+
+  if (messageLoading || mediaLoading) return <div>Loading...</div>;
+  if (messageError || mediaError)
+    return <div>{messageError || mediaError}</div>;
+
+  const mediaUrlsUser =
+    allMedia?.response?.user_media?.map((media) => media.url) ?? [];
+  const fileNamesUser = mediaUrlsUser.map((url) => url.split("/").pop());
+  const mediaUrlsEmpolyee =
+    allMedia?.response?.employee_media?.map((media) => media.url) ?? [];
+  const fileNamesEmpolyee = mediaUrlsEmpolyee.map((url) =>
+    url.split("/").pop()
+  );
+
+  const handleAddReply = () => {
+    setOpenDialog(true);
   };
 
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setNewComment("");
+  };
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      console.log("File selected:", {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+      });
+      setSelectedFile(file);
+    }
   };
-  const rowData = location.state || {
-    serviceNumber: "343234",
-    serviceDescription: "تعديل المهنة للعمالة",
-    status: "قيد الانتظار",
-    price: "499",
-    customerName: "محمد علي",
-    requestDate: "11/8/2024 (18:20)",
-  };
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const handleSaveReply = async () => {
+    if (newComment.trim() === "") return;
 
-  const handleClose = () => {
-    setOpen(false);
+    try {
+      const baseURL = process.env.REACT_APP_BASE_URL;
+      const authToken = Cookies.get("auth_token");
+      const empolyeeToken = Cookies.get("authemployee");
+      const tokenToUse = authToken || empolyeeToken;
+
+      // أولاً - رفع الصورة إذا كانت موجودة
+      let mediaId = null;
+      if (selectedFile) {
+        const mediaFormData = new FormData();
+        mediaFormData.append("order_id", orderId);
+        mediaFormData.append("media[]", selectedFile);
+
+        const mediaResponse = await axios.post(
+          `${baseURL}/share/chat/upload-media`,
+          mediaFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${tokenToUse}`,
+            },
+          }
+        );
+        console.log("Media upload response:", mediaResponse.data);
+        // احفظ ID الصورة إذا كان السيرفر يرجعه
+        mediaId = mediaResponse.data.media_id; // تأكد من اسم الحقل الصحيح من الـ response
+      }
+
+      // ثانياً - إرسال الرسالة
+      const messageFormData = new FormData();
+      messageFormData.append("order_id", orderId);
+      messageFormData.append("message", newComment);
+      if (mediaId) {
+        messageFormData.append("media_id", mediaId);
+      }
+
+      const messageResponse = await axios.post(
+        `${baseURL}/share/chat`,
+        messageFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${tokenToUse}`,
+          },
+        }
+      );
+
+      console.log("Message send response:", messageResponse.data);
+
+      dispatch(fetchAllMessage(orderId));
+      dispatch(fetchAllMedia(orderId));
+
+      handleDialogClose();
+      setSelectedFile(null);
+      setNewComment("");
+    } catch (error) {
+      console.error("Error:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+    }
   };
-  const handleMessageChange = (event) => {
-    setMessage(event.target.value);
-  };
-  const handlePhotoChange = (event) => {
-    setPhoto(event.target.files[0]);
+  // const handleAcceptServiceClick = () => {
+  //   navigate(`/employee/${rowData.serviceDescription}/servicePageActive`, {
+  //     state: rowData,
+  //   });
+  // };
+  const handleAcceptServiceClick = () => {
+    console.log("done");
   };
   return (
     <Container maxWidth="lg" sx={{ py: 10 }}>
@@ -159,6 +344,7 @@ const ServicePageActive = () => {
           <RequestDetails
             rowData={rowData}
             handleAcceptServiceClick={handleAcceptServiceClick}
+            orderId={rowData.id}
           />
         </Grid>
         <Grid item xs={12} md={3}>
@@ -202,7 +388,7 @@ const ServicePageActive = () => {
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  {rowData.customerName || "محمد علي"}
+                  {rowData?.user?.fullname}
                 </Typography>
               </Grid>
 
@@ -227,7 +413,7 @@ const ServicePageActive = () => {
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  {rowData.requestDate}
+                  {rowData?.created_at}
                 </Typography>
               </Grid>
               <Grid
@@ -251,7 +437,7 @@ const ServicePageActive = () => {
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  {rowData.requestDate}
+                  {rowData?.updated_at}
                 </Typography>
               </Grid>
               <Grid
@@ -287,7 +473,7 @@ const ServicePageActive = () => {
                 color: theme.palette.primary.main,
               }}
             >
-              {rowData.price}
+              {rowData.total}
               <Typography
                 component="span"
                 variant="subtitle2"
@@ -321,30 +507,34 @@ const ServicePageActive = () => {
                 width: "100%",
               }}
             >
-              مرفقات العميل{" "}
+              مرفقات العميل
             </Typography>
-            <Box sx={{ bgcolor: "white", width: "100%", textAlign: "center" }}>
-              <label htmlFor="file-upload">
-                <Input
-                  id="file-upload"
-                  type="file"
-                  onChange={handleFileChange}
-                  sx={{ display: "none" }}
-                />
-                <Button
-                  component="span"
+            <Box
+              sx={{
+                bgcolor: "white",
+                width: "100%",
+                textAlign: "center",
+                height: "auto",
+                minHeight: "fit-content",
+                padding: "8px",
+                overflow: "hidden",
+              }}
+            >
+              {fileNamesUser.map((fileName, index) => (
+                <Typography
+                  key={index}
+                  onClick={() => window.open(mediaUrlsUser[index], "_blank")}
                   sx={{
-                    color: "#595F69",
-                    textTransform: "none",
-                    pb: 3,
-                    "&:hover": {
-                      bgcolor: "#F0F0F0",
-                    },
+                    cursor: "pointer",
+                    wordBreak: "break-word",
+                    lineHeight: 1.5,
+                    display: "block",
+                    mb: 1,
                   }}
                 >
-                  {selectedFile ? selectedFile.name : "Upload Photo"}
-                </Button>
-              </label>
+                  {fileName}
+                </Typography>
+              ))}
             </Box>
           </Box>
           <Box
@@ -361,96 +551,109 @@ const ServicePageActive = () => {
               overflow: "hidden",
             }}
           >
-            <Typography
+            <Box
               sx={{
-                fontWeight: "700",
-                textAlign: "center",
-                fontSize: "16px",
-                p: 1.5,
-                bgcolor: "#eef1f3",
+                bgcolor: "white",
                 width: "100%",
+                textAlign: "center",
+                height: "auto",
+                minHeight: "fit-content",
+                overflow: "hidden",
               }}
             >
-              مرفقاتي{" "}
-            </Typography>
-            <Box sx={{ bgcolor: "white", width: "100%", textAlign: "center" }}>
-              <label htmlFor="file-upload">
-                <Input
-                  id="file-upload"
-                  type="file"
-                  onChange={handleFileChange}
-                  sx={{ display: "none" }}
-                />
-                <Button
-                  component="span"
+              <Typography
+                sx={{
+                  fontWeight: "700",
+                  textAlign: "center",
+                  fontSize: "16px",
+                  p: 1.5,
+                  bgcolor: "#eef1f3",
+                  width: "100%",
+                }}
+              >
+                مرفقاتي{" "}
+              </Typography>
+              {fileNamesEmpolyee.map((fileName, index) => (
+                <Typography
+                  key={index}
+                  onClick={() =>
+                    window.open(mediaUrlsEmpolyee[index], "_blank")
+                  }
                   sx={{
-                    color: "#595F69",
-                    textTransform: "none",
-                    pb: 3,
-                    "&:hover": {
-                      bgcolor: "#F0F0F0",
-                    },
+                    cursor: "pointer",
+                    wordBreak: "break-word",
+                    lineHeight: 1.5,
+                    display: "block",
+                    mb: 1,
                   }}
                 >
-                  {selectedFile ? selectedFile.name : "Upload Photo"}
-                </Button>
-              </label>
+                  {fileName}
+                </Typography>
+              ))}
             </Box>
           </Box>
+
           <Box sx={{ mb: 5 }}>
             <CustomButton
               width="100%"
               backgroundColor="#DDEBFD"
               textColor="#07489D"
-              onClick={handleClickOpen}
+              onClick={handleAddReply}
             >
               إضافة رد
             </CustomButton>
           </Box>
 
-          <CustomButton
-            width="100%"
-            textColor="#6E1311"
-            backgroundColor="transparent"
-            borderColor="#8C1816"
-            border={true}
-          >
-            إلغاء الخدمة
-          </CustomButton>
+          <CancelOrderButton
+            orderId={orderId}
+            
+          />
         </Grid>
       </Grid>
-
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openDialog} onClose={handleDialogClose} fullWidth>
         <DialogTitle>إضافة رد</DialogTitle>
         <DialogContent>
           <TextField
-            label="الرسالة"
-            variant="outlined"
             fullWidth
-            margin="dense"
-            value={message}
-            onChange={handleMessageChange}
+            multiline
+            rows={4}
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="اكتب تعليقك هنا..."
           />
-          <TextField
-            type="file"
-            fullWidth
-            margin="dense"
-            onChange={handlePhotoChange}
-            inputProps={{ accept: "image/*" }}
-          />
+          <Box sx={{ mt: 2, dir: "rtl" }}>
+            <Button
+              component="label"
+              variant="outlined"
+              startIcon={<CloudUpload />}
+              sx={{
+                width: "100%",
+                height: "56px",
+                borderStyle: "dashed",
+                gap: "12px",
+              }}
+            >
+              اختر ملفاً
+              <input
+                type="file"
+                onChange={handleFileChange}
+                accept="image/jpeg,image/png,application/pdf"
+                style={{
+                  display: "none",
+                }}
+              />
+            </Button>
+          </Box>
+          {selectedFile && (
+            <Typography sx={{ mt: 1 }}>
+              Selected file: {selectedFile.name}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            إلغاء
-          </Button>
-          <Button
-            onClick={() => {
-            
-              handleClose();
-            }}
-            color="primary"
-          >
-            إرسال
+          <Button onClick={handleDialogClose}>إلغاء</Button>
+          <Button onClick={handleSaveReply} color="primary" variant="contained">
+            حفظ
           </Button>
         </DialogActions>
       </Dialog>

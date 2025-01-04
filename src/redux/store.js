@@ -7,7 +7,14 @@ import blogsReducer from "./Slices/blogsData/blogSlice";
 import ministryReducer from "./Slices/ministrySlice/ministrySlice";
 import statisticsReducer from "./Slices/staticsSlice/statisticsSlice";
 import userReducer from "./Slices/userdata/userSlice";
-
+import empolyeeReducer from "./Slices/empolyeeData/empolyeeSlice";
+import completedRequestReducer from "./Slices/employeeRequest/completedRequestSlice";
+import newRequestReducer from "./Slices/employeeRequest/newRequestSlice";
+import userRequestReducer from "./Slices/userRequest/userRequestSlice";
+import reserverdRequestReducer from "./Slices/employeeRequest/reservedRequestSlice";
+import canceledRequestReducer from "./Slices/employeeRequest/canceledReuwstSlice";
+import allMessageReducer from "./Slices/chat/allMessageRequestSlice";
+import allMediaReducer from "./Slices/chat/allMediaRequestSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +26,14 @@ export const store = configureStore({
     ministry: ministryReducer,
     statistics: statisticsReducer,
     user: userReducer,
-
+    empolyee: empolyeeReducer,
+    completedRequest: completedRequestReducer,
+    newRequest: newRequestReducer,
+    userRequest:userRequestReducer,
+    reservedRequest:reserverdRequestReducer,
+    canceledRequest:canceledRequestReducer,
+    allMessage:allMessageReducer,
+    allMedia:allMediaReducer
   },
 });
 

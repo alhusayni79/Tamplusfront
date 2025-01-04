@@ -5,8 +5,78 @@
     "contactus": " تواصل معنا",
     "services": "خدماتنا",
     "News": "آخر الأخبار",
-    "search":"البحث",
-    "reviews":"التقييمات"
+    "search": "البحث",
+    "reviews": "التقييمات"
+  },
+  "customheader": {
+    "home": " عن المنصة",
+    "quickservice": "  أنجز معاملتك الحكومية في أقل من دقيقة!",
+    "allservices": " جميع الخدمات "
+  },
+
+  "home": {
+    "why": " لماذا تختار تم بلس؟",
+    "whychoose": "إليك سبب ثقة الآلاف من المستخدمين في منصتنا",
+    "client": "معدل رضا العملاء",
+    "newrequest": "طلب جديد يوميا",
+    "fullservice": "خدمة مكتملة",
+    "difservice": "خدمات متنوعة",
+    "discover": "استكشف خدماتنا",
+    "discovermore": "اكتشف الخدمات المقدمة عبر مختلف القطاعات الحكومية",
+    "howwork": "كيف يعمل تم بلس",
+    "5steps": "خمس خطوات بسيطة لإنجاز خدماتك",
+    "review": "ماذا يقول عملاؤنا",
+    "reviewmore": "آلاف المستخدمين الراضين أكملوا طلباتهم بنجاح",
+    "ready": "جاهز للبدء؟",
+    "readymore": "انضم إلى الآلاف من عملائنا الذين سهلنا خدماتهم الحكومية",
+    "news": "آخر الأخبار",
+    "newsmore": "نصائح مفيدة حول كيفية الاستفادة من منصة تم بلس",
+    "why_choose_templus": "لماذا تختار تم بلس؟",
+    "why_trust_templus": "إليك سبب ثقة الآلاف من المستخدمين في منصتنا",
+    "customer_satisfaction_rate": "معدل رضا العملاء",
+    "new_requests_daily": "طلب جديد يوميا",
+    "completed_services": "خدمة مكتملة",
+    "variety_of_services": "خدمات متنوعة",
+    "explore_our_services": "استكشف خدماتنا",
+    "discover_services_offered": "اكتشف الخدمات المقدمة عبر مختلف القطاعات الحكومية",
+    "how_templus_works": "كيف يعمل تم بلس",
+    "five_simple_steps": "خمس خطوات بسيطة لإنجاز خدماتك",
+    "what_our_clients_say": "ماذا يقول عملاؤنا",
+    "happy_clients": "آلاف المستخدمين الراضين أكملوا طلباتهم بنجاح",
+    "ready_to_start": "جاهز للبدء؟",
+    "join_our_clients": "انضم إلى الآلاف من عملائنا الذين سهلنا خدماتهم الحكومية",
+    "latest_news": "آخر الأخبار",
+    "helpful_tips": "نصائح مفيدة حول كيفية الاستفادة من منصة تم بلس"
+  },
+  "about": {
+    "about": "عن المنصة",
+    "aboutmore": "أنجز معاملتك الحكومية في أقل من دقيقة!",
+    "about!": "من نحن؟",
+    "fast": "سرعة الإنجاز",
+    "privacy": "السرية والخصوصية",
+    "trust": "الشفافية والمصداقية"
+  },
+  "contact": {
+    "call": "اتصل بالدعم",
+    "Mobile number": "رقم الجوال",
+    "Email": "الإيميل",
+    "Location": "الموقع",
+    "Social media": "مواقع التواصل",
+    "brach": "فروعنا",
+    "roadto": "طريقك لإيجاد أقرب مركز خدمة",
+    "madina": "المدينة",
+    "choose": "اختر المدينة",
+    "choosemore": "لم يتم اختيار مركز خدمة",
+    "firstname": "الاسم الاول",
+    "lastname": "الاسم الاخير",
+    "Message": "الرسالة",
+    "Name is required": "الاسم مطلوب",
+    "Email is required": "الإيميل مطلوب",
+    "Invalid email": "الإيميل غير صحيح",
+    "Mobile number is required": " الجوال مطلوب",
+    "Message is required": "الرسالة مطلوبة",
+    "successMessage": "تم إرسال الرسالة بنجاح!",
+    "errorMessage": "حدث خطأ أثناء الإرسال. حاول مرة أخرى."
   },
   "buttons": {
     "start_now": "ابدأ الآن",
@@ -23,7 +93,33 @@
     "login": "التسجيل / إنشاء حساب"
   },
   "footer": {
-    "copyright": "© ٢٠٢٤ موقعي. جميع الحقوق محفوظة."
+    "All-rights": "جميع الحقوق محفوظة © 2024",
+    "Commercial-Registration": "السجل التجاري:",
+    "Tax-Number": "الرقم الضريبي:",
+    "Other resources": "مصادر أخرى",
+    "Contact info": "معلومات التواصل",
+    "made": "صنع بكل❤️ في ",
+    "privacy_policy": "سياسة الخصوصية",
+    "terms_conditions": "الشروط والأحكام"
+  },
+  "profile": {
+    "welcome_message": "مرحباً",
+    "account_information": "معلومات الحساب",
+    "previous_services": "الخدمات السابقة",
+    "services_displayed_summary": "يتم عرض من 1 إلى 5 خدمات من5 خدمة",
+    "submission_date": "تاريخ التقديم",
+    "creation_date": "تاريخ الإنشاء",
+    "status": "الحالة",
+    "my_attachments": "مرفقاتي",
+    "service_provider_attachments": "مرفقات مقدم الخدمة",
+    "service_information": "معلومات الخدمة",
+    "our_services": "خدماتنا",
+    "active": "نشطة",
+    "closed": "مغلقة",
+    "completed": "مكتملة",
+    "archived": "مغلقة"
+   
+
   },
   "email": "البريد الإلكتروني",
   "subscribeNow": "اشترك الآن",
@@ -31,5 +127,28 @@
     "title": "اشترك في النشرة الإخبارية لدينا",
     "description": "كن أول من يعرف عن آخر الأخبار والرؤى.",
     "button": "newsletterButton"
-  }
+  },
+  "serviceprovider": {
+  "welcome_message": "مرحباً",
+  "new_requests": "الطلبات الجديدة",
+  "requests": "الطلبات",
+  "requests_in_progress": "الطلبات قيد التنفيذ",
+  "completed_requests": "الطلبات المكتملة",
+  "cancelled_requests": "الطلبات الملغاة",
+  "account_information": "معلومات الحساب",
+  "service_information": "معلومات الخدمة",
+  "service_request_date": "تاريخ طلب الخدمة",
+  "last_update": "آخر تحديث",
+  "status": "الحالة",
+  "total": "الإجمالي",
+  "client_attachments": "مرفقات العميل",
+  "my_attachments": "مرفقاتي",
+  "no_data": "لا توجد بيانات",
+  "services_displayed_summary": "يتم عرض من 1 إلى 0 خدمات من 0 خدمة",
+  "actions": "الإجراءات",
+  "request": "الطلب",
+  "profile_picture": "الصورة الشخصية",
+  "offer_services_with_us": "قدم خدماتك معنا"
+}
+
 }

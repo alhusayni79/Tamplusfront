@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import CustomButton from "../../shared/CustomButton";
+import { useTheme } from "@mui/material";
 
-const MyFatoorahPayment = ({id}) => {
-  const cardElementRef = useRef(null);
+const MyFatoorahPayment = ({ id }) => {
+  const theme =useTheme();
+    const cardElementRef = useRef(null);
   const [configData, setConfigData] = useState(null);
 
   useEffect(() => {
@@ -36,7 +39,6 @@ const MyFatoorahPayment = ({id}) => {
   }, []);
 
   useEffect(() => {
-    // Initialize myFatoorah once configData is available
     if (configData && window.myFatoorah) {
       const config = {
         countryCode: configData.countryCode,
@@ -102,31 +104,26 @@ const MyFatoorahPayment = ({id}) => {
   }, [configData]);
 
   const handleBinChanges = (bin) => {
-    console.log("BIN changed:", bin);
   };
 
   const handleSubmit = async () => {
     try {
-      // Trigger myFatoorah submit
       const response = await window.myFatoorah.submit();
-  
-      // Extract session details
+
       const { sessionId, cardBrand, cardIdentifier } = response;
-      console.log("Payment Response:", { sessionId, cardBrand, cardIdentifier });
-  
-      // Prepare FormData
+      console.log("Payment Response:", {
+        sessionId,
+        cardBrand,
+        cardIdentifier,
+      });
       const formData = new FormData();
       formData.append("sessionId", sessionId);
-      formData.append("service_id", id); // Replace with actual service ID
-  
-      // Get token from cookies
+      formData.append("service_id", id);
       const token = Cookies.get("auth_token");
       if (!token) {
         console.error("Token is missing. Cannot proceed with payment.");
         return;
       }
-  
-      // Send POST request to your backend
       const baseURL = process.env.REACT_APP_BASE_URL;
       const postResponse = await axios.post(
         `${baseURL}/user/order/pay`,
@@ -138,13 +135,8 @@ const MyFatoorahPayment = ({id}) => {
           },
         }
       );
-  
-      // Handle the response
       if (postResponse.data?.response?.url) {
         const redirectUrl = postResponse.data.response.url;
-        console.log("Redirecting to:", redirectUrl);
-  
-        // Redirect to the URL
         window.location.href = redirectUrl;
       } else {
         console.error("URL not found in response:", postResponse.data);
@@ -153,7 +145,7 @@ const MyFatoorahPayment = ({id}) => {
       console.error("Error during payment process:", error);
     }
   };
-  
+
   return (
     <div>
       {configData ? (
@@ -161,7 +153,12 @@ const MyFatoorahPayment = ({id}) => {
           <div style={{ width: "400px" }}>
             <div id="card-element" ref={cardElementRef}></div>
           </div>
-          <button onClick={handleSubmit}>Pay Now</button>
+          <CustomButton
+            backgroundColor={theme.palette.primary.main}
+            onClick={handleSubmit}
+          >
+            Pay Now
+          </CustomButton>
         </>
       ) : (
         <p>Loading payment form...</p>

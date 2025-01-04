@@ -18,21 +18,108 @@ import TimeCircle from "../../assets/image/TimeCircle.png";
 import Coins from "../../assets/image/Coins.png";
 import { useTranslation } from "react-i18next";
 import ServiceInfoTabs from "./ServiceInfoTabs";
+import axios from "axios";
+import RequiredDataModal from "./paymentcomponent/RequiredDataModal";
+import Cookies from "js-cookie";
 
 export default function ServicePage() {
+  const [formData, setFormData] = useState({});
+  const [requiredFields, setRequiredFields] = useState([]);
+  const [error, setError] = useState("");
+  const [openModal, setOpenModal] = useState(false);
   const { i18n, t } = useTranslation();
   const currentLang = i18n.language;
   const { label } = useParams();
   const location = useLocation();
-  const { mainTitle, price, description, id, title, requiredDocuments, terms } =
-    location.state || {};
+  const {
+    mainTitle,
+    price,
+    description,
+    id,
+    title,
+    requiredDocuments,
+    terms,
+    period,
+    price_without_vat,
+    government_fees_without_vat,
+    government_fees_with_vat,
+  } = location.state || {};
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate(`/services/${label}/Payment`, {
-      state: { price, description, id, requiredDocuments, terms },
+  const handleModalClose = () => {
+    setOpenModal(false);
+    setError("");
+  };
+
+  const handleInputChange = (field) => (event) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.value,
     });
+  };
+
+  const handleModalSubmit = (formData) => {
+    // Navigate to payment page with the form data
+    navigate(`/services/${label}/Payment`, {
+      state: {
+        price,
+        description,
+        id,
+        requiredDocuments,
+        terms,
+        period,
+        price_without_vat,
+        government_fees_without_vat,
+        government_fees_with_vat,
+        ...formData, // Include the form data
+      },
+    });
+    setOpenModal(false);
+  };
+
+  const validateAndOpenModal = async () => {
+    try {
+      const baseURL = process.env.REACT_APP_BASE_URL;
+      const token = Cookies.get("auth_token");
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await axios.post(
+        `${baseURL}/user/required-data`,
+        {},
+        config
+      );
+      navigate(`/services/${label}/Payment`, {
+        state: {
+          price,
+          description,
+          id,
+          requiredDocuments,
+          terms,
+          period,
+          price_without_vat,
+          government_fees_without_vat,
+          government_fees_with_vat,
+        },
+      });
+    } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login", {
+          state: {
+            returnUrl: `/services/${label}`, 
+          },
+        });
+      } else if (error.response?.status === 422) {
+        setRequiredFields(error.response.data.response || []);
+        setOpenModal(true);
+      }
+    }
   };
 
   const theme = useTheme();
@@ -182,18 +269,35 @@ export default function ServicePage() {
                   >
                     مدة تنفيذ الخدمة
                   </Typography>
-                  <Typography
+                  <Box
                     sx={{
-                      fontSize: "20px",
-                      fontWeight: "700",
-                      color: theme.palette.primary.dark,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
                     }}
                   >
-                    فوري
-                  </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        fontWeight: 700,
+                        color: theme.palette.primary.dark,
+                      }}
+                    >
+                      {period}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        fontWeight: 700,
+                        color: theme.palette.primary.dark,
+                      }}
+                    >
+                      ايام
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
-              <Box
+              {/* <Box
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -248,15 +352,22 @@ export default function ServicePage() {
                     </Typography>
                   </Box>
                 </Box>
-              </Box>
+              </Box> */}
 
               <CustomButton
                 backgroundColor={theme.palette.primary.main}
                 width="100%"
-                onClick={handleNavigate}
+                onClick={validateAndOpenModal}
               >
                 ابدأ الخدمة الآن
               </CustomButton>
+
+              <RequiredDataModal
+                open={openModal}
+                onClose={handleModalClose}
+                requiredFields={requiredFields}
+                onSubmit={handleModalSubmit}
+              />
             </Card>
           </Grid>
 

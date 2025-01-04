@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Grid,
-  Typography,
-  Card,
-  useTheme,
-  Box,
-} from "@mui/material";
+import { Grid, Typography, Card, useTheme, Box } from "@mui/material";
 import { useParams, useLocation } from "react-router-dom";
 import tampluslogo from "../../assets/image/tampluslogo.png";
 import { useTranslation } from "react-i18next";
@@ -17,7 +11,7 @@ export default function Payment() {
   const currentLang = i18n.language;
   const { label } = useParams();
   const location = useLocation();
-  const { price, description, id } = location.state || {};
+  const { price, description, id, price_without_vat } = location.state || {};
   const theme = useTheme();
   return (
     <Box sx={{ backgroundColor: "#F4F4F6" }}>
@@ -68,31 +62,82 @@ export default function Payment() {
                   left: 0,
                 }}
               />
+
               <Typography
                 sx={{
                   fontSize: "16px",
                   fontWeight: "700",
                   color: theme.palette.primary.body,
+                  mb: 2,
                 }}
               >
-                سعر الخدمة
+                سعر الخدمة قبل الضريبة
               </Typography>
-              <Typography
-                sx={{
-                  fontSize: "56px",
-                  fontWeight: "bold",
-                  color: theme.palette.primary.main,
-                }}
-              >
-                {price}
+
+              <Box sx={{ mb: 2 }}>
                 <Typography
-                  component="span"
-                  variant="subtitle2"
-                  sx={{ color: "#595F69" }}
+                  sx={{
+                    fontSize: "32px",
+                    fontWeight: "bold",
+                    color: theme.palette.primary.main,
+                  }}
                 >
-                  ر.س
+                  {price_without_vat}
+                  <Typography
+                    component="span"
+                    variant="subtitle2"
+                    sx={{
+                      color: "#595F69",
+                      mr: 1,
+                      fontSize: "16px",
+                    }}
+                  >
+                    ر.س
+                  </Typography>
                 </Typography>
-              </Typography>
+              </Box>
+
+              {/* Total Price with VAT */}
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    color: theme.palette.primary.body,
+                    mb: 2,
+                  }}
+                >
+                  سعر الخدمة شامل الضريبة
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: theme.palette.primary.dark,
+                    mb: 1,
+                  }}
+                ></Typography>
+                <Typography
+                  sx={{
+                    fontSize: "32px",
+                    fontWeight: "bold",
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  {price}
+                  <Typography
+                    component="span"
+                    variant="subtitle2"
+                    sx={{
+                      color: "#595F69",
+                      mr: 1,
+                      fontSize: "20px",
+                    }}
+                  >
+                    ر.س
+                  </Typography>
+                </Typography>
+              </Box>
             </Card>
           </Grid>
 
@@ -117,7 +162,7 @@ export default function Payment() {
               >
                 {description[currentLang]}
               </Typography>
-             <ServiceInfo/>
+              <ServiceInfo />
             </Card>
 
             <PaymentMethod price={price} id={id} />

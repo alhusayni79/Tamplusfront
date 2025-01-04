@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 const News = () => {
   const theme = useTheme();
   const location = useLocation();
-  const { id } = location.state || {}; // Get the `id` from state
+  const { id } = location.state || {}; 
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
 
@@ -34,7 +34,7 @@ const News = () => {
         });
       }
     }
-  }, [blogs, id, currentLang]); // Recalculate whenever the language changes
+  }, [blogs, id, currentLang]); 
 
   return (
     <>

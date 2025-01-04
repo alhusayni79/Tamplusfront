@@ -1,60 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
   Card,
-  Grid,
   Avatar,
   useTheme,
   CardContent,
-  Input,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  Grid,
 } from "@mui/material";
 import CustomButton from "../shared/CustomButton";
 import StatusChip from "../shared/getStatusStyles";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllMessage } from "../../redux/Slices/chat/allMessageRequestSlice";
+import { fetchAllMedia } from "../../redux/Slices/chat/allMediaRequestSlice";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { CloudUpload } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
+import { CancelOrderUser } from "./cancel/CancelOrderUser";
 
-export default function ServiceDetails({ ServiceNumber, Status, serviceDescription,user }) {
+export default function ServiceDetails({
+  ServiceNumber,
+  Status,
+  serviceDescription,
+  user,
+  row,
+  orderId,
+}) {
   const theme = useTheme();
-
-  const [cardsData, setCardsData] = useState([
-    {
-      id: 1,
-      name: "محمد",
-      role: "مقدم الخدمة",
-      date: "11/8/2024 (18:20)",
-      content:
-        "لوريم إيبسوم هو نموذج افتراضي يضعه في التصاميم لتعرض على العميل ليتمكن من تصور طريقة النصوص بالتزامن سواء كانت تصاميم مطبوعة ... بروشور أو فلاير على سبيل المثال ... أو نماذج مواقع الانترنت ...",
-    },
-    {
-      id: 2,
-      name: "علي",
-      role: "مقدم الخدمة",
-      date: "10/8/2024 (14:00)",
-      content:
-        "لوريم إيبسوم هو نموذج افتراضي يستخدم في التصميمات لإظهار النصوص وتوزيعها بشكل مؤقت للتصميمات سواء كانت مطبوعة أو مواقع الإنترنت.",
-    },
-    {
-      id: 3,
-      name: "سارة",
-      role: "مقدمة الخدمة",
-      date: "9/8/2024 (16:45)",
-      content:
-        "هذا النص هو مجرد مثال لاختبار الشكل والتصميم. يتم استخدامه لمساعدة المصممين في التركيز على عناصر التصميم بدلاً من محتوى النص نفسه.",
-    },
-  ]);
-
+  const dispatch = useDispatch();
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const [selectedFile, setSelectedFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const { allMessage, messageLoading, messageError } = useSelector(
+    (state) => state.allMessage
+  );
+  const { allMedia, mediaLoading, mediaError } = useSelector(
+    (state) => state.allMedia
+  );
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+  useEffect(() => {
+    if (orderId) {
+      dispatch(fetchAllMessage(orderId));
+      dispatch(fetchAllMedia(orderId));
+      const interval = setInterval(() => {
+        dispatch(fetchAllMessage(orderId));
+        dispatch(fetchAllMedia(orderId));
+      }, 15000);
+      return () => clearInterval(interval);
+    }
+  }, [dispatch, orderId]);
+
+  if (messageLoading || mediaLoading) return <div>Loading...</div>;
+  if (messageError || mediaError)
+    return <div>{messageError || mediaError}</div>;
+  const cardsData = allMessage?.response;
+  const mediaUrls =
+    allMedia?.response?.user_media?.map((media) => media.url) ?? [];
+  const fileNames = mediaUrls.map((url) => url.split("/").pop());
 
   const handleAddReply = () => {
     setOpenDialog(true);
@@ -62,23 +73,71 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
 
   const handleDialogClose = () => {
     setOpenDialog(false);
-    setNewComment(""); 
+    setNewComment("");
   };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+  };
+  const handleSaveReply = async () => {
+    if (newComment.trim() === "") return;
 
-  const handleSaveReply = () => {
-    if (newComment.trim() !== "") {
-      const newEntry = {
-        id: cardsData.length + 1,
-        name:user?.response?.first_name,
-        role: "معلق",
-        date: new Date().toLocaleString("ar-EG"), 
-        content: newComment,
-      };
-      setCardsData([...cardsData, newEntry]); 
-      handleDialogClose(); 
+    try {
+      const baseURL = process.env.REACT_APP_BASE_URL;
+      const authToken = Cookies.get("auth_token");
+      const empolyeeToken = Cookies.get("authemployee");
+      const tokenToUse = authToken || empolyeeToken;
+      let mediaId = null;
+      if (selectedFile) {
+        const mediaFormData = new FormData();
+        mediaFormData.append("order_id", orderId);
+        mediaFormData.append("media[]", selectedFile);
+
+        const mediaResponse = await axios.post(
+          `${baseURL}/share/chat/upload-media`,
+          mediaFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${tokenToUse}`,
+            },
+          }
+        );
+        mediaId = mediaResponse.data.media_id;
+      }
+
+      // ثانياً - إرسال الرسالة
+      const messageFormData = new FormData();
+      messageFormData.append("order_id", orderId);
+      messageFormData.append("message", newComment);
+      if (mediaId) {
+        messageFormData.append("media_id", mediaId);
+      }
+
+      const messageResponse = await axios.post(
+        `${baseURL}/share/chat`,
+        messageFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${tokenToUse}`,
+          },
+        }
+      );
+
+      dispatch(fetchAllMessage(orderId));
+      dispatch(fetchAllMedia(orderId));
+
+      handleDialogClose();
+      setSelectedFile(null);
+      setNewComment("");
+    } catch (error) {
+      console.error("Error:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
     }
   };
-
   return (
     <Box sx={{ padding: 2 }}>
       <Grid container spacing={2} flexDirection={"row-reverse"}>
@@ -102,7 +161,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
           </Box>
 
           <Grid container spacing={2}>
-            {cardsData.map((card, index) => (
+            {(cardsData || []).map((card, index) => (
               <Grid item xs={12} key={card.id}>
                 <Card
                   sx={{ maxWidth: "100%", height: "196px", margin: "auto" }}
@@ -112,12 +171,25 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      bgcolor: index === cardsData.length - 1 ? "#DDEBFD" : "#F4F5F6",
+                      bgcolor:
+                        index === cardsData.length - 1 ? "#DDEBFD" : "#F4F5F6",
                       p: 2,
                     }}
                   >
                     <Box display="flex" alignItems="center" gap={2}>
-                      <Avatar alt={card.name} />
+                      <Avatar
+                        alt={card.name || "User Avatar"}
+                        src={card.image || null}
+                        sx={{
+                          width: 56,
+                          height: 56,
+                          border: "2px solid #07489D",
+                          "&:hover": {
+                            cursor: "pointer",
+                            opacity: 0.9,
+                          },
+                        }}
+                      />
                       <Box ml={2}>
                         <Typography
                           sx={{
@@ -126,7 +198,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                             color: theme.palette.primary.dark,
                           }}
                         >
-                          {card.name}
+                          {card.first_name}
                         </Typography>
                         <Typography
                           sx={{
@@ -135,7 +207,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                             color: theme.palette.primary.dark,
                           }}
                         >
-                          {card.role}
+                          {card?.role?.[currentLang]}
                         </Typography>
                       </Box>
                     </Box>
@@ -146,7 +218,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                         color: theme.palette.primary.dark,
                       }}
                     >
-                      {card.date}
+                      {card.created_at}
                     </Typography>
                   </Box>
 
@@ -158,8 +230,28 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                         color: theme.palette.primary.body,
                       }}
                     >
-                      {card.content}
+                      {card.message}
                     </Typography>
+                    {card.file && (
+                      <Box mt={2}>
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            fontWeight: "500",
+                            color: theme.palette.primary.dark,
+                          }}
+                        >
+                          مرفق:{" "}
+                          <a
+                            href={URL.createObjectURL(card.file)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {card.file.name}
+                          </a>
+                        </Typography>
+                      </Box>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
@@ -167,7 +259,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
           </Grid>
         </Grid>
 
-         <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={3}>
           <Card sx={{ borderRadius: "8px" }}>
             <Typography
               sx={{
@@ -233,7 +325,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  11/8/2024 (18:20)
+                  {row.time}
                 </Typography>
               </Grid>
               <Grid
@@ -257,7 +349,7 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                     color: theme.palette.primary.dark,
                   }}
                 >
-                  20/8/2024 (14:30)
+                  {row.timeupdate}
                 </Typography>
               </Grid>
               <Grid
@@ -282,7 +374,6 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
           <Box
             sx={{
               width: "100%",
-              height: "100px",
               mt: "32px",
               borderRadius: "8px",
               display: "flex",
@@ -303,30 +394,87 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
                 width: "100%",
               }}
             >
-              المرفقات
+              مرفقاتي
             </Typography>
-            <Box sx={{ bgcolor: "white", width: "100%", textAlign: "center" }}>
-              <label htmlFor="file-upload">
-                <Input
-                  id="file-upload"
-                  type="file"
-                  onChange={handleFileChange}
-                  sx={{ display: "none" }}
-                />
-                <Button
-                  component="span"
+            <Box
+              sx={{
+                bgcolor: "white",
+                width: "100%",
+                textAlign: "center",
+                height: "auto",
+                minHeight: "fit-content",
+                padding: "8px",
+                overflow: "hidden",
+              }}
+            >
+              {fileNames.map((fileName, index) => (
+                <Typography
+                  key={index}
+                  onClick={() => window.open(mediaUrls[index], "_blank")}
                   sx={{
-                    color: "#595F69",
-                    textTransform: "none",
-                    pb: 3,
-                    "&:hover": {
-                      bgcolor: "#F0F0F0",
-                    },
+                    cursor: "pointer",
+                    wordBreak: "break-word",
+                    lineHeight: 1.5,
+                    display: "block",
+                    mb: 1,
                   }}
                 >
-                  {selectedFile ? selectedFile.name : "Upload Photo"}
-                </Button>
-              </label>
+                  {fileName}
+                </Typography>
+              ))}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              mt: "32px",
+              borderRadius: "8px",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "center",
+              mb: 7,
+              overflow: "hidden",
+            }}
+          >
+            <Typography
+              sx={{
+                fontWeight: "700",
+                textAlign: "center",
+                fontSize: "16px",
+                p: 1.5,
+                bgcolor: "#F4F5F6",
+                width: "100%",
+              }}
+            >
+              مرفقات مقدم الخدمة
+            </Typography>
+            <Box
+              sx={{
+                bgcolor: "white",
+                width: "100%",
+                textAlign: "center",
+                height: "auto",
+                minHeight: "fit-content",
+                padding: "8px",
+                overflow: "hidden",
+              }}
+            >
+              {fileNames.map((fileName, index) => (
+                <Typography
+                  key={index}
+                  onClick={() => window.open(mediaUrls[index], "_blank")}
+                  sx={{
+                    cursor: "pointer",
+                    wordBreak: "break-word",
+                    lineHeight: 1.5,
+                    display: "block",
+                    mb: 1,
+                  }}
+                >
+                  {fileName}
+                </Typography>
+              ))}
             </Box>
           </Box>
           <CustomButton
@@ -336,6 +484,10 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
           >
             إضافة رد
           </CustomButton>
+          <Box sx={{mt:2}}>
+          <CancelOrderUser orderId={orderId} />
+          </Box>
+         
         </Grid>
       </Grid>
 
@@ -350,6 +502,34 @@ export default function ServiceDetails({ ServiceNumber, Status, serviceDescripti
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="اكتب تعليقك هنا..."
           />
+          <Box sx={{ mt: 2, dir: "rtl" }}>
+            <Button
+              component="label"
+              variant="outlined"
+              startIcon={<CloudUpload />}
+              sx={{
+                width: "100%",
+                height: "56px",
+                borderStyle: "dashed",
+                gap: "12px",
+              }}
+            >
+              اختر ملفاً
+              <input
+                type="file"
+                onChange={handleFileChange}
+                accept="image/jpeg,image/png,application/pdf"
+                style={{
+                  display: "none",
+                }}
+              />
+            </Button>
+          </Box>
+          {selectedFile && (
+            <Typography sx={{ mt: 1 }}>
+              Selected file: {selectedFile.name}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>إلغاء</Button>

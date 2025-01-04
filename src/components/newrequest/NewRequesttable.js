@@ -13,34 +13,80 @@ import {
   Paper,
   TextField,
   InputAdornment,
-  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const NewRequesttable = ({ rows, selectedCategory }) => {
-  const theme = useTheme();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
-
-  const handleCategoryClick = (category) => {
-    setPage(1);
-  };
+console.log("rows",rows);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleRowClick = (row) => {
-    navigate(`/employee/${row.serviceDescription}`, { state: row });
+  const handleRowClick = (transformedRow, originalRowIndex) => {
+    const originalRow = rows[originalRowIndex];
+    
+    if (originalRow && originalRow.service) {
+      if (originalRow.status === 'Reserved') {
+        navigate(`/employee/${originalRow.serviceDescription}/servicePageActive`, {
+          state: {
+            ...originalRow,
+            selectedCategory
+          }
+        });
+      } else {
+        navigate(`/employee/${originalRow.service.title.ar}`, {
+          state: {
+            ...originalRow,
+            selectedCategory
+          }
+        });
+      }
+    }
   };
 
-  const filteredRows = (rows || []).filter((row) =>
+  const transformedRows = (rows || []).map(row => ({
+    id: row.id,
+    serviceNumber: row.service?.id || "",
+    serviceDescription: row.service?.title?.ar || "",
+    status: row.status === "Completed" ? "مكتملة" : row.status,
+    price: `${row.total} ${row.currency?.ar || "ر.س"}`,
+    created_at: row.created_at
+    
+  }));
+
+  const filteredRows = transformedRows.filter((row) =>
     row.serviceDescription.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Status color mapping
+  const getStatusStyles = (status) => {
+    const statusMap = {
+      "مكتملة": {
+        bg: "#D1ECF1",
+        color: "#0C5460"
+      },
+      "نشطة": {
+        bg: "#E2FAE0",
+        color: "#114C0B"
+      },
+      "قيد الانتظار": {
+        bg: "#FFF3CD",
+        color: "#856404"
+      },
+      "تم الإلغاء": {
+        bg: "#F8D7DA",
+        color: "#721C24"
+      }
+    };
+    return statusMap[status] || { bg: "#FAE1E0", color: "#6E1311" };
+  };
 
   return (
     <>
@@ -170,7 +216,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                 .map((row, index) => (
                   <TableRow
                     key={row.id}
-                    onClick={() => handleRowClick(row)}
+                    onClick={() => handleRowClick(row, index + (page - 1) * rowsPerPage)}
                     sx={{
                       "&:hover": {
                         backgroundColor: "#f1f1f1",
@@ -200,7 +246,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                           color: "#1E2024",
                         }}
                       >
-                        {row.serviceNumber}
+                        {row?.id}
                       </Box>
                       <Box
                         component="span"
@@ -226,26 +272,8 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                         sx={{
                           borderRadius: "16px",
                           padding: "4px 12px",
-                          backgroundColor:
-                            row.status === "نشطة"
-                              ? "#E2FAE0"
-                              : row.status === "قيد الانتظار"
-                              ? "#FFF3CD"
-                              : row.status === "تم الإلغاء"
-                              ? "#F8D7DA"
-                              : row.status === "مكتملة"
-                              ? "#D1ECF1"
-                              : "#FAE1E0",
-                          color:
-                            row.status === "نشطة"
-                              ? "#114C0B"
-                              : row.status === "قيد الانتظار"
-                              ? "#856404"
-                              : row.status === "تم الإلغاء"
-                              ? "#721C24"
-                              : row.status === "مكتملة"
-                              ? "#0C5460"
-                              : "#6E1311",
+                          backgroundColor: getStatusStyles(row.status).bg,
+                          color: getStatusStyles(row.status).color,
                         }}
                       >
                         {row.status}
@@ -257,6 +285,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                         color: "#6E1311",
                         fontWeight: "400",
                         fontSize: "16px",
+                        textAlign: "center",
                         backgroundColor:
                           index % 2 === 0 ? "transparent" : "#F4F5F6",
                       }}
@@ -285,14 +314,14 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                         }}
                       >
                         <VisibilityIcon sx={{ color: "#07489D" }} />
-                      </Box>{" "}
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={3}
+                  colSpan={4}
                   align="center"
                   sx={{ color: "#999", padding: "20px" }}
                 >
@@ -318,8 +347,8 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
               fontWeight: "400",
             }}
           >
-            يتم عرض من 1 إلى 5 خدمات من
-            {Math.min(page * rowsPerPage, filteredRows.length)} خدمة
+            يتم عرض من 1 إلى {Math.min(rowsPerPage, filteredRows.length)} خدمات من{" "}
+            {filteredRows.length} خدمة
           </p>
           <Pagination
             count={Math.ceil(filteredRows.length / rowsPerPage)}
@@ -350,7 +379,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
               "& .MuiPaginationItem-icon": {
                 color: "#3D4148",
                 backgroundColor: "#D8DBDE",
-                width: "30px ",
+                width: "30px",
                 height: "30px",
                 borderRadius: "50%",
               },

@@ -1,8 +1,29 @@
 import React from "react";
-import { Box, Typography, TextField, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  MenuItem,
+  useTheme,
+} from "@mui/material";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-const CustomInput = ({ label, placeholder, isTextarea = false, rows = 4, ...props }) => {
+const CustomInput = ({
+  label,
+  placeholder,
+  isTextarea = false,
+  rows = 4,
+  select = false,
+  options = [],
+  value = "",
+  onChange,
+  ...props
+}) => {
   const theme = useTheme();
+
+  // Check the direction from the theme (rtl or ltr)
+  const isRtl = theme.direction === "rtl";
+
   return (
     <Box
       sx={{
@@ -12,6 +33,7 @@ const CustomInput = ({ label, placeholder, isTextarea = false, rows = 4, ...prop
         width: "100%",
       }}
     >
+      {/* Label */}
       <Typography
         variant="body1"
         component="label"
@@ -19,6 +41,8 @@ const CustomInput = ({ label, placeholder, isTextarea = false, rows = 4, ...prop
           fontSize: "16px",
           color: theme.palette.primary.dark,
           fontWeight: "500",
+          // Dynamically align the label based on theme direction
+          textAlign: isRtl ? "right" : "left",
         }}
       >
         {label}
@@ -28,10 +52,28 @@ const CustomInput = ({ label, placeholder, isTextarea = false, rows = 4, ...prop
         fullWidth
         placeholder={placeholder}
         variant="outlined"
-        multiline={isTextarea} 
-        rows={isTextarea ? rows : 1} 
+        multiline={isTextarea}
+        rows={isTextarea ? rows : 1}
+        select={select}
+        value={value}
+        onChange={onChange}
+        // Pass direction to the input itself
+        inputProps={{
+          dir: isRtl ? "rtl" : "ltr",
+        }}
+        
+        SelectProps={{
+          IconComponent: KeyboardArrowDownIcon,
+        }}
         {...props}
-      />
+      >
+        {select &&
+          options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+      </TextField>
     </Box>
   );
 };

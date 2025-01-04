@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -8,37 +8,62 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  Tabs,
+  Tab,
+  Divider,
+  Link,
+  IconButton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import CustomBanner from "../components/layout/CustomBanner";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
+import CustomInput from "../components/shared/CustomInput";
+import CustomButton from "../components/shared/CustomButton";
+import Tamplus from "../../src/assets/image/tampluslogo.png";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [phoneSubmitted, setPhoneSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [phoneInput, setPhoneInput] = useState(""); 
 
   const navigate = useNavigate();
-
+  const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   useEffect(() => {
-    const savedEmail = localStorage.getItem("savedEmail");
-    if (savedEmail) {
-      setEmail(savedEmail);
+    if (phone) {
+      localStorage.setItem("savedPhone", phone);
+    }
+  }, [phone]);
+  useEffect(() => {
+    if (phoneSubmitted && otpRefs[0].current) {
+      otpRefs[0].current.focus();
+    }
+  }, [phoneSubmitted]);
+  useEffect(() => {
+    const savedPhone = localStorage.getItem("savedPhone");
+    if (savedPhone) {
+      setPhone(savedPhone);
     }
   }, []);
 
   useEffect(() => {
-    if (email) {
-      localStorage.setItem("savedEmail", email);
+    if (phone) {
+      localStorage.setItem("savedPhone", phone);
     }
-  }, [email]);
+  }, [phone]);
 
-  const handleEmailSubmit = async (e) => {
+  const handlePhoneSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      setError("يرجى إدخال بريد إلكتروني صالح");
+    if (!phone || !/^\+?[0-9]{10,15}$/.test(phone)) {
+      setError("يرجى إدخال رقم هاتف صالح");
       return;
     }
 
@@ -46,24 +71,41 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/user/login`,
-        { email }
-      );
+      const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
+      await axios.post(`${process.env.REACT_APP_BASE_URL}${endpoint}`, {
+        phone,
+      });
 
-      setEmailSubmitted(true);
+      setPhoneSubmitted(true);
     } catch (error) {
-      setError("حدث خطأ أثناء إرسال البريد الإلكتروني. حاول مرة أخرى.");
+      setError("حدث خطأ أثناء إرسال OTP. حاول مرة أخرى.");
     } finally {
       setLoading(false);
     }
+  };
+  const handlePhoneChange = (e) => {
+    let value = e.target.value;
+
+    // إزالة أي حروف غير رقمية
+    value = value.replace(/[^0-9]/g, "");
+
+    // إذا بدأ الرقم بصفر، نقوم بإزالته
+    if (value.startsWith("0")) {
+      value = value.substring(1);
+    }
+
+    setPhoneInput(value);
+    // تحديث الرقم الكامل مع 966
+    setPhone(`966${value}`);
   };
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
 
-    if (!otp) {
-      setError("يرجى إدخال OTP");
+    const enteredOtp = otp.join("");
+
+    if (enteredOtp.length < 4) {
+      setError("يرجى إدخال OTP كاملاً");
       return;
     }
 
@@ -71,25 +113,30 @@ const Login = () => {
     setLoading(true);
 
     try {
+      const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
       const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/user/login`,
+        `${process.env.REACT_APP_BASE_URL}${endpoint}`,
         {
-          email,
-          otp,
+          phone,
+          otp: enteredOtp,
         }
       );
 
-
       const { token } = response.data.response;
-
       if (!token) {
         throw new Error("Token not found in response");
       }
 
-      Cookies.set("auth_token", token, { expires: 7 });
+      const cookieName = selectedTab === 0 ? "auth_token" : "authemployee";
+      Cookies.set(cookieName, token, { expires: 7 });
 
       toast.success("Login successful!");
-      navigate("/");
+
+      if (selectedTab === 0) {
+        navigate("/");
+      } else {
+        navigate("/employee/");
+      }
     } catch (error) {
       console.error("Error submitting OTP:", error);
       setError("OTP غير صحيح. حاول مرة أخرى.");
@@ -98,102 +145,288 @@ const Login = () => {
     }
   };
 
+  const handleOtpChange = (index, value, event) => {
+    if (!/^\d*$/.test(value)) {
+      return;
+    }
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value !== "") {
+      if (index < otpRefs.length - 1) {
+        otpRefs[index + 1].current.focus();
+      }
+    } else if (event.key === "Backspace" && index > 0) {
+      otpRefs[index - 1].current.focus();
+    }
+  };
+
+  const handleKeyDown = (index, event) => {
+    if (event.key === "Backspace" && !otp[index] && index > 0) {
+      otpRefs[index - 1].current.focus();
+    } else if (event.key === "ArrowLeft" && index > 0) {
+      otpRefs[index - 1].current.focus();
+    } else if (event.key === "ArrowRight" && index < otpRefs.length - 1) {
+      otpRefs[index + 1].current.focus();
+    }
+  };
+
+  const handlePaste = (event) => {
+    event.preventDefault();
+    const pastedData = event.clipboardData.getData("text").slice(0, 4);
+    const newOtp = [...otp];
+
+    pastedData.split("").forEach((char, index) => {
+      if (/^\d$/.test(char) && index < 4) {
+        newOtp[index] = char;
+      }
+    });
+
+    setOtp(newOtp);
+
+    const nextEmptyIndex = newOtp.findIndex((val) => !val);
+    if (nextEmptyIndex !== -1) {
+      otpRefs[nextEmptyIndex].current.focus();
+    } else if (newOtp[3]) {
+      otpRefs[3].current.focus();
+    }
+  };
+
   return (
-    <>
-      <CustomBanner title=" تسجيل الدخول" />
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      sx={{ backgroundColor: "#f4f5f7" }}
+      dir="ltr"
+    >
       <Box
         sx={{
-          pr: { xs: 1, sm: 3, md: 18 },
-          pl: { xs: 1, sm: 3, md: 18 },
-          mt: "290px",
-          mb: 4,
+          width: "380px",
+          boxShadow: 3,
+          backgroundColor: "#fff",
+          textAlign: "center",
+          padding: 4,
           position: "relative",
+          borderTop: "8px solid #07489D",
         }}
       >
         <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh"
-          sx={{ padding: 2 }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+            width: "100%",
+          }}
         >
-          <Box
+          {phoneSubmitted ? (
+            <>
+            <IconButton onClick={() => setPhoneSubmitted(false)}>
+                <CloseIcon sx={{ color: "#000" }} />
+              </IconButton>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontSize: "18px", fontWeight: "500"  }}>
+                  رمز التحقق
+                </Typography>
+                <IconButton onClick={() => setPhoneSubmitted(false)}>
+                  <ArrowForwardIcon sx={{ color: "#000" }} />
+                </IconButton>
+               
+              </Box>
+              
+            </>
+          ) : (
+            <>
+            
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "18px",
+                  fontWeight: "500",
+                }}
+              >
+                تسجيل الدخول
+              </Typography>
+              
+            </>
+          )}
+        </Box>
+
+        {!phoneSubmitted && (
+          <>
+            <Tabs
+              value={selectedTab}
+              onChange={(e, newValue) => setSelectedTab(newValue)}
+              centered
+              sx={{
+                "& .MuiTab-root": {
+                  fontSize: "18px",
+                  fontWeight: "500",
+                },
+              }}
+            >
+              <Tab label="طالب خدمة" />
+              <Tab label="مقدم خدمة" />
+            </Tabs>
+            <Divider sx={{ marginY: 2 }} />
+          </>
+        )}
+
+        {phoneSubmitted ? (
+          <form onSubmit={handleOtpSubmit}>
+            <Box mt={4} display="flex" justifyContent="center" gap={2} direction="rtl">
+              {otp.map((value, index) => (
+                <TextField
+                  key={index}
+                  type="text"
+                  value={value}
+                  onChange={(e) => handleOtpChange(index, e.target.value, e)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={handlePaste}
+                  inputProps={{
+                    maxLength: 1,
+                    inputMode: "numeric",
+                    pattern: "[0-9]*",
+                    style: { textAlign: "center" },
+                  }}
+                  sx={{
+                    width: 50,
+                    "& input": { textAlign: "center" },
+                  }}
+                  inputRef={otpRefs[index]}
+                  autoComplete="off"
+                />
+              ))}
+            </Box>
+            <Box mt={4} display="flex" justifyContent="center">
+              <CustomButton
+                type="submit"
+                fullWidth
+                disabled={loading}
+                backgroundColor={theme.palette.primary.main}
+                width="100%"
+              >
+                {loading ? (
+                  <>
+                    <CircularProgress size={20} />
+                    التحقق...
+                  </>
+                ) : (
+                  "تأكيد"
+                )}
+              </CustomButton>
+            </Box>
+          </form>
+        ) : (
+          <>
+            <form onSubmit={handlePhoneSubmit}>
+              <CustomInput
+                type="tel"
+                value={phoneInput}
+                onChange={handlePhoneChange}
+                placeholder="أدخل رقم هاتفك"
+                 fullWidth
+                margin="normal"
+                required
+                error={Boolean(error)}
+                helperText={error}
+                InputProps={{
+                  startAdornment: (
+                    <Typography sx={{ color: "text.secondary", ml: 1 }}>
+                      966
+                    </Typography>
+                  ),
+                  sx: {
+                    direction: "ltr", 
+                    textAlign: "left",
+                    "& input": {
+                      textAlign: "left",
+                      direction: "ltr",
+                      paddingLeft: "8px",
+                    },
+                  },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    direction: "ltr",
+                  },
+                  "& .MuiInputLabel-root": {
+                    left: 0,
+                    right: "auto",
+                    transformOrigin: "left",
+                  },
+                }}
+              />
+              <Box mt={2} display="flex" justifyContent="center">
+                <CustomButton
+                  type="submit"
+                  fullWidth
+                  disabled={loading}
+                  onClick={handlePhoneSubmit}
+                  backgroundColor={theme.palette.primary.main}
+                  width="100%"
+                >
+                  {loading ? (
+                    <>
+                      <CircularProgress size={20} />
+                      إرسال...
+                    </>
+                  ) : (
+                    "تسجيل الدخول"
+                  )}
+                </CustomButton>
+              </Box>
+            </form>
+
+            {selectedTab === 1 && (
+              <Typography sx={{ my: 2, fontSize: "18px", fontWeight: "400" }}>
+                لا تمتلك حساب بعد؟{" "}
+                <Link
+                  sx={{
+                    color: "#07489D",
+                    fontWeight: "600",
+                  }}
+                  href="/employee/register"
+                >
+                  أنشئ حساب جديد
+                </Link>
+              </Typography>
+            )}
+          </>
+        )}
+
+        {phoneSubmitted && (
+          <Typography
             sx={{
-              width: { xs: "100%", sm: "400px" },
-              boxShadow: 3,
-              padding: 4,
-              borderRadius: 2,
-              backgroundColor: "#fff",
+              my: 2,
+              fontSize: "18px",
+              fontWeight: "400",
+              color: "#1E2124",
             }}
           >
-            {!emailSubmitted ? (
-              <form onSubmit={handleEmailSubmit}>
-                <Typography variant="h5" gutterBottom align="center">
-                  تسجيل الدخول
-                </Typography>
-
-                <TextField
-                  label="البريد الإلكتروني"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="أدخل بريدك الإلكتروني"
-                  fullWidth
-                  margin="normal"
-                  required
-                  error={Boolean(error)}
-                  helperText={error}
-                />
-
-                <Box mt={2}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    disabled={loading}
-                    startIcon={loading && <CircularProgress size={20} />}
-                  >
-                    {loading ? "إرسال..." : "إرسال البريد الإلكتروني"}
-                  </Button>
-                </Box>
-              </form>
-            ) : (
-              <form onSubmit={handleOtpSubmit}>
-                <Typography variant="h5" gutterBottom align="center">
-                  تحقق من OTP
-                </Typography>
-                <TextField
-                  label="OTP"
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="أدخل OTP"
-                  fullWidth
-                  margin="normal"
-                  required
-                  error={Boolean(error)}
-                  helperText={error}
-                />
-                <Box mt={2}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    disabled={loading}
-                    startIcon={loading && <CircularProgress size={20} />}
-                  >
-                    {loading ? "التحقق..." : "إرسال OTP"}
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Box>
-        </Box>
+            لم يصلك كود التحقق؟{" "}
+            <Link
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePhoneSubmit(e);
+              }}
+              sx={{
+                color: "#07489D",
+                fontWeight: "600",
+              }}
+            >
+              إعادة إرسال الكود
+            </Link>
+          </Typography>
+        )}
       </Box>
-    </>
+    </Box>
   );
 };
 

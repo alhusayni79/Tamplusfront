@@ -209,3 +209,49 @@ video {
     display: none;
   }
 }
+.offcanvas-header {
+  background-color: #121212;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.custom-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: capitalize;
+
+}
+
+.custom-body {
+  padding: 20px;
+  background-color: #ffffff;
+}
+:dir(ltr) .custom-body {
+  font-family: "Poppins", sans-serif !important;
+}
+
+:dir(rtl) .custom-body {
+  font-family: "Neo Sans " !important;
+}
+
+.custom-btn-close {
+  color: red !important; /* Change to your desired color */
+  opacity: 1; /* Ensure the color is not affected by Bootstrap's default opacity */
+}
+
+
+.custom-close-icon {
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  background-color: transparent;
+}

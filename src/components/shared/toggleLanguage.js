@@ -44,7 +44,7 @@ const LanguageToggleButton = ({
         backgroundColor: backgroundColor,
         color: theme.palette.primary.main,
         padding: { xs: "8px 16px", sm: "10px 10px", md: "8px 10px" },
-        fontWeight: "bold",
+        fontWeight: "bold",  
         fontSize: { md: "14px", lg: "18px" },
       }}
     >

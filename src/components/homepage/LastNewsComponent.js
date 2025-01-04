@@ -89,7 +89,7 @@ const LastNewsComponent = ({ displayCount }) => {
                     color: theme.palette.primary.main.body,
                   }}
                 >
-                  {news.content[currentLang]}
+                  {news.content[currentLang]?.slice(0, 180)}
                 </Typography>
               </CardContent>
             </Card>

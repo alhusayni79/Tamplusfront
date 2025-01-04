@@ -16,13 +16,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchFooter } from "../../../redux/Slices/FooterData/footerSlice";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import CloseIcon from "@mui/icons-material/Close";
+import { Offcanvas } from "react-bootstrap";
+import Cookies from "js-cookie";
 
 export default function ResponsiveFooter() {
   const theme = useTheme();
   const { i18n, t } = useTranslation();
-  const currentLang = i18n.language; 
+  const currentLang = i18n.language;
   const navigate = useNavigate();
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [offcanvasContent, setOffcanvasContent] = useState("");
+  const [offcanvasTitle, setOffcanvasTitle] = useState("");
+  const authEmployeeCookie = Cookies.get("authemployee");
 
+  // دالة التنقّل عند الضغط
+  const handleEmployee = () => {
+    navigate("/employee/register");
+  };
   const dispatch = useDispatch();
   const { footer, loading, error } = useSelector((state) => state.footer);
 
@@ -38,8 +49,16 @@ export default function ResponsiveFooter() {
     return <div>Error: {error}</div>;
   }
 
-  const handleTypographyClick = (route, contentKey) => {
-    navigate(route, { state: { contentKey } });
+  const handleTypographyClick = (contentKey, title) => {
+    setOffcanvasContent(
+      footer?.response?.[contentKey]?.[currentLang] || "No content available"
+    );
+    setOffcanvasTitle(title);
+    setShowOffcanvas(true);
+  };
+
+  const handleCloseOffcanvas = () => {
+    setShowOffcanvas(false);
   };
 
   return (
@@ -253,11 +272,25 @@ export default function ResponsiveFooter() {
             مصادر اخرى
           </Typography>
           <>
+            {/* Typography Elements */}
+            {authEmployeeCookie && (
+              <Typography
+                onClick={handleEmployee}
+                sx={{
+                  color: "primary",
+                  fontWeight: "400",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                }}
+              >
+                قدم خدماتك معنا
+              </Typography>
+            )}
             <Typography
               onClick={() =>
                 handleTypographyClick(
-                  "/PrivacyPolicy",
-                  "privacy_policy_content"
+                  "privacy_policy_content",
+                  t("footer.privacy_policy")
                 )
               }
               sx={{
@@ -267,13 +300,13 @@ export default function ResponsiveFooter() {
                 cursor: "pointer",
               }}
             >
-              {footer?.response?.privacy_policy_content[currentLang]}
+              {footer?.response?.privacy_policy_content?.[currentLang]}
             </Typography>
             <Typography
               onClick={() =>
                 handleTypographyClick(
-                  "/TermsConditions",
-                  "terms_and_conditions_content"
+                  "terms_and_conditions_content",
+                  t("footer.terms_conditions")
                 )
               }
               sx={{
@@ -283,8 +316,26 @@ export default function ResponsiveFooter() {
                 cursor: "pointer",
               }}
             >
-              {footer?.response?.terms_and_conditions_content[currentLang]}
+              {footer?.response?.terms_and_conditions_content?.[currentLang]}
             </Typography>
+
+            {/* Bootstrap Offcanvas */}
+            <Offcanvas
+              show={showOffcanvas}
+              onHide={handleCloseOffcanvas}
+              placement={currentLang === "ar" ? "end" : "start"}
+            >
+              <Offcanvas.Header>
+                <Offcanvas.Title>{offcanvasTitle}</Offcanvas.Title>
+                <CloseIcon
+                  className="custom-close-icon"
+                  onClick={handleCloseOffcanvas}
+                />
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <p>{offcanvasContent}</p>
+              </Offcanvas.Body>
+            </Offcanvas>
           </>
         </Grid>
         <Grid

@@ -24,14 +24,22 @@ import Employee from "./pages/Employee.js";
 import RequestPage from "./components/newrequest/RequestPage.js";
 import ServicePageActive from "./components/newrequest/ServicePageActive.js";
 import PaymentSuccess from "./components/shared/PaymentSuccess.js";
-import FaildPayment from "./components/shared/FaildPayment.js";
 import TermsConditions from "./components/footerpage/TermsConditions.js";
 import PrivacyPolicy from "./components/footerpage/PrivacyPolicy.js";
+import Paycheck from "./pages/Paycheck.js";
+import EmployeeRegister from "./components/newrequest/employee/EmployeeRegister.js";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Refund from "./components/shared/Refund.js";
+import ProtectedRoute from "./components/auth/ProtectedRoute.js";
+import EmployeeProtectedRoute from "./components/auth/EmployeeProtectedRoute.js";
+import PaymentFailed from "./components/shared/PaymentFailed.js";
+import MainRoutes from "./routes/MainRoutes.js";
+import EmployeeRoutes from "./routes/EmployeeRoutes.js";
+import PublicRoutes from "./routes/PublicRoutes.js";
 
 function App() {
   const { i18n } = useTranslation();
   const currentTheme = i18n.language === "ar" ? arabicTheme : englishTheme;
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={currentTheme}>
@@ -39,37 +47,9 @@ function App() {
         <Router>
           <ScrollToTop />
           <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
-              <Route path="services" element={<Servicess />} />
-              <Route path="services/:label" element={<ServicePage />} />
-              <Route path="lastnews" element={<LastNews />} />
-              <Route path="lastnews/:title" element={<News />} />
-              <Route path="contactus" element={<Contact />} />
-              <Route path="login" element={<Login />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="PrivacyPolicy" element={<PrivacyPolicy />} />
-              <Route path="TermsConditions" element={<TermsConditions />} />
-
-
-              <Route
-                path="profile/:serviceDescription"
-                element={<ProfileDetails />}
-              />
-            </Route>
-            <Route element={<CustomLayout />}>
-              <Route path="employee" element={<Employee />} />
-              <Route path="employee/:service" element={<RequestPage />} />
-              <Route
-                path="employee/:service/servicePageActive"
-                element={<ServicePageActive />}
-              />
-            </Route>
-            <Route path="/services/:label/payment" element={<Payment />} />
-            <Route path="/maintenance" element={<Maintenance />} />
-            <Route path="payment/succespayment" element={<PaymentSuccess />} />
-            <Route path="payment/faildpayment" element={<FaildPayment />} />
+            {MainRoutes()}
+            {EmployeeRoutes()}
+            {PublicRoutes()}
           </Routes>
         </Router>
         <ToastNotification />

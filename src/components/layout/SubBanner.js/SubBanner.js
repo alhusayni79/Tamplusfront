@@ -17,8 +17,6 @@ const SubBanner = () => {
   const trackRef = useRef();
   const dispatch = useDispatch();
   const { ministry, loading, error } = useSelector((state) => state.ministry);
-  console.log("ministry", ministry);
-
   const imageUrls = ministry?.response?.data || [];
   useEffect(() => {
     dispatch(fetchMinistryData());

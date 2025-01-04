@@ -4,8 +4,8 @@
     "about": "About",
     "contactus": "Contact Us",
     "services": "Services",
-    "search":"search",
-    "reviews":"reviews",
+    "search": "search",
+    "reviews": "reviews",
     "News": "News"
   },
   "buttons": {
@@ -23,12 +23,59 @@
     "login": "Login / Register"
   },
   "footer": {
-    "copyright": "© 2024 My Website. All rights reserved."
+    "All-rights": "جميع الحقوق محفوظة © 2024",
+    "Commercial-Registration": "السجل التجاري:",
+    "Tax-Number": "الرقم الضريبي:",
+    "Other resources": "مصادر أخرى",
+    "Contact info": "معلومات التواصل",
+    "made": "صنع بكل❤️ في ",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions"
+  },
+  "profile": {
+    "welcome_message": "Welcome",
+    "account_information": "Account Information",
+    "previous_services": "Previous Services",
+    "services_displayed_summary": "Showing 1 to 5 of 5 services",
+    "submission_date": "Submission Date",
+    "creation_date": "Creation Date",
+    "status": "Status",
+    "my_attachments": "My Attachments",
+    "service_provider_attachments": "Service Provider Attachments",
+    "service_information": "Service Information",
+    "our_services": "Our Services",
+    "active": "Active",
+    "closed": "Closed",
+    "completed": "Completed",
+    "archived": "Archived"
   },
   "email": "Email",
   "subscribeNow": "Subscribe Now",
   "newsletter": {
     "title": "Subscribe to Our Newsletter",
     "description": "Be the first to know about the latest news and insights."
-  }
+  },
+"serviceprovider": {
+  "welcome_message": "Welcome",
+  "new_requests": "New Requests",
+  "requests": "Requests",
+  "requests_in_progress": "Requests in Progress",
+  "completed_requests": "Completed Requests",
+  "cancelled_requests": "Cancelled Requests",
+  "account_information": "Account Information",
+  "service_information": "Service Information",
+  "service_request_date": "Service Request Date",
+  "last_update": "Last Update",
+  "status": "Status",
+  "total": "Total",
+  "client_attachments": "Client Attachments",
+  "my_attachments": "My Attachments",
+  "no_data": "No Data",
+  "services_displayed_summary": "Showing 1 to 0 services of 0 total services",
+  "actions": "Actions",
+  "request": "Request",
+  "profile_picture": "Profile Picture",
+  "offer_services_with_us": "Offer Your Services With Us"
+}
+
 }

@@ -212,7 +212,11 @@ export default function Dashboard() {
                   title={subService.title || "No Title"}
                   mainTitle={selectedCategory}
                   imageSrc={subService.image}
-                  price={subService.service_price}
+                  price={subService.price_with_vat}
+                  price_without_vat={subService.price_without_vat}
+                  government_fees_without_vat={subService.price_with_vat}
+                  government_fees_with_vat={subService.price_with_vat}
+                  period={subService?.period_in_days}
                   requiredDocuments={subService.required_documents}
                   terms={subService.terms}
                   description={subService.description || "No Description"}

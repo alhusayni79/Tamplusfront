@@ -16,26 +16,19 @@ import LastNewsComponent from "../components/homepage/LastNewsComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDesignData } from "../redux/Slices/home/homeSlice";
 import fram111 from "../assets/image/Frame111.png";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 const Home = () => {
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { design, loading, error } = useSelector((state) => state.design);
 
   useEffect(() => {
-    const authToken = Cookies.get("auth_token");
-    if (!authToken) {
-      navigate("/login");
-    } else {
-      dispatch(fetchDesignData());
-    }
-  }, [dispatch, navigate]);
+    dispatch(fetchDesignData());
+  }, [dispatch]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -148,6 +141,7 @@ const Home = () => {
               onClick={() => alert("Button Clicked!")}
               backgroundColor="#07489D"
               textColor="white"
+              border={true}
               sx={{ zIndex: 100 }}
             >
               تصفح كل الخدمات{" "}
@@ -190,6 +184,7 @@ const Home = () => {
               onClick={() => alert("Button Clicked!")}
               backgroundColor="#07489D"
               textColor="white"
+              border={true}
               sx={{ zIndex: 100 }}
             >
               ابدأ خطوتك الأولى الآن
@@ -269,6 +264,7 @@ const Home = () => {
             onClick={() => alert("Button Clicked!")}
             backgroundColor="#07489D"
             textColor="white"
+            border={true}
             sx={{ zIndex: 100 }}
           >
             المزيد من المقالات{" "}

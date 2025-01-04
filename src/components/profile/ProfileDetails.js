@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import ServiceDetails from "./ServiceDetails";
 import CustomBanner from "../layout/CustomBanner";
 import { useParams, useLocation } from "react-router-dom";
@@ -8,8 +8,6 @@ const ProfileDetails = () => {
   const location = useLocation();
   const [rowData, setRowData] = useState(null);
   const { row, user } = location.state || {};
-
-  console.log("user de", user);
 
   useEffect(() => {
     if (location.state) {
@@ -30,8 +28,6 @@ const ProfileDetails = () => {
       />
       <Box
         sx={{
-          pr: { xs: 1, sm: 3, md: 18 },
-          pl: { xs: 1, sm: 3, md: 18 },
           mt: "290px",
           mb: 4,
           position: "relative",
@@ -49,15 +45,18 @@ const ProfileDetails = () => {
             zIndex: -1111,
           }}
         />
-
-        <Box sx={{ pt: "64px" }}>
-          <ServiceDetails
-            ServiceNumber={row.serviceNumber}
-            Status={row.status}
-            serviceDescription={row.serviceDescription}
-            user={user}
-          />
-        </Box>
+        <Container maxWidth="lg">
+          <Box sx={{ pt: "64px" }}>
+            <ServiceDetails
+              ServiceNumber={row.serviceNumber}
+              Status={row.status}
+              serviceDescription={row.serviceDescription}
+              orderId={row.id}
+              user={user}
+              row={row}
+            />
+          </Box>
+        </Container>
       </Box>
     </>
   );
