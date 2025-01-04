@@ -226,7 +226,8 @@ const Login = () => {
         >
           {phoneSubmitted ? (
             <>
-            <IconButton onClick={() => setPhoneSubmitted(false)}>
+             
+              <IconButton onClick={() => setPhoneSubmitted(false)}>
                 <CloseIcon sx={{ color: "#000" }} />
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -236,13 +237,22 @@ const Login = () => {
                 <IconButton onClick={() => setPhoneSubmitted(false)}>
                   <ArrowForwardIcon sx={{ color: "#000" }} />
                 </IconButton>
-               
+                
               </Box>
-              
             </>
           ) : (
             <>
-            
+            <Box>
+                <img
+                  src={Tamplus}
+                  alt="Description"
+                  style={{
+                    width: isSmallScreen ? "50px" : "80px",
+                    height: isSmallScreen ? "41px" : "64px",
+                    cursor: "pointer",
+                  }}
+                />
+              </Box>
               <Typography
                 variant="h6"
                 sx={{
