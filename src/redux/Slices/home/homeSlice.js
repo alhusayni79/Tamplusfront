@@ -13,7 +13,7 @@ export const fetchDesignData = createAsyncThunk(
 
       const baseURL = process.env.REACT_APP_BASE_URL;  
 
-      const response = await axios.get(`${baseURL}/api/user/design`, {
+      const response = await axios.get(`${baseURL}/user/design`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,  

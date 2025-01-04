@@ -98,52 +98,55 @@ const Login = () => {
     // تحديث الرقم الكامل مع 966
     setPhone(`966${value}`);
   };
+  const api = axios.create({
+    baseURL: process.env.REACT_APP_BASE_URL,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
+const handleOtpSubmit = async (e) => {
+  e.preventDefault();
+  
+  const enteredOtp = otp.join("");
+  if (enteredOtp.length < 4) {
+    setError("يرجى إدخال OTP كاملاً");
+    return;
+  }
 
-    const enteredOtp = otp.join("");
+  setError("");
+  setLoading(true);
 
-    if (enteredOtp.length < 4) {
-      setError("يرجى إدخال OTP كاملاً");
-      return;
+  try {
+    const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
+    // Just use the endpoint path - no string interpolation
+    const response = await api.post(endpoint, {
+      phone,
+      otp: enteredOtp,
+    });
+
+    const { token } = response.data.response;
+    if (!token) {
+      throw new Error("Token not found in response");
     }
 
-    setError("");
-    setLoading(true);
+    const cookieName = selectedTab === 0 ? "auth_token" : "authemployee";
+    Cookies.set(cookieName, token, { expires: 7 });
 
-    try {
-      const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}${endpoint}`,
-        {
-          phone,
-          otp: enteredOtp,
-        }
-      );
-
-      const { token } = response.data.response;
-      if (!token) {
-        throw new Error("Token not found in response");
-      }
-
-      const cookieName = selectedTab === 0 ? "auth_token" : "authemployee";
-      Cookies.set(cookieName, token, { expires: 7 });
-
-      toast.success("Login successful!");
-
-      if (selectedTab === 0) {
-        navigate("/");
-      } else {
-        navigate("/employee/");
-      }
-    } catch (error) {
-      console.error("Error submitting OTP:", error);
-      setError("OTP غير صحيح. حاول مرة أخرى.");
-    } finally {
-      setLoading(false);
+    toast.success("Login successful!");
+    
+    if (selectedTab === 0) {
+      navigate("/");
+    } else {
+      navigate("/employee/");
     }
-  };
+  } catch (error) {
+    console.error("Error submitting OTP:", error);
+    setError("OTP غير صحيح. حاول مرة أخرى.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleOtpChange = (index, value, event) => {
     if (!/^\d*$/.test(value)) {
