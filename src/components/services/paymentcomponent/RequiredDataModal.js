@@ -133,8 +133,15 @@ const RequiredDataModal = ({ open, onClose, requiredFields, onSubmit }) => {
         {requiredFields.map((field) => (
           <CustomInput
             key={field}
-            label={field === "first_name" ? "الاسم الأول" : field}
-            variant="outlined"
+            label={
+              field === "first_name"
+                ? "الاسم الأول"
+                : field === "last_name"
+                ? "الاسم الأخير"
+                : field === "email"
+                ? "البريد الإلكتروني"
+                : field
+            }            variant="outlined"
             fullWidth
             value={formData[field] || ""}
             onChange={handleInputChange(field)}
