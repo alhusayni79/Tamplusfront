@@ -71,7 +71,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const endpoint = selectedTab === 0 ? "/api/user/login" : "/api/employee/login";
+      const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
       await axios.post(`${process.env.REACT_APP_BASE_URL}${endpoint}`, {
         phone,
       });
@@ -113,7 +113,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const endpoint = selectedTab === 0 ? "/api/user/login" : "/api/employee/login";
+      const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}${endpoint}`,
         {
