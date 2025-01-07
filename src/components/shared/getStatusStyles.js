@@ -1,26 +1,56 @@
 import React from "react";
 import Chip from "@mui/material/Chip";
 
-const getStatusStyles = (Status) => {
-  switch (Status) {
-    case "نشطة":
+const getLanguage = () => {
+  return localStorage.getItem("language") || "en"; 
+};
+const getTranslatedStatus = (status) => {
+  const translations = {
+    en: {
+      Paid: "Paid",
+      Reserved: "Reserved",
+      Completed: "Completed",
+      Canceled: "Canceled",
+    },
+    ar: {
+      Paid: "قيد الانتظار",
+      Reserved: "نشطة",
+      Completed: "مكتملة",
+      Canceled: "تم الإلغاء",
+    },
+  };
+
+  const language = getLanguage();
+  return translations[language]?.[status] || status;
+};
+const getStatusStyles = (status) => {
+  switch (status) {
+    case "Paid":
+      return {
+        backgroundColor: "#FFF3CD",
+        color: "#856404",
+        fontWeight: "400",
+        fontSize: "16px",
+      };
+    case "Reserved":
+       return {
+        backgroundColor: "#E2FAE0",
+        color: "#114C0B",
+        fontWeight: "400",
+        fontSize: "16px",
+      };
+
+    case "Completed":
       return {
         backgroundColor: "#E2FAE0",
         color: "#114C0B",
         fontWeight: "400",
         fontSize: "16px",
       };
-    case "مغلقة":
+    case "Canceled":
       return {
         backgroundColor: "#FAE1E0",
         color: "#6E1311",
-        fontWeight: "400",
-        fontSize: "16px",
-      };
-    case "قيد الانتظار":
-      return {
-        backgroundColor: "#FFF3CD",
-        color: "#856404",
         fontWeight: "400",
         fontSize: "16px",
       };
@@ -34,8 +64,14 @@ const getStatusStyles = (Status) => {
   }
 };
 
+// مكوّن لعرض الحالة مع الترجمة
 const StatusChip = ({ Status }) => {
-  return <Chip label={Status} sx={getStatusStyles(Status)} />;
+  return (
+    <Chip
+      label={getTranslatedStatus(Status)}
+      sx={getStatusStyles(Status)}
+    />
+  );
 };
 
 export default StatusChip;

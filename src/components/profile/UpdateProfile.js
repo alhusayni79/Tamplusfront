@@ -14,11 +14,13 @@ function UpdateProfile() {
   const userData = useSelector((state) => state.user);
   const [imagePreview, setImagePreview] = useState(null);
   const baseURL = process.env.REACT_APP_BASE_URL;
-
   const validationSchema = Yup.object({
     firstName: Yup.string().required("الاسم الأول مطلوب"),
     lastName: Yup.string().required("الاسم الأخير مطلوب"),
-    phone: Yup.string().required("رقم الهاتف المحمول مطلوب"),
+    phone: Yup.string()
+      .matches(/^\d{12}$/, "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5")
+      .required("رقم الجوال مطلوب"),
+
     email: Yup.string()
       .email("البريد الإلكتروني غير صحيح")
       .required("البريد الإلكتروني مطلوب"),
@@ -61,10 +63,11 @@ function UpdateProfile() {
 
         const data = await response.json();
         dispatch(fetchUserData());
-                toast.success("تم تحديث البيانات بنجاح");
-              } catch (error) {
+        toast.success("تم تحديث البيانات بنجاح");
+      } catch (error) {
         console.error("Error updating profile:", error);
-        alert("حدث خطأ أثناء تحديث البيانات");
+        toast.error("حدث خطأ أثناء تحديث البيانات");
+        // alert("حدث خطأ أثناء تحديث البيانات");
       }
     },
   });
@@ -135,19 +138,30 @@ function UpdateProfile() {
           </Box>
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="رقم الهاتف المحمول"
-              // placeholder="+966507917664"
+              label="رقم الجوال"
               name="phone"
-              value={formik.values.phone}
-              onChange={formik.handleChange}
+              value={formik.values.phone.replace(/^966/, "")}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                formik.setFieldValue("phone", "966" + inputValue);
+              }}
               onBlur={formik.handleBlur}
-              error={formik.touched.phone && Boolean(formik.errors.phone)}
-              helperText={formik.touched.phone && formik.errors.phone}
-              sx={{
-                "& .MuiFormHelperText-root": {
-                  textAlign: "right",
+              error={Boolean(formik.touched.phone && formik.errors.phone)}
+              InputProps={{
+                startAdornment: (
+                  <Typography sx={{ color: "text.secondary", ml: 1 }}>
+                    966
+                  </Typography>
+                ),
+                sx: {
+                  direction: "ltr",
+                  textAlign: "left",
+                  "& input": {
+                    textAlign: "left",
+                    direction: "ltr",
+                    paddingLeft: "8px",
+                  },
                 },
-                textAlign: "right",
               }}
             />
           </Box>
@@ -171,7 +185,7 @@ function UpdateProfile() {
           </Box>
           <Box sx={{ mb: "32px", textAlign: "center" }}>
             <Typography sx={{ mb: 2, textAlign: "right" }}>
-               الصورة الشخصية
+              الصورة الشخصية
             </Typography>
             <Box
               sx={{

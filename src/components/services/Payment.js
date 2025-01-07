@@ -11,9 +11,9 @@ export default function Payment() {
   const currentLang = i18n.language;
   const { label } = useParams();
   const location = useLocation();
-  const { price, description, id, price_without_vat } = location.state || {};
-  const theme = useTheme();
-  return (
+  const { price, description, id, price_without_vat,title } = location.state || {};
+    const theme = useTheme();
+    return (
     <Box sx={{ backgroundColor: "#F4F4F6" }}>
       <Box
         sx={{
@@ -151,7 +151,7 @@ export default function Payment() {
                   mb: 2,
                 }}
               >
-                تعديل المهنة للعمالة
+                {title?.[currentLang]}
               </Typography>
               <Typography
                 sx={{

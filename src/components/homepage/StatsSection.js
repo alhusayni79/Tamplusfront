@@ -9,7 +9,7 @@ import CaseImage from "../../assets/image/Case.png";
 import { useTranslation } from "react-i18next"; 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStatisticsData } from "../../redux/Slices/staticsSlice/statisticsSlice";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 const StatsSection = () => {
   const theme = useTheme();
   const { i18n } = useTranslation();
@@ -21,8 +21,8 @@ const StatsSection = () => {
     dispatch(fetchStatisticsData());
   }, [dispatch]); 
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -50,7 +50,6 @@ const StatsSection = () => {
         flexDirection={"row-reverse"}
         spacing={0}
       >
-        {/* First Item */}
         <Grid item xs={6} sm={6} lg={3}>
           <Grid
             container

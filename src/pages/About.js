@@ -10,7 +10,7 @@ import SubBanner from "../components/layout/SubBanner.js/SubBanner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDesignData } from "../redux/Slices/home/homeSlice";
 import frambanner from "../assets/image/frambanner.png";
-
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 const About = () => {
   const dispatch = useDispatch();
   const { design, loading, error } = useSelector((state) => state.design);
@@ -19,8 +19,8 @@ const About = () => {
     dispatch(fetchDesignData());
   }, [dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {

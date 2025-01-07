@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../../redux/Slices/userdata/userSlice";
 import Cookies from "js-cookie";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import UserMenu from "./UserMenu";
 function ResponsiveAppBar() {
   const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
@@ -61,7 +62,15 @@ function ResponsiveAppBar() {
   const [bgColor, setBgColor] = useState("transparent");
   const [activePage, setActivePage] = useState(pages[0].label);
   const [lastActiveMainPage, setLastActiveMainPage] = useState(pages[0].label);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const findActivePage = (pathname, hash) => {
     const normalizedPath = pathname + (hash || "");
 
@@ -226,50 +235,44 @@ function ResponsiveAppBar() {
             {/* <SearchComponent /> */}
 
             {token ? (
-           <Box
-           onClick={handleUserRoute}
-           sx={{
-             cursor: "pointer",
-             display: "flex",
-             alignItems: "center",
-             color: "white",
-             "&:hover": {
-               textDecoration: "underline",
-             },
-           }}
-         >
-           <Box
-             sx={{
-               display: "flex",
-               flexDirection: "row",
-               alignItems: "center",
-               justifyContent: "center",
-               gap: 0.2,
-             }}
-           >
-             <img
-               src={user?.response?.image} // Add the image source here
-               alt={`${user?.response?.first_name} ${user?.response?.last_name}`} // Add an accessible alt text
-               style={{
-                 width: "40px", 
-                 height: "40px", 
-                 borderRadius: "50%",
-                 objectFit: "cover", 
-                 marginLeft:"5px",
-               }}
-             />
-             
-             {/* <Typography>{user?.response?.last_name}</Typography> */}
-             <Typography>{user?.response?.first_name}</Typography>
-             {/* <KeyboardArrowDownIcon
-               sx={{
-                 marginRight: "1px",
-                 fontSize: "20px",
-               }}
-             /> */}
-           </Box>
-         </Box>
-         
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "white",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0.2,
+                  }}
+                >
+                  <img
+                    src={user?.response?.image}
+                    alt={`${user?.response?.first_name} ${user?.response?.last_name}`}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginLeft: "5px",
+                    }}
+                  />
+                  <UserMenu
+                    user={`${user?.response?.first_name} ${user?.response?.last_name}`}
+                    handleUserRoute={handleUserRoute}
+                    isSpecialUser={true}
+                  />
+                </Box>
+              </Box>
             ) : (
               <Button
                 onClick={handleProfileRoute}
@@ -355,71 +358,67 @@ function ResponsiveAppBar() {
                 </MenuItem>
               ))}
               <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              {token ? (
-           <Box
-           onClick={handleUserRoute}
-           sx={{
-             cursor: "pointer",
-             display: "flex",
-             alignItems: "center",
-             color: "#000",
-             "&:hover": {
-               textDecoration: "underline",
-             },
-           }}
-         >
-           <Box
-             sx={{
-               display: "flex",
-               flexDirection: "row",
-               alignItems: "center",
-               justifyContent: "center",
-               gap: 0.2,
-             }}
-           >
-             <img
-               src={user?.response?.image} // Add the image source here
-               alt={`${user?.response?.first_name} ${user?.response?.last_name}`} // Add an accessible alt text
-               style={{
-                 width: "40px", 
-                 height: "40px", 
-                 borderRadius: "50%",
-                 objectFit: "cover", 
-                 marginLeft:"5px",
-               }}
-             />
-             
-             <Typography>{user?.response?.last_name}</Typography>
-             <Typography>{user?.response?.first_name}</Typography>
-             {/* <KeyboardArrowDownIcon
-               sx={{
-                 marginRight: "1px",
-                 fontSize: "20px",
-               }}
-             /> */}
-           </Box>
-         </Box>
-         
-            ) : (
-              <Button
-                onClick={handleProfileRoute}
-                variant="outlined"
-                sx={{
-                  fontSize: { md: "10px", lg: "16px" },
-                  padding: { xs: "8px 16px", md: "8px 10px" },
-                  color: "white",
-                  borderColor: "white",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    borderColor: "white",
-                  },
-                  width: "fit-content",
-                  margin: "initial",
-                }}
-              >
-                {t("buttons.login")}
-              </Button>
-            )}
+                {token ? (
+                  <Box
+                    // onClick={handleUserRoute}
+                    sx={{
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "#000",
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 0.2,
+                      }}
+                    >
+                      <img
+                        src={user?.response?.image}
+                        alt={`${user?.response?.first_name} ${user?.response?.last_name}`}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginLeft: "5px",
+                        }}
+                      />
+
+                      <UserMenu
+                        user={`${user?.response?.first_name} ${user?.response?.last_name}`}
+                        handleUserRoute={handleUserRoute}
+                        isSpecialUser={false}
+                      />
+                    </Box>
+                  </Box>
+                ) : (
+                  <Button
+                    onClick={handleProfileRoute}
+                    variant="outlined"
+                    sx={{
+                      fontSize: { md: "10px", lg: "16px" },
+                      padding: { xs: "8px 16px", md: "8px 10px" },
+                      color: "white",
+                      borderColor: "white",
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                        borderColor: "white",
+                      },
+                      width: "fit-content",
+                      margin: "initial",
+                    }}
+                  >
+                    {t("buttons.login")}
+                  </Button>
+                )}
               </Box>
             </Menu>
           </Box>

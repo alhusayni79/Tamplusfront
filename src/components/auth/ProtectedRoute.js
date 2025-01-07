@@ -5,22 +5,14 @@ import Cookies from 'js-cookie';
 const ProtectedRoute = ({ children }) => {
   const authEmployeeCookie = Cookies.get('authemployee');
   const authTokenCookie = Cookies.get('auth_token');
-  
-  // Check current path
-  const currentPath = window.location.pathname;
-  
-  // Logic for employee routes
-  if (currentPath.startsWith('/employee')) {
+    const currentPath = window.location.pathname;
+    if (currentPath.startsWith('/employee')) {
     return authEmployeeCookie ? children : <Navigate to="/login" />;
   }
-  
-  // Logic for user routes
-  if (currentPath === '/') {
+    if (currentPath === '/') {
     return authTokenCookie ? children : <Navigate to="/login" />;
   }
-  
-  // Logic for login page
-  if (currentPath === '/login') {
+    if (currentPath === '/login') {
     if (authEmployeeCookie) {
       return <Navigate to="/employee" />;
     }

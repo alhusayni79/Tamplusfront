@@ -25,14 +25,13 @@ const Paycheck = () => {
         )
         .then((response) => {
           if (response.data?.response?.success === true) {
-            window.location.href =
-              "http://localhost:3000/payment/paymentSuccess";
+            navigate("/payment/paymentSuccess");
+
           } else if (response.data?.response?.success === false) {
-            navigate("http://localhost:3000/payment/PaymentFailed");
+            navigate("/payment/PaymentFailed");
           }
         })
         .catch((error) => {
-          // Handle 500 Internal Server Error or other errors
           if (error.response && error.response.status === 500) {
             const errorData = error.response.data;
             if (errorData.response?.success === false) {

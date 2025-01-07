@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Container, Box } from "@mui/material";
+import { Typography, Container, Box, Button, Link } from "@mui/material";
 import desktopMain from "../assets/image/desktobMain.jpg";
 import mobileMain from "../assets/image/mobileMain.jpg";
 
@@ -35,15 +35,29 @@ const Maintenance = () => {
           mx: "auto",
         }}
       >
-        <Typography variant="h2" gutterBottom>
-          تحت الصيانة
-        </Typography>
-        <Typography variant="body1" paragraph>
-          نحن نجري بعض التحسينات على موقعنا. يرجى التحقق لاحقًا
-        </Typography>
-        <Typography variant="body2" color="inherit">
-          نعتذر عن أي إزعاج
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h1" color="primary" gutterBottom>
+            404
+          </Typography>
+
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            العودة إلى الصفحة الرئيسية
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

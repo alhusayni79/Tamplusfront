@@ -20,7 +20,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import ClearIcon from "@mui/icons-material/Clear";
 import PaymentComponent from "./PaymentComponent";
-
+import LoadingSpinner from "../../shared/LoadingSpinner";
+import { toast } from "react-toastify";
 const PaymentMethod = ({ price, id }) => {
   useEffect(() => {
     const savedDir = localStorage.getItem("dir") || "ltr";
@@ -44,15 +45,16 @@ const PaymentMethod = ({ price, id }) => {
     dispatch(fetchBankInfo());
   }, [dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
   const handlePayment = () => {
-    alert(`جاري معالجة الدفع لـ ${label} بمبلغ ${price} ر.س`);
+    toast.pending(`جاري معالجة الدفع لـ ${label} بمبلغ ${price} ر.س`);
+    // alert(`جاري معالجة الدفع لـ ${label} بمبلغ ${price} ر.س`);
   };
 
   const handlePaymentMethodChange = (method) => {
@@ -140,9 +142,7 @@ const PaymentMethod = ({ price, id }) => {
       setUploadedFile(null);
       setUploadErrorMessage("");
       setIsSubmissionSuccessful(true);
-  
-      // Scroll to the top after successful submission
-      window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Failed to submit form:", error);
       setUploadErrorMessage("حدث خطأ أثناء رفع الملف. حاول مجددًا.");

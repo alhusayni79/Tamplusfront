@@ -3,7 +3,7 @@ import { Container, Grid } from "@mui/material";
 import ServiceCard from "./ServiceCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchServices } from "../../redux/Slices/services/serviceSlice";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 const Services = () => {
   const dispatch = useDispatch();
   const { services, loading, error } = useSelector((state) => state.services);
@@ -12,8 +12,8 @@ const Services = () => {
     dispatch(fetchServices());
   }, [dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {

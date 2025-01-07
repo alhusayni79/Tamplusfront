@@ -15,8 +15,6 @@ function PaymentInfoForm() {
       .matches(/^FA\d{2}\d{22}$/, "يجب أن يكون IBAN رقم بصيغة صحيحة")
       .required("IBAN رقم مطلوب"),
   });
-
-  // Setup Formik
   const formik = useFormik({
     initialValues: {
       bankName: "",

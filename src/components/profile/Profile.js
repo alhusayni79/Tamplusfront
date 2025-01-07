@@ -27,7 +27,7 @@ import UpdateProfile from "./UpdateProfile";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserRequest } from "../../redux/Slices/userRequest/userRequestSlice";
 import StatusChip from "../shared/getStatusStyles";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 const Profile = () => {
   const location = useLocation();
   const { user } = location.state || {};
@@ -86,7 +86,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -102,20 +102,11 @@ const Profile = () => {
       id: request.id,
       time: request.created_at,
       timeupdate: request.updated_at,
-      status: getArabicStatus(request.status),
+      status: request.status,
       serviceNumber: `#${request.id}`,
       serviceDescription:
         request.service?.title?.ar || request.service?.title?.en || "",
     }));
-  };
-  const getArabicStatus = (status) => {
-    const statusMap = {
-      Reserved: "نشطة",
-      Canceled: "مغلقة",
-      Completed: "مكتملة",
-      Paid: "مدفوع",
-    };
-    return statusMap[status] || status;
   };
 
   const rows = transformRequestToTableData(userRequest);

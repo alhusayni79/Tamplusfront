@@ -20,7 +20,7 @@ import { fetchCompletedRequest } from "../redux/Slices/employeeRequest/completed
 import { fetchNewRequest } from "../redux/Slices/employeeRequest/newRequestSlice";
 import { fetchReservedRequest } from "../redux/Slices/employeeRequest/reservedRequestSlice";
 import { fetchCanceledRequest } from "../redux/Slices/employeeRequest/canceledReuwstSlice";
-
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 const Employee = () => {
   const theme = useTheme();
@@ -89,8 +89,7 @@ const Employee = () => {
   }, [dispatch]);
   
   if (completedLoading || newLoading || reservedLoading || canceledLoading) {
-    return <div>Loading...</div>;
-  }
+    return <LoadingSpinner />;  }
   
   if (completedError || newError || reservedError || canceledError) {
     return (

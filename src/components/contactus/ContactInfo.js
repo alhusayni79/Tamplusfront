@@ -1,4 +1,3 @@
-// components/ContactInfo.js
 import {
   Box,
   Typography,
@@ -18,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { fetchFooter } from "../../redux/Slices/FooterData/footerSlice";
 import { useEffect } from "react";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 const ContactInfo = () => {
   const theme = useTheme();
   const { i18n, t } = useTranslation();
@@ -26,13 +25,12 @@ const ContactInfo = () => {
   const dispatch = useDispatch();
   const { footer, loading, error } = useSelector((state) => state.footer);
 
-
   useEffect(() => {
     dispatch(fetchFooter());
   }, [dispatch]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -101,25 +99,25 @@ const ContactInfo = () => {
                   fontWeight: "700",
                   fontSize: "20px",
                   color: theme.palette.primary.dark,
-                  mt:"-5px"
+                  mt: "-5px",
                 }}
               >
                 رقم الجوال
               </Typography>
               <Typography
-              component="a" 
-              href={`tel:${footer?.response?.phone}`} 
-              sx={{
-                color: theme.palette.primary.body,
-                fontWeight: "400",
-                textDecoration: "none",
-                "&:hover": {
-                  textDecoration: "underline", 
-                },
-              }}
-            >
-              {footer?.response?.phone}
-            </Typography>
+                component="a"
+                href={`tel:${footer?.response?.phone}`}
+                sx={{
+                  color: theme.palette.primary.body,
+                  fontWeight: "400",
+                  textDecoration: "none",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                {footer?.response?.phone}
+              </Typography>
             </Box>
           </Box>
           <Box
@@ -137,26 +135,25 @@ const ContactInfo = () => {
                   fontWeight: "700",
                   fontSize: "20px",
                   color: theme.palette.primary.dark,
-                  mt:"-5px"
-
+                  mt: "-5px",
                 }}
               >
                 الإيميل{" "}
               </Typography>
               <Typography
-              component="a" 
-              href={`mailto:${footer?.response?.email}`} 
-              sx={{
-                color: theme.palette.primary.body,
-                fontWeight: "400",
-                textDecoration: "none", 
-                "&:hover": {
-                  textDecoration: "underline", 
-                },
-              }}
-            >
-              {footer?.response?.email}
-            </Typography>
+                component="a"
+                href={`mailto:${footer?.response?.email}`}
+                sx={{
+                  color: theme.palette.primary.body,
+                  fontWeight: "400",
+                  textDecoration: "none",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                {footer?.response?.email}
+              </Typography>
             </Box>
           </Box>
           <Box
@@ -174,29 +171,27 @@ const ContactInfo = () => {
                   fontWeight: "700",
                   fontSize: "20px",
                   color: theme.palette.primary.dark,
-                  mt:"-5px"
-
+                  mt: "-5px",
                 }}
               >
                 الموقع{" "}
               </Typography>
               <Typography
-              component="a" 
-              href={`https://www.google.com/maps?q=:${footer?.response?.address}`}
-
-              target="_blank"
-              rel="noopener noreferrer" 
-              sx={{
-                color: theme.palette.primary.body,
-                fontWeight: "400",
-                textDecoration: "none", 
-                "&:hover": {
-                  textDecoration: "underline", 
-                },
-              }}
-            >
-              {footer?.response?.address}
-            </Typography>
+                component="a"
+                href={`https://www.google.com/maps?q=:${footer?.response?.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  color: theme.palette.primary.body,
+                  fontWeight: "400",
+                  textDecoration: "none",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                {footer?.response?.address}
+              </Typography>
             </Box>
           </Box>
         </Box>

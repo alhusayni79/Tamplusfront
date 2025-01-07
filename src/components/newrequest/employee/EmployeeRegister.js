@@ -8,6 +8,7 @@ import CustomButton from "../../shared/CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchServices } from "../../../redux/Slices/services/serviceSlice";
 import InstitutionTypeSection from "./institutionRequirements";
+import { toast } from "react-toastify";
 
 
 const EmployeeRegister = () => {
@@ -15,7 +16,6 @@ const EmployeeRegister = () => {
   const { services, loading, error } = useSelector((state) => state.services);
 
   const [attachments, setAttachments] = useState({
-    // شركة
     companyCommercialReg: null,
     companyBankLetter: null,
     companyCivilId: null,
@@ -24,23 +24,17 @@ const EmployeeRegister = () => {
     companyManagerCivilId: null,
     companyLicense: null,
     companySignatureAuth: null,
-    
-    // مؤسسة
-    orgCommercialReg: null,
+        orgCommercialReg: null,
     orgBankLetter: null,
     orgCivilId: null,
     orgLicense: null,
     orgManagerCivilId: null,
     orgSignatureAuth: null,
-    
-    // عمل حر
-    freelancerCivilId: null,
+        freelancerCivilId: null,
     freelancerArticles: null,
     freelancerBankLetter: null,
     freelancerLicense: null
   });
-
-  // قائمة أنواع المؤسسات
   const institutionTypeOptions = useMemo(() => [
     { value: "1", label: "شركة" },
     { value: "2", label: "مؤسسة" },
@@ -62,18 +56,17 @@ const EmployeeRegister = () => {
   const handleFileChange = (event, fieldName) => {
     const file = event.target.files[0];
     if (!file) return;
-
-    // التحقق من نوع الملف
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      alert("نوع الملف غير مسموح به. يرجى اختيار ملف PDF أو صورة");
+      toast.error("نوع الملف غير مسموح به. يرجى اختيار ملف PDF أو صورة")
+      // alert("نوع الملف غير مسموح به. يرجى اختيار ملف PDF أو صورة");
       return;
     }
-
-    // التحقق من حجم الملف (5 ميجابايت كحد أقصى)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert("حجم الملف كبير جداً. الحد الأقصى هو 5 ميجابايت");
+      toast.error("حجم الملف كبير جداً. الحد الأقصى هو 5 ميجابايت")
+
+      // alert("حجم الملف كبير جداً. الحد الأقصى هو 5 ميجابايت");
       return;
     }
 
@@ -90,7 +83,6 @@ const EmployeeRegister = () => {
     }));
   };
 
-  // Validation Schema
   const validationSchema = Yup.object({
     first_name: Yup.string().required("الاسم الأول مطلوب"),
     last_name: Yup.string().required("الاسم الأخير مطلوب"),
@@ -109,8 +101,6 @@ const EmployeeRegister = () => {
     institution_type: Yup.string().required("نوع المؤسسة مطلوب"),
     bank_account_holder_name: Yup.string().required("اسم صاحب الحساب البنكي مطلوب"),
   });
-
-  // Initial Values
   const initialValues = {
     first_name: "",
     last_name: "",
@@ -129,13 +119,11 @@ const EmployeeRegister = () => {
     try {
       const formData = new FormData();
   
-      // إضافة الحقول النصية
       Object.keys(values).forEach((key) => {
         formData.append(key, values[key]);
       });
   
-      // إضافة الملفات حسب نوع المؤسسة
-      if (values.institution_type === "1") { // شركة
+      if (values.institution_type === "1") { 
         const companyFiles = [
           { key: 'companyCommercialReg', name: 'commercial_register' },
           { key: 'companyBankLetter', name: 'bank_account_letter' },
@@ -153,7 +141,7 @@ const EmployeeRegister = () => {
           }
         });
       } 
-      else if (values.institution_type === "2") { // مؤسسة
+      else if (values.institution_type === "2") { 
         const orgFiles = [
           { key: 'orgCommercialReg', name: 'commercial_register' },
           { key: 'orgBankLetter', name: 'bank_account_letter' },
@@ -169,7 +157,7 @@ const EmployeeRegister = () => {
           }
         });
       }
-      else if (values.institution_type === "3") { // عمل حر
+      else if (values.institution_type === "3") { 
         const freelancerFiles = [
           { key: 'freelancerCivilId', name: 'civil_id' },
           { key: 'freelancerArticles', name: 'articles_association' },
@@ -193,11 +181,13 @@ const EmployeeRegister = () => {
           },
         }
       );
-      alert("تم إنشاء الحساب بنجاح");
+      toast.success("تم إنشاء الحساب بنجاح");
+      // alert("تم إنشاء الحساب بنجاح");
     } catch (error) {
       console.error("Error:", error);
       const errorMessage = error.response?.data?.message || "حدث خطأ أثناء إنشاء الحساب";
-      alert(errorMessage);
+      toast.error(errorMessage)
+      // alert(errorMessage);
     } finally {
       setSubmitting(false);
     }

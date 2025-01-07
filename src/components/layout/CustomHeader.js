@@ -5,7 +5,7 @@ import Tamplus from "../../assets/image/tampluslogo.png";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEmpolyeeUData } from "../../redux/Slices/empolyeeData/empolyeeSlice";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 const CustomHeader = () => {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
   const dispatch = useDispatch();
@@ -13,7 +13,13 @@ const CustomHeader = () => {
 
   useEffect(() => {
     dispatch(fetchEmpolyeeUData());
-  }, [dispatch]);  
+  }, [dispatch]);
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+  if (error) {
+    return <p>حدث خطأ: {error}</p>;
+  }
   return (
     <Box
       sx={{

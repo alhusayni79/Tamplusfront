@@ -8,17 +8,10 @@ import CustomHeader from "./CustomHeader";
 const CustomLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // Hide the footer on certain routes
-  const hideFooterRoutes = ["/employee/register"];
+    const hideFooterRoutes = ["/employee/register"];
   const shouldShowFooter = !hideFooterRoutes.includes(location.pathname);
-
-  // Check for authentication on component mount and route changes
   useEffect(() => {
     const authEmployeeCookie = Cookies.get("authemployee");
-
-    // If no auth cookie AND not on /login AND not on /employee/register,
-    // then redirect to /login
     if (
       !authEmployeeCookie &&
       !location.pathname.includes("/login") &&

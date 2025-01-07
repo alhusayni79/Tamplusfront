@@ -18,7 +18,6 @@ const Banner = ({ data }) => {
         height: { xs: "85vh", sm: "90vh", md: "90vh", lg: "83vh" },
       }}
     >
-      {/* Background Image */}
       <Box
         sx={{
           position: "absolute",
@@ -40,7 +39,6 @@ const Banner = ({ data }) => {
         />
       </Box>
 
-      {/* Blue Overlay */}
       <Box
         sx={{
           position: "absolute",
@@ -53,7 +51,6 @@ const Banner = ({ data }) => {
         }}
       ></Box>
 
-      {/* Content */}
       <Box
         sx={{
           position: "absolute",
@@ -108,19 +105,18 @@ const Banner = ({ data }) => {
             textColor="#07489D"
             sx={{ zIndex: 100 }}
           >
-           {t("buttons.start_now")}
+            {t("buttons.start_now")}
           </CustomButton>
           <CustomButton
             onClick={() => alert("Button Clicked!")}
             backgroundColor="transparent"
-            border={true} 
-            borderColor="white" 
-     
+            border={true}
+            borderColor="white"
             sx={{ display: "flex", alignItems: "center", zIndex: 100 }}
           >
             <KeyboardArrowDownIcon sx={{ mr: 1, color: "white" }} />
             {t("buttons.learn_more")}
-            </CustomButton>
+          </CustomButton>
         </Box>
       </Box>
 

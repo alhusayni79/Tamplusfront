@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Grid,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -17,8 +12,14 @@ const ContactForm = () => {
   const validationSchema = Yup.object({
     firstName: Yup.string().required("الاسم الأول مطلوب"),
     lastName: Yup.string().required("الاسم الأخير مطلوب"),
-    phone: Yup.string().required("رقم الجوال مطلوب"),
-    email: Yup.string().email("بريد الكتروني غير صالح").required("الايميل مطلوب"),
+    phone: Yup.string()
+    .matches(/^\d{12}$/, "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5")
+    .required("رقم الجوال مطلوب"),
+  
+  
+    email: Yup.string()
+      .email("بريد الكتروني غير صالح")
+      .required("الايميل مطلوب"),
     message: Yup.string().required("الرسالة مطلوبة"),
   });
   const formik = useFormik({
@@ -32,13 +33,16 @@ const ContactForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/user/contact`, {
-          first_name: values.firstName,
-          last_name: values.lastName,
-          email: values.email,
-          phone: values.phone,
-          message: values.message,
-        });
+        const response = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/user/contact`,
+          {
+            first_name: values.firstName,
+            last_name: values.lastName,
+            email: values.email,
+            phone: values.phone,
+            message: values.message,
+          }
+        );
         toast.success("تم إرسال الرسالة بنجاح!");
         resetForm();
       } catch (error) {
@@ -72,7 +76,9 @@ const ContactForm = () => {
               value={formik.values.firstName}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={Boolean(formik.touched.firstName && formik.errors.firstName)}
+              error={Boolean(
+                formik.touched.firstName && formik.errors.firstName
+              )}
             />
             {formik.touched.firstName && formik.errors.firstName && (
               <Typography color="error">{formik.errors.firstName}</Typography>
@@ -96,11 +102,31 @@ const ContactForm = () => {
             <CustomInput
               label="رقم الجوال"
               name="phone"
-              value={formik.values.phone}
-              onChange={formik.handleChange}
+              value={formik.values.phone.replace(/^966/, "")}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                formik.setFieldValue("phone", "966" + inputValue);
+              }}
               onBlur={formik.handleBlur}
               error={Boolean(formik.touched.phone && formik.errors.phone)}
+              InputProps={{
+                startAdornment: (
+                  <Typography sx={{ color: "text.secondary", ml: 1 }}>
+                    966
+                  </Typography>
+                ),
+                sx: {
+                  direction: "ltr",
+                  textAlign: "left",
+                  "& input": {
+                    textAlign: "left",
+                    direction: "ltr",
+                    paddingLeft: "8px",
+                  },
+                },
+              }}
             />
+
             {formik.touched.phone && formik.errors.phone && (
               <Typography color="error">{formik.errors.phone}</Typography>
             )}

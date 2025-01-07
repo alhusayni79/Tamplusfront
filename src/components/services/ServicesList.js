@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchServices } from "../../redux/Slices/services/serviceSlice";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 export default function Dashboard() {
   const { i18n, t } = useTranslation();
   const currentLang = i18n.language;
@@ -61,8 +61,8 @@ export default function Dashboard() {
     }
   }, [selectedCategory, services]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {

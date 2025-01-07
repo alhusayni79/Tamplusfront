@@ -17,7 +17,7 @@ import { Description as DescriptionIcon, CloudUpload as CloudUploadIcon, Delete 
 import CustomInput from "../../shared/CustomInput";
 
 const institutionRequirements = {
-  "1": { // شركة
+  "1": { 
     type: "شركة",
     fileFields: [
       {
@@ -62,7 +62,7 @@ const institutionRequirements = {
       }
     ]
   },
-  "2": { // مؤسسة
+  "2": { 
     type: "مؤسسة",
     fileFields: [
       {
@@ -97,7 +97,7 @@ const institutionRequirements = {
       }
     ]
   },
-  "3": { // عمل حر
+  "3": { 
     type: "عمل حر",
     fileFields: [
       {

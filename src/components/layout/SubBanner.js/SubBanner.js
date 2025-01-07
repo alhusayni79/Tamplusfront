@@ -9,7 +9,7 @@ import imagebanner4 from "../../../assets/image/banner4.svg";
 import imagebanner5 from "../../../assets/image/banner5.svg";
 import { fetchMinistryData } from "../../../redux/Slices/ministrySlice/ministrySlice";
 import { useDispatch, useSelector } from "react-redux";
-
+import LoadingSpinner from "../../shared/LoadingSpinner";
 const SubBanner = () => {
   const { i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -66,8 +66,8 @@ const SubBanner = () => {
     });
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {

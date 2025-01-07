@@ -16,7 +16,7 @@ const ToastNotification = () => {
       pauseOnHover
       draggable
       progress={undefined}
-      toastStyle={{ zIndex: 15000 }} // Set z-index for the toast notifications
+      toastStyle={{ zIndex: 15000 }} 
     />
   );
 };

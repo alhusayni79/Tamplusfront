@@ -60,7 +60,6 @@ export default function ServicePage() {
   };
 
   const handleModalSubmit = (formData) => {
-    // Navigate to payment page with the form data
     navigate(`/services/${label}/Payment`, {
       state: {
         price,
@@ -72,7 +71,8 @@ export default function ServicePage() {
         price_without_vat,
         government_fees_without_vat,
         government_fees_with_vat,
-        ...formData, // Include the form data
+        ...formData, 
+        title
       },
     });
     setOpenModal(false);
@@ -106,6 +106,7 @@ export default function ServicePage() {
           price_without_vat,
           government_fees_without_vat,
           government_fees_with_vat,
+          title
         },
       });
     } catch (error) {

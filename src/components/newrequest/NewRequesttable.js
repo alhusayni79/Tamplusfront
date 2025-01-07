@@ -17,13 +17,14 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import StatusChip from "../shared/getStatusStyles";
 
 const NewRequesttable = ({ rows, selectedCategory }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
-console.log("rows",rows);
+  console.log("rows", rows);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -31,62 +32,63 @@ console.log("rows",rows);
 
   const handleRowClick = (transformedRow, originalRowIndex) => {
     const originalRow = rows[originalRowIndex];
-    
+
     if (originalRow && originalRow.service) {
-      if (originalRow.status === 'Reserved') {
-        navigate(`/employee/${originalRow.serviceDescription}/servicePageActive`, {
-          state: {
-            ...originalRow,
-            selectedCategory
+      if (originalRow.status === "Reserved") {
+        navigate(
+          `/employee/${originalRow.serviceDescription}/servicePageActive`,
+          {
+            state: {
+              ...originalRow,
+              selectedCategory,
+            },
           }
-        });
+        );
       } else {
         navigate(`/employee/${originalRow.service.title.ar}`, {
           state: {
             ...originalRow,
-            selectedCategory
-          }
+            selectedCategory,
+          },
         });
       }
     }
   };
 
-  const transformedRows = (rows || []).map(row => ({
+  const transformedRows = (rows || []).map((row) => ({
     id: row.id,
     serviceNumber: row.service?.id || "",
     serviceDescription: row.service?.title?.ar || "",
-    status: row.status === "Completed" ? "مكتملة" : row.status,
+    status: row.status,
     price: `${row.total} ${row.currency?.ar || "ر.س"}`,
-    created_at: row.created_at
-    
+    created_at: row.created_at,
   }));
 
   const filteredRows = transformedRows.filter((row) =>
     row.serviceDescription.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Status color mapping
-  const getStatusStyles = (status) => {
-    const statusMap = {
-      "مكتملة": {
-        bg: "#D1ECF1",
-        color: "#0C5460"
-      },
-      "نشطة": {
-        bg: "#E2FAE0",
-        color: "#114C0B"
-      },
-      "قيد الانتظار": {
-        bg: "#FFF3CD",
-        color: "#856404"
-      },
-      "تم الإلغاء": {
-        bg: "#F8D7DA",
-        color: "#721C24"
-      }
-    };
-    return statusMap[status] || { bg: "#FAE1E0", color: "#6E1311" };
-  };
+  // const getStatusStyles = (status) => {
+  //   const statusMap = {
+  //     "مكتملة": {
+  //       bg: "#D1ECF1",
+  //       color: "#0C5460"
+  //     },
+  //     "نشطة": {
+  //       bg: "#E2FAE0",
+  //       color: "#114C0B"
+  //     },
+  //     "قيد الانتظار": {
+  //       bg: "#FFF3CD",
+  //       color: "#856404"
+  //     },
+  //     "تم الإلغاء": {
+  //       bg: "#F8D7DA",
+  //       color: "#721C24"
+  //     }
+  //   };
+  //   return statusMap[status] || { bg: "#FAE1E0", color: "#6E1311" };
+  // };
 
   return (
     <>
@@ -216,7 +218,9 @@ console.log("rows",rows);
                 .map((row, index) => (
                   <TableRow
                     key={row.id}
-                    onClick={() => handleRowClick(row, index + (page - 1) * rowsPerPage)}
+                    onClick={() =>
+                      handleRowClick(row, index + (page - 1) * rowsPerPage)
+                    }
                     sx={{
                       "&:hover": {
                         backgroundColor: "#f1f1f1",
@@ -267,7 +271,7 @@ console.log("rows",rows);
                           index % 2 === 0 ? "transparent" : "#F4F5F6",
                       }}
                     >
-                      <Button
+                      {/* <Button
                         variant="contained"
                         sx={{
                           borderRadius: "16px",
@@ -277,7 +281,8 @@ console.log("rows",rows);
                         }}
                       >
                         {row.status}
-                      </Button>
+                      </Button> */}
+                      <StatusChip Status={row.status} />
                     </TableCell>
                     <TableCell
                       sx={{
@@ -347,8 +352,8 @@ console.log("rows",rows);
               fontWeight: "400",
             }}
           >
-            يتم عرض من 1 إلى {Math.min(rowsPerPage, filteredRows.length)} خدمات من{" "}
-            {filteredRows.length} خدمة
+            يتم عرض من 1 إلى {Math.min(rowsPerPage, filteredRows.length)} خدمات
+            من {filteredRows.length} خدمة
           </p>
           <Pagination
             count={Math.ceil(filteredRows.length / rowsPerPage)}

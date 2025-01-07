@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { Offcanvas } from "react-bootstrap";
 import Cookies from "js-cookie";
-
+import LoadingSpinner from "../../shared/LoadingSpinner";
 export default function ResponsiveFooter() {
   const theme = useTheme();
   const { i18n, t } = useTranslation();
@@ -29,8 +29,6 @@ export default function ResponsiveFooter() {
   const [offcanvasContent, setOffcanvasContent] = useState("");
   const [offcanvasTitle, setOffcanvasTitle] = useState("");
   const authEmployeeCookie = Cookies.get("authemployee");
-
-  // دالة التنقّل عند الضغط
   const handleEmployee = () => {
     navigate("/employee/register");
   };
@@ -41,8 +39,8 @@ export default function ResponsiveFooter() {
     dispatch(fetchFooter());
   }, [dispatch, currentLang]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -272,7 +270,6 @@ export default function ResponsiveFooter() {
             مصادر اخرى
           </Typography>
           <>
-            {/* Typography Elements */}
             {authEmployeeCookie && (
               <Typography
                 onClick={handleEmployee}
@@ -319,7 +316,6 @@ export default function ResponsiveFooter() {
               {footer?.response?.terms_and_conditions_content?.[currentLang]}
             </Typography>
 
-            {/* Bootstrap Offcanvas */}
             <Offcanvas
               show={showOffcanvas}
               onHide={handleCloseOffcanvas}

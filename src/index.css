@@ -255,3 +255,7 @@ video {
   height: 70vh;
   background-color: transparent;
 }
+input[name="phone"] {
+  text-align: left;
+  direction: ltr;
+}

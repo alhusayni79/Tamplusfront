@@ -21,8 +21,8 @@ function AccountInfoForm() {
     first_name: Yup.string().required("الاسم الأول مطلوب"),
     last_name: Yup.string().required("الاسم الأخير مطلوب"),
     phone: Yup.string()
-      .matches(/^966\d{9}$/, "رقم الهاتف المحمول غير صحيح")
-      .required("رقم الهاتف المحمول مطلوب"),
+        .matches(/^\d{12}$/, "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5")
+        .required("رقم الجوال مطلوب"),
     email: Yup.string()
       .email("البريد الإلكتروني غير صحيح")
       .required("البريد الإلكتروني مطلوب"),
@@ -94,11 +94,11 @@ function AccountInfoForm() {
       </Typography>
       <form onSubmit={formik.handleSubmit}>
         <Paper
-          elevation={0}
+          elevation={1}
           sx={{
             padding: { xs: "0px", md: "2rem" },
             width: "100%",
-            bgcolor: "transparent",
+            bgcolor: "white",
             mb: "32px",
           }}
         >
@@ -141,20 +141,31 @@ function AccountInfoForm() {
           </Box>
 
           <Box sx={{ mb: "32px" }}>
-            <CustomInput
-              label="رقم الهاتف المحمول"
-              placeholder="966xxxxxxxxx"
+          <CustomInput
+              label="رقم الجوال"
               name="phone"
-              value={formik.values.phone}
-              onChange={formik.handleChange}
+              value={formik.values.phone.replace(/^966/, "")}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                formik.setFieldValue("phone", "966" + inputValue);
+              }}
               onBlur={formik.handleBlur}
-              error={formik.touched.phone && Boolean(formik.errors.phone)}
-              helperText={formik.touched.phone && formik.errors.phone}
-              sx={{
-                "& .MuiFormHelperText-root": {
-                  textAlign: "right",
+              error={Boolean(formik.touched.phone && formik.errors.phone)}
+              InputProps={{
+                startAdornment: (
+                  <Typography sx={{ color: "text.secondary", ml: 1 }}>
+                    966
+                  </Typography>
+                ),
+                sx: {
+                  direction: "ltr",
+                  textAlign: "left",
+                  "& input": {
+                    textAlign: "left",
+                    direction: "ltr",
+                    paddingLeft: "8px",
+                  },
                 },
-                textAlign: "right",
               }}
             />
           </Box>

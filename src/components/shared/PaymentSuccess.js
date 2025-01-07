@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography, Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -6,10 +6,20 @@ import HomeIcon from "@mui/icons-material/Home";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    localStorage.setItem("selectedCategory", "الخدمات السابقة");
+
+    const timer = setTimeout(() => {
+      navigate("/profile");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   const handleBackToHome = () => {
     navigate("/");
   };
+  
 
   return (
     <Box

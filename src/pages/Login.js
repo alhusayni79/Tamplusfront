@@ -32,7 +32,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [phoneInput, setPhoneInput] = useState(""); 
+  const [phoneInput, setPhoneInput] = useState("");
 
   const navigate = useNavigate();
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -61,57 +61,60 @@ const Login = () => {
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!phone || !/^\+?[0-9]{10,15}$/.test(phone)) {
       setError("يرجى إدخال رقم هاتف صالح");
       return;
     }
-
+  
     setError("");
     setLoading(true);
-
+  
     try {
       const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
-      await axios.post(`${process.env.REACT_APP_BASE_URL}${endpoint}`, {
-        phone,
-      });
-
+      await axios.post(`${process.env.REACT_APP_BASE_URL}${endpoint}`, { phone });
+  
       setPhoneSubmitted(true);
+      toast.success("تم إرسال OTP بنجاح!");
     } catch (error) {
       setError("حدث خطأ أثناء إرسال OTP. حاول مرة أخرى.");
+      toast.error("عذراً، حدث خطأ أثناء إرسال OTP. يرجى المحاولة لاحقًا.");
     } finally {
       setLoading(false);
     }
   };
+  
   const handlePhoneChange = (e) => {
     let value = e.target.value;
-
-    // إزالة أي حروف غير رقمية
     value = value.replace(/[^0-9]/g, "");
 
-    // إذا بدأ الرقم بصفر، نقوم بإزالته
     if (value.startsWith("0")) {
       value = value.substring(1);
     }
-
+    if (value.length > 9) {
+      setError("يجب ألا يتجاوز رقم الهاتف 9 أرقام بعد رمز الدولة.");
+    } else if (value.length < 9) {
+      setError("يجب أن يحتوي رقم الهاتف على 9 أرقام بعد رمز الدولة.");
+    } else {
+      setError("");
+    }
     setPhoneInput(value);
-    // تحديث الرقم الكامل مع 966
     setPhone(`966${value}`);
   };
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-
+  
     const enteredOtp = otp.join("");
-
+  
     if (enteredOtp.length < 4) {
       setError("يرجى إدخال OTP كاملاً");
       return;
     }
-
+  
     setError("");
     setLoading(true);
-
+  
     try {
       const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
       const response = await axios.post(
@@ -121,30 +124,33 @@ const Login = () => {
           otp: enteredOtp,
         }
       );
-
+  
       const { token } = response.data.response;
       if (!token) {
         throw new Error("Token not found in response");
       }
-
+  
       const cookieName = selectedTab === 0 ? "auth_token" : "authemployee";
       Cookies.set(cookieName, token, { expires: 7 });
-
-      toast.success("Login successful!");
-
+  
+      // Success Alert
+      toast.success("تم التحقق بنجاح! سيتم توجيهك الآن.");
+  
       if (selectedTab === 0) {
         navigate("/");
       } else {
         navigate("/employee/");
       }
     } catch (error) {
-      console.error("Error submitting OTP:", error);
       setError("OTP غير صحيح. حاول مرة أخرى.");
+  
+      // Error Alert
+      toast.error("OTP غير صحيح. حاول مرة أخرى.");
     } finally {
       setLoading(false);
     }
   };
-
+  
   const handleOtpChange = (index, value, event) => {
     if (!/^\d*$/.test(value)) {
       return;
@@ -226,23 +232,21 @@ const Login = () => {
         >
           {phoneSubmitted ? (
             <>
-             
               <IconButton onClick={() => setPhoneSubmitted(false)}>
                 <CloseIcon sx={{ color: "#000" }} />
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ fontSize: "18px", fontWeight: "500"  }}>
+                <Typography sx={{ fontSize: "18px", fontWeight: "500" }}>
                   رمز التحقق
                 </Typography>
                 <IconButton onClick={() => setPhoneSubmitted(false)}>
                   <ArrowForwardIcon sx={{ color: "#000" }} />
                 </IconButton>
-                
               </Box>
             </>
           ) : (
             <>
-            <Box>
+              <Box>
                 <img
                   src={Tamplus}
                   alt="Description"
@@ -262,7 +266,6 @@ const Login = () => {
               >
                 تسجيل الدخول
               </Typography>
-              
             </>
           )}
         </Box>
@@ -289,7 +292,13 @@ const Login = () => {
 
         {phoneSubmitted ? (
           <form onSubmit={handleOtpSubmit}>
-            <Box mt={4} display="flex" justifyContent="center" gap={2} direction="rtl">
+            <Box
+              mt={4}
+              display="flex"
+              justifyContent="center"
+              gap={2}
+              direction="rtl"
+            >
               {otp.map((value, index) => (
                 <TextField
                   key={index}
@@ -340,7 +349,7 @@ const Login = () => {
                 value={phoneInput}
                 onChange={handlePhoneChange}
                 placeholder="أدخل رقم هاتفك"
-                 fullWidth
+                fullWidth
                 margin="normal"
                 required
                 error={Boolean(error)}
@@ -352,7 +361,7 @@ const Login = () => {
                     </Typography>
                   ),
                   sx: {
-                    direction: "ltr", 
+                    direction: "ltr",
                     textAlign: "left",
                     "& input": {
                       textAlign: "left",
@@ -372,6 +381,7 @@ const Login = () => {
                   },
                 }}
               />
+
               <Box mt={2} display="flex" justifyContent="center">
                 <CustomButton
                   type="submit"
@@ -379,13 +389,17 @@ const Login = () => {
                   disabled={loading}
                   onClick={handlePhoneSubmit}
                   backgroundColor={theme.palette.primary.main}
-                  width="100%"
+                  width="80%"
+                  sx={{
+                    backgroundColor: theme.palette.primary.main,
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
                   {loading ? (
-                    <>
-                      <CircularProgress size={20} />
-                      إرسال...
-                    </>
+                    <CircularProgress size={24} color="white" />
                   ) : (
                     "تسجيل الدخول"
                   )}

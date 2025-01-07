@@ -82,8 +82,6 @@ const RequestDetails = ({ rowData, handleAcceptServiceClick, orderId }) => {
       const authToken = Cookies.get("auth_token");
       const empolyeeToken = Cookies.get("authemployee");
       const tokenToUse = authToken || empolyeeToken;
-
-      // أولاً - رفع الصورة إذا كانت موجودة
       let mediaId = null;
       if (selectedFile) {
         const mediaFormData = new FormData();
@@ -102,8 +100,6 @@ const RequestDetails = ({ rowData, handleAcceptServiceClick, orderId }) => {
         );
         mediaId = mediaResponse.data.media_id;
       }
-
-      // ثانياً - إرسال الرسالة
       const messageFormData = new FormData();
       messageFormData.append("order_id", orderId);
       messageFormData.append("message", newComment);
@@ -216,17 +212,12 @@ const ServicePageActive = () => {
 
   useEffect(() => {
     if (orderId) {
-      // التحديث الأولي
       dispatch(fetchAllMessage(orderId));
       dispatch(fetchAllMedia(orderId));
-
-      // إنشاء interval للتحديث الدوري
       const interval = setInterval(() => {
         dispatch(fetchAllMessage(orderId));
         dispatch(fetchAllMedia(orderId));
-      }, 15000); // كل 3 ثواني
-
-      // cleanup عند unmount
+      }, 3000); 
       return () => clearInterval(interval);
     }
   }, [dispatch, orderId]);
@@ -271,8 +262,6 @@ const ServicePageActive = () => {
       const authToken = Cookies.get("auth_token");
       const empolyeeToken = Cookies.get("authemployee");
       const tokenToUse = authToken || empolyeeToken;
-
-      // أولاً - رفع الصورة إذا كانت موجودة
       let mediaId = null;
       if (selectedFile) {
         const mediaFormData = new FormData();
@@ -290,11 +279,8 @@ const ServicePageActive = () => {
           }
         );
         console.log("Media upload response:", mediaResponse.data);
-        // احفظ ID الصورة إذا كان السيرفر يرجعه
-        mediaId = mediaResponse.data.media_id; // تأكد من اسم الحقل الصحيح من الـ response
+        mediaId = mediaResponse.data.media_id; 
       }
-
-      // ثانياً - إرسال الرسالة
       const messageFormData = new FormData();
       messageFormData.append("order_id", orderId);
       messageFormData.append("message", newComment);

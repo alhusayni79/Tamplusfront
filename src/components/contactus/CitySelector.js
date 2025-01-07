@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { fetchFooter } from "../../redux/Slices/FooterData/footerSlice";
 import Map from "./Map";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-
+ import LoadingSpinner from "../../components/shared/LoadingSpinner.js"
 const CitySelector = () => {
   const [city, setCity] = useState("");
   const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
@@ -42,8 +42,8 @@ const CitySelector = () => {
     dispatch(fetchFooter());
   }, [dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+ if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {

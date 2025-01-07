@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBlogs } from "../../redux/Slices/blogsData/blogSlice";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-
+import LoadingSpinner from "../shared/LoadingSpinner";
 const LastNewsComponent = ({ displayCount }) => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
@@ -27,7 +27,7 @@ const LastNewsComponent = ({ displayCount }) => {
   }, [dispatch]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

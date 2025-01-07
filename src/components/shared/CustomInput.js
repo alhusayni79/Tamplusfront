@@ -20,8 +20,6 @@ const CustomInput = ({
   ...props
 }) => {
   const theme = useTheme();
-
-  // Check the direction from the theme (rtl or ltr)
   const isRtl = theme.direction === "rtl";
 
   return (
@@ -41,7 +39,6 @@ const CustomInput = ({
           fontSize: "16px",
           color: theme.palette.primary.dark,
           fontWeight: "500",
-          // Dynamically align the label based on theme direction
           textAlign: isRtl ? "right" : "left",
         }}
       >
@@ -57,7 +54,6 @@ const CustomInput = ({
         select={select}
         value={value}
         onChange={onChange}
-        // Pass direction to the input itself
         inputProps={{
           dir: isRtl ? "rtl" : "ltr",
         }}

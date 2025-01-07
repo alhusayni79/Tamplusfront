@@ -10,7 +10,6 @@ const MyFatoorahPayment = ({ id }) => {
   const [configData, setConfigData] = useState(null);
 
   useEffect(() => {
-    // Fetch session ID and country code from backend
     const fetchConfigData = async () => {
       try {
         const token = Cookies.get("auth_token");
