@@ -19,9 +19,7 @@ const MainRoutes = () => [
     <Route
       index
       element={
-        <ProtectedRoute>
           <Home />
-        </ProtectedRoute>
       }
       key="home"
     />
