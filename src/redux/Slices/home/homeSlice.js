@@ -11,19 +11,12 @@ export const fetchDesignData = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-
-      // ✅ Log the response data
-      console.log("Fetched Design Data:", response.data);
-
       return response.data;
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "Unknown error occurred";
-
-      // ✅ Log the error
-      console.error("Error fetching design data:", errorMessage);
 
       return thunkAPI.rejectWithValue(errorMessage);
     }
