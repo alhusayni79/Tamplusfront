@@ -1,22 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import axios from 'axios'; 
+import axios from 'axios';
 
 export const fetchMinistryData = createAsyncThunk(
   'ministry/fetchMinistryData',
   async (_, thunkAPI) => {
     try {
-      const token = Cookies.get('auth_token');  
-      if (!token) {
-        return thunkAPI.rejectWithValue("Authentication token is missing");
-      }
-
-      const baseURL = process.env.REACT_APP_BASE_URL;  
+      const baseURL = process.env.REACT_APP_BASE_URL;
 
       const response = await axios.get(`${baseURL}/user/ministry`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  
         },
       });
 
@@ -31,7 +24,7 @@ export const fetchMinistryData = createAsyncThunk(
 const ministrySlice = createSlice({
   name: 'ministry',
   initialState: {
-    ministry: [],  
+    ministry: [],
     loading: false,
     error: null,
   },
@@ -44,11 +37,11 @@ const ministrySlice = createSlice({
       })
       .addCase(fetchMinistryData.fulfilled, (state, action) => {
         state.loading = false;
-        state.ministry = action.payload;  
+        state.ministry = action.payload;
       })
       .addCase(fetchMinistryData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; 
+        state.error = action.payload;
       });
   },
 });

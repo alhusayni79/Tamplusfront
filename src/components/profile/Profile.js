@@ -77,7 +77,7 @@ const Profile = () => {
               .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
         );
 
-      window.location.href = "/login";
+      navigate("/");
     } else {
       setSelectedCategory(category);
       setPage(1);

@@ -16,22 +16,8 @@ import Paycheck from "../pages/Paycheck";
 
 const MainRoutes = () => [
   <Route path="/" element={<MainLayout />} key="main-layout">
-    <Route
-      index
-      element={
-          <Home />
-      }
-      key="home"
-    />
-    <Route
-      path="about"
-      element={
-        <ProtectedRoute>
-          <About />
-        </ProtectedRoute>
-      }
-      key="about"
-    />
+    <Route index element={<Home />} key="home" />
+    <Route path="about" element={<About />} key="about" />
     <Route
       path="services"
       element={

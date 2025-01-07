@@ -26,7 +26,6 @@ function App() {
             {EmployeeRoutes()}
             {PublicRoutes()}
             <Route path="*" element={<Maintenance />} />
-
           </Routes>
         </Router>
         <ToastNotification />

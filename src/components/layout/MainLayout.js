@@ -26,7 +26,7 @@ const MainLayout = ({ children }) => {
           mb: 5,
         }}
       >
-        <Header user={"user"} />
+        <Header />
       </Box>
 
       <main

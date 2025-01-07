@@ -19,9 +19,10 @@ import fram111 from "../assets/image/Frame111.png";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 const Home = () => {
-
   const dispatch = useDispatch();
-  const { design, loading, error } = useSelector((state) => state.design);
+  const { data, loading, error } = useSelector((state) => state.design);
+
+  console.log("Design Data:", data);
 
   useEffect(() => {
     dispatch(fetchDesignData());
@@ -32,12 +33,12 @@ const Home = () => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error}</div>;
   }
 
   return (
     <>
-      <Banner data={design?.response[0]} />
+      {data?.response?.length > 0 && <Banner data={data.response[0]} />}
       <Box
         sx={{
           display: "flex",
@@ -56,7 +57,9 @@ const Home = () => {
           mt: 4,
         }}
       >
-        <CustomComponent data={design?.response[1]} />
+        {data?.response?.length > 1 && (
+          <CustomComponent data={data.response[1]} />
+        )}
         <Box
           component="img"
           src={fram111}
@@ -171,7 +174,9 @@ const Home = () => {
             pb: 5,
           }}
         >
-          <CustomStepper data={design?.response[2]} />
+          {data?.response?.length > 2 && (
+            <CustomStepper data={data.response[2]} />
+          )}
           <Box
             sx={{
               textAlign: "center",

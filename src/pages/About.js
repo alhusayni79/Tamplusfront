@@ -13,13 +13,13 @@ import frambanner from "../assets/image/frambanner.png";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 const About = () => {
   const dispatch = useDispatch();
-  const { design, loading, error } = useSelector((state) => state.design);
+  const { data, loading, error } = useSelector((state) => state.design);
 
   useEffect(() => {
     dispatch(fetchDesignData());
   }, [dispatch]);
 
- if (loading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
@@ -41,7 +41,7 @@ const About = () => {
             mb: 4,
           }}
         >
-          <TrustSection data={design?.response[3]} />
+          <TrustSection data={data?.response[3]} />
         </Box>
         <Box
           sx={{
@@ -57,7 +57,7 @@ const About = () => {
             pt: "88px",
           }}
         >
-          <VisionMissionValuesSection data={design?.response[4]} />
+          <VisionMissionValuesSection data={data?.response[4]} />
         </Box>
         <Box
           sx={{
@@ -77,7 +77,7 @@ const About = () => {
             py: 4,
           }}
         >
-          <TeamSection data={design?.response[5]} />
+          <TeamSection data={data?.response[5]} />
         </Box>
         <Box
           sx={{

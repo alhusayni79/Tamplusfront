@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Menu, MenuItem, Typography, IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useNavigate } from "react-router-dom";
 
 const UserMenu = ({ user, handleUserRoute, isSpecialUser }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
+  const navigate = useNavigate();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -29,7 +30,7 @@ const UserMenu = ({ user, handleUserRoute, isSpecialUser }) => {
         .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
     });
 
-    window.location.href = "/login";
+    navigate("/");
     handleClose();
   };
 

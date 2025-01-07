@@ -1,22 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 export const fetchStatisticsData = createAsyncThunk(
   "statistics/fetchStatisticsData",
   async (_, thunkAPI) => {
     try {
-      const token = Cookies.get("auth_token");
-      if (!token) {
-        return thunkAPI.rejectWithValue("Authentication token is missing");
-      }
-
       const baseURL = process.env.REACT_APP_BASE_URL;
 
       const response = await axios.get(`${baseURL}/user/statistics`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 

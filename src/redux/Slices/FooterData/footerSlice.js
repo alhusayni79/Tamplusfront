@@ -1,43 +1,31 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import axios from 'axios'; 
+import axios from 'axios';
 
 export const fetchFooter = createAsyncThunk(
   'footer/fetchFooter',
   async (_, thunkAPI) => {
     try {
-      const authToken = Cookies.get('auth_token');  
-      const anotherToken = Cookies.get('authemployee');  
-
-      const tokenToUse = authToken || anotherToken;  // استخدام المتوفر
-
-      if (!tokenToUse) {
-        return thunkAPI.rejectWithValue("Authentication token is missing");
-      }
-
-      const baseURL = process.env.REACT_APP_BASE_URL;  
+      const baseURL = process.env.REACT_APP_BASE_URL;
 
       const response = await axios.get(`${baseURL}/user/footer-info`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenToUse}`,  // إرسال التوكين المتوفر فقط
         },
       });
 
       return response.data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
+      const errorMessage =
+        error.response?.data?.message || error.message || 'Unknown error occurred';
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
 
-
-
 const footerSlice = createSlice({
   name: 'footer',
   initialState: {
-    footer: [],  
+    footer: [],
     loading: false,
     error: null,
   },
@@ -50,11 +38,11 @@ const footerSlice = createSlice({
       })
       .addCase(fetchFooter.fulfilled, (state, action) => {
         state.loading = false;
-        state.footer = action.payload;  
+        state.footer = action.payload;
       })
       .addCase(fetchFooter.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; 
+        state.error = action.payload;
       });
   },
 });

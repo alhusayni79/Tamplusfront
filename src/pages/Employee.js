@@ -21,9 +21,11 @@ import { fetchNewRequest } from "../redux/Slices/employeeRequest/newRequestSlice
 import { fetchReservedRequest } from "../redux/Slices/employeeRequest/reservedRequestSlice";
 import { fetchCanceledRequest } from "../redux/Slices/employeeRequest/canceledReuwstSlice";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
   const theme = useTheme();
+  const Navigate=useNavigate()
   const [selectedCategory, setSelectedCategory] = useState("الطلبات");
   const [selectedSubcategory, setSelectedSubcategory] =
     useState("الطلبات الجديدة");
@@ -116,8 +118,7 @@ const Employee = () => {
               .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
         );
   
-      // Redirect to login page
-      window.location.href = "/login";
+      Navigate("/")
     } else {
       setSelectedCategory(category);
       setSelectedSubcategory(null);

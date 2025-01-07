@@ -1,37 +1,41 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import axios from 'axios'; 
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const fetchDesignData = createAsyncThunk(
-  'design/fetchDesignData',
+  "design/fetchDesignData",
   async (_, thunkAPI) => {
     try {
-      const token = Cookies.get('auth_token');  
-      if (!token) {
-        return thunkAPI.rejectWithValue("Authentication token is missing");
-      }
-
-      const baseURL = process.env.REACT_APP_BASE_URL;  
-
+      const baseURL = process.env.REACT_APP_BASE_URL;
       const response = await axios.get(`${baseURL}/user/design`, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  
+          "Content-Type": "application/json",
         },
       });
 
+      // ✅ Log the response data
+      console.log("Fetched Design Data:", response.data);
+
       return response.data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Unknown error occurred";
+
+      // ✅ Log the error
+      console.error("Error fetching design data:", errorMessage);
+
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
 
+
+
 const homeSlice = createSlice({
-  name: 'design',
+  name: "design",
   initialState: {
-    data: [],  
+    data: [],
     loading: false,
     error: null,
   },
@@ -44,13 +48,21 @@ const homeSlice = createSlice({
       })
       .addCase(fetchDesignData.fulfilled, (state, action) => {
         state.loading = false;
-        state.design = action.payload;  
+        state.data = action.payload;
+  
+        // ✅ Log the state update
+        console.log("Design Data Loaded in State:", action.payload);
       })
       .addCase(fetchDesignData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; 
+        state.error = action.payload;
+  
+        // ✅ Log the error state
+        console.error("Error State Updated:", action.payload);
       });
-  },
+  }
+  
+
 });
 
 export default homeSlice.reducer;

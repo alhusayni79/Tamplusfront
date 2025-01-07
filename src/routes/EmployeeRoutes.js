@@ -10,20 +10,13 @@ function EmployeeRoutes() {
   return (
     <>
       <Route element={<CustomLayout />}>
-        <Route
-          path="employee/register"
-          element={
-            <EmployeeProtectedRoute>
-              <EmployeeRegister />
-            </EmployeeProtectedRoute>
-          }
-        />
+        <Route path="employee/register" element={<EmployeeRegister />} />
         <Route
           path="employee"
           element={
             <EmployeeProtectedRoute>
               <Employee />
-            </EmployeeProtectedRoute>
+          </EmployeeProtectedRoute>
           }
         />
         <Route
