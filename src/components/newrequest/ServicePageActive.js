@@ -217,7 +217,7 @@ const ServicePageActive = () => {
       const interval = setInterval(() => {
         dispatch(fetchAllMessage(orderId));
         dispatch(fetchAllMedia(orderId));
-      }, 3000); 
+      }, 3000);
       return () => clearInterval(interval);
     }
   }, [dispatch, orderId]);
@@ -278,8 +278,7 @@ const ServicePageActive = () => {
             },
           }
         );
-        console.log("Media upload response:", mediaResponse.data);
-        mediaId = mediaResponse.data.media_id; 
+        mediaId = mediaResponse.data.media_id;
       }
       const messageFormData = new FormData();
       messageFormData.append("order_id", orderId);
@@ -298,8 +297,6 @@ const ServicePageActive = () => {
           },
         }
       );
-
-      console.log("Message send response:", messageResponse.data);
 
       dispatch(fetchAllMessage(orderId));
       dispatch(fetchAllMedia(orderId));
@@ -445,7 +442,7 @@ const ServicePageActive = () => {
               </Grid>
             </Grid>
           </Card>
-
+                  
           <Paper
             elevation={0}
             sx={{ padding: "32px", textAlign: "center", borderRadius: "8px" }}
@@ -590,10 +587,7 @@ const ServicePageActive = () => {
             </CustomButton>
           </Box>
 
-          <CancelOrderButton
-            orderId={orderId}
-            
-          />
+          <CancelOrderButton orderId={orderId} />
         </Grid>
       </Grid>
       <Dialog open={openDialog} onClose={handleDialogClose} fullWidth>

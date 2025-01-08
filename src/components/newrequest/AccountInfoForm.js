@@ -12,7 +12,6 @@ import { fetchEmpolyeeUData } from "../../redux/Slices/empolyeeData/empolyeeSlic
 function AccountInfoForm() {
   const dispatch = useDispatch();
   const  employeeData = useSelector((state) => state.empolyee);
-  console.log("employeeData",employeeData);
   
   const [imagePreview, setImagePreview] = useState(null);
   const baseURL = process.env.REACT_APP_BASE_URL;

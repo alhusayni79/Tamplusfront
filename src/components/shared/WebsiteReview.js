@@ -43,7 +43,6 @@ const WebsiteReview = () => {
           }
         );
 
-        console.log("Response:", response.data);
         toast.success("Thank you for your feedback!");
 
         // alert("Thank you for your feedback!");

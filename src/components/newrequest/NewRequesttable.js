@@ -24,7 +24,6 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
-  console.log("rows", rows);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

@@ -22,7 +22,6 @@ const Home = () => {
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.design);
 
-  console.log("Design Data:", data);
 
   useEffect(() => {
     dispatch(fetchDesignData());

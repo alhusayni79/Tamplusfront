@@ -132,10 +132,7 @@ const Login = () => {
   
       const cookieName = selectedTab === 0 ? "auth_token" : "authemployee";
       Cookies.set(cookieName, token, { expires: 7 });
-  
-      // Success Alert
-      toast.success("تم التحقق بنجاح! سيتم توجيهك الآن.");
-  
+        toast.success("تم التحقق بنجاح! سيتم توجيهك الآن.");
       if (selectedTab === 0) {
         navigate("/");
       } else {

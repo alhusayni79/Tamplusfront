@@ -15,6 +15,8 @@ import reserverdRequestReducer from "./Slices/employeeRequest/reservedRequestSli
 import canceledRequestReducer from "./Slices/employeeRequest/canceledReuwstSlice";
 import allMessageReducer from "./Slices/chat/allMessageRequestSlice";
 import allMediaReducer from "./Slices/chat/allMediaRequestSlice";
+import reviewsReducer from "./Slices/reviews/reviewsSlice";
+
 
 export const store = configureStore({
   reducer: {
@@ -33,7 +35,8 @@ export const store = configureStore({
     reservedRequest:reserverdRequestReducer,
     canceledRequest:canceledRequestReducer,
     allMessage:allMessageReducer,
-    allMedia:allMediaReducer
+    allMedia:allMediaReducer,
+    reviews:reviewsReducer,
   },
 });
 

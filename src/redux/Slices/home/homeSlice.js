@@ -43,15 +43,11 @@ const homeSlice = createSlice({
         state.loading = false;
         state.data = action.payload;
   
-        // ✅ Log the state update
-        console.log("Design Data Loaded in State:", action.payload);
       })
       .addCase(fetchDesignData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
   
-        // ✅ Log the error state
-        console.error("Error State Updated:", action.payload);
       });
   }
   

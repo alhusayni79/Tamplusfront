@@ -53,7 +53,6 @@ const OrderReview = () => {
           }
         );
 
-        console.log("Response:", response.data);
         toast.success("Thank you for your feedback!");
         // alert("Thank you for your feedback!");
       } catch (error) {

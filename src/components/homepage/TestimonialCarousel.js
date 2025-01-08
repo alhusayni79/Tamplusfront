@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Slider from "react-slick";
 import {
   Box,
@@ -17,26 +17,31 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import avatar from "../../assets/image/avatar.png";
 import Primary from "../../assets/image/Primary.png";
-const testimonials = [
-  {
-    name: "محمد الشهرواي",
-    image: avatar,
-    text: "لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم لتعرض على العميل ليتصور طريقه وضع النصوص بالتصاميم سواء كانت تصاميم مطبوعه … بروشور او فلاير على سبيل المثال … او نماذج مواقع انترنت …",
-    rating: 5,
-  },
-  {
-    name: "محمد ناصر",
-    image: avatar,
-    text: "لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم لتعرض على العميل ليتصور طريقه وضع النصوص بالتصاميم سواء كانت تصاميم مطبوعه … بروشور او فلاير على سبيل المثال … او نماذج مواقع انترنت …",
-    rating: 5,
-  },
-  {
-    name: "يوسف عبدالعزيز",
-    image: avatar,
-    text: "لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم لتعرض على العميل ليتصور طريقه وضع النصوص بالتصاميم سواء كانت تصاميم مطبوعه … بروشور او فلاير على سبيل المثال … او نماذج مواقع انترنت …",
-    rating: 5,
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchReviewsData } from "../../redux/Slices/reviews/reviewsSlice";
+import LoadingSpinner from "../shared/LoadingSpinner";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+// const testimonials = [
+//   {
+//     name: "محمد الشهرواي",
+//     image: avatar,
+//     text: "لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم لتعرض على العميل ليتصور طريقه وضع النصوص بالتصاميم سواء كانت تصاميم مطبوعه … بروشور او فلاير على سبيل المثال … او نماذج مواقع انترنت …",
+//     rating: 5,
+//   },
+//   {
+//     name: "محمد ناصر",
+//     image: avatar,
+//     text: "لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم لتعرض على العميل ليتصور طريقه وضع النصوص بالتصاميم سواء كانت تصاميم مطبوعه … بروشور او فلاير على سبيل المثال … او نماذج مواقع انترنت …",
+//     rating: 5,
+//   },
+//   {
+//     name: "يوسف عبدالعزيز",
+//     image: avatar,
+//     text: "لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم لتعرض على العميل ليتصور طريقه وضع النصوص بالتصاميم سواء كانت تصاميم مطبوعه … بروشور او فلاير على سبيل المثال … او نماذج مواقع انترنت …",
+//     rating: 5,
+//   },
+// ];
 
 function NextArrow(props) {
   const { onClick } = props;
@@ -135,101 +140,142 @@ function CategoryCarousel() {
       },
     ],
   };
-
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.reviews);
 
+  useEffect(() => {
+    dispatch(fetchReviewsData());
+  }, [dispatch]);
+  const testimonials = data?.response;
+  console.log("data", data?.response);
+
+  useEffect(() => {
+    dispatch(fetchReviewsData());
+  }, [dispatch]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <Container maxWidth="lg">
-
-   
-    <Box
-      sx={{
-        backgroundColor: "transparent",
-        position: "relative",
-      }}
-    >
-      <Slider {...settings}>
-        {testimonials.map((testimonial, index) => (
-          <Box key={index} sx={{ padding: "0 0.8rem" }}>
-            <Card
-              key={index}
-              sx={{
-                borderRadius: 3,
-                textAlign: "center",
-                backgroundColor: "#F4F5F6",
-                width: "100%",
-                height: "196px",
-                justifyContent: "space-between",
-                transition: "transform 0.3s ease",
-                "&:hover": {
-                  transform: "scale(1.05)",
-                },
-              }}
-              elevation={0}
-            >
-              <CardContent>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
-                  <img
-                    src={Primary}
-                    alt="column"
-                    style={{ width: 42, height: 30 }}
-                  />
+      <Box
+        sx={{
+          backgroundColor: "transparent",
+          position: "relative",
+        }}
+      >
+        <Slider {...settings}>
+          {testimonials?.map((testimonial, index) => (
+            <Box key={testimonial.id} sx={{ padding: "0 0.8rem" }}>
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  textAlign: "center",
+                  backgroundColor: "#F4F5F6",
+                  width: "100%",
+                  height: "196px",
+                  justifyContent: "space-between",
+                  transition: "transform 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+                elevation={0}
+              >
+                <CardContent>
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "space-between",
                       alignItems: "center",
-                      gap: 1,
+                      gap: 2,
                     }}
                   >
-                    <Box>
-                      <Typography
-                        sx={{
-                          fontWeight: "bold",
-                          fontSize: "18px",
-                          color: theme.palette.primary.dark,
-                        }}
-                      >
-                        {testimonial.name}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontWeight: "400",
-                          fontSize: "14px",
-                          color: theme.palette.primary.body,
-                          textAlign: "right",
-                        }}
-                      >
-                        {"⭐".repeat(testimonial.rating)}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Avatar
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        sx={{ width: 50, height: 50, margin: "0 auto" }}
-                      />
+                    <img
+                      src={Primary}
+                      alt="column"
+                      style={{ width: 42, height: 30 }}
+                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            color: theme.palette.primary.dark,
+                            textAlign: "end",
+                          }}
+                        >
+                          {testimonial?.user?.fullname}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontWeight: "400",
+                            fontSize: "14px",
+                            textAlign: "right",
+                            direction: "rtl",
+                          }}
+                        >
+                          {[...Array(5)].map((_, index) =>
+                            index <
+                            parseInt(testimonial.number_of_stars, 10) ? (
+                              <StarIcon
+                                key={index}
+                                sx={{
+                                  color: "#ffd700",
+                                  fontSize: "20px",
+                                  margin: "0 2px",
+                                }}
+                              />
+                            ) : (
+                              <StarBorderIcon
+                                key={index}
+                                sx={{
+                                  color: "gray",
+                                  fontSize: "20px",
+                                  margin: "0 2px",
+                                }}
+                              />
+                            )
+                          )}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Avatar
+                          src={testimonial?.user?.image}
+                          alt={testimonial?.user?.fullname}
+                          sx={{ width: 50, height: 50, margin: "0 auto" }}
+                        />
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-                <Typography variant="body1">
-                  {testimonial.text.length > 100
+                  <Typography variant="body1" mt={2}>
+                    {/* {testimonial.text.length > 100
                     ? `${testimonial.text.slice(0, 80)}...`
-                    : testimonial.text}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Box>
-        ))}
-      </Slider>
-    </Box>
+                    : testimonial.text} */}
+                    {testimonial.comment}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+          ))}
+        </Slider>
+      </Box>
     </Container>
   );
 }
