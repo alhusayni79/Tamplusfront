@@ -98,48 +98,8 @@ function PrevArrow(props) {
 }
 
 function CategoryCarousel() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    customPaging: (i) => (
-      <Box
-        className="custom-dot"
-        sx={{
-          width: "12px",
-          height: "12px",
-          backgroundColor: "gray",
-          margin: "0 5px",
-          mt: 5,
-        }}
-      />
-    ),
-    dotsClass: "slick-dots",
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 1000,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
+
+  
   const theme = useTheme();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.reviews);
@@ -161,6 +121,42 @@ function CategoryCarousel() {
   if (error) {
     return <div>Error: {error}</div>;
   }
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: Math.min(testimonials?.length || 1, 3), 
+    slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    customPaging: (i) => (
+      <Box
+        className="custom-dot"
+        sx={{
+          width: "12px",
+          height: "12px",
+          backgroundColor: "gray",
+          margin: "0 5px",
+          mt: 5,
+        }}
+      />
+    ),
+    dotsClass: "slick-dots",
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: Math.min(testimonials?.length || 1, 2), 
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1, 
+        },
+      },
+    ],
+  };
   return (
     <Container maxWidth="lg">
       <Box

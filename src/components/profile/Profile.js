@@ -28,23 +28,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserRequest } from "../../redux/Slices/userRequest/userRequestSlice";
 import StatusChip from "../shared/getStatusStyles";
 import LoadingSpinner from "../shared/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 const Profile = () => {
   const location = useLocation();
   const { user } = location.state || {};
-
+  const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
-  const [selectedCategory, setSelectedCategory] = useState("معلومات الحساب");
+  const [selectedCategory, setSelectedCategory] = useState(
+    t("profile.account_information")
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const categories = [
-    { category: "معلومات الحساب" },
-    { category: "الخدمات السابقة" },
-    { category: "رصيد المحفظة" },
-    { category: " تسجيل الخروج" },
+    { category: t("profile.account_information") },
+    { category: t("profile.previous_services") },
+    { category: t("profile.wallet_balance") },
+    { category: t("profile.logout") },
   ];
 
   const dispatch = useDispatch();
@@ -64,7 +67,7 @@ const Profile = () => {
   }, []);
 
   const handleCategoryClick = (category) => {
-    if (category === " تسجيل الخروج") {
+    if (category === t("profile.logout")) {
       document.cookie =
         "auth_token=;expires=" + new Date(0).toUTCString() + ";path=/";
 
@@ -132,7 +135,11 @@ const Profile = () => {
 
   return (
     <Box sx={{ pt: "64px" }}>
-      <CustomBanner title={`مرحباً, ${user?.response?.first_name || ""}!`} />
+      <CustomBanner
+        title={`${t("profile.welcome_message")}, ${
+          user?.response?.first_name || ""
+        }!`}
+      />
       <Box
         sx={{
           mt: "290px",
@@ -224,7 +231,7 @@ const Profile = () => {
               </Grid>
 
               <Grid item xs={12} sm={12} md={9}>
-                {selectedCategory === "الخدمات السابقة" ? (
+                {selectedCategory === t("profile.previous_services") ? (
                   <>
                     <Box
                       sx={{
@@ -239,10 +246,10 @@ const Profile = () => {
                         variant="h6"
                         sx={{ color: "#000", fontWeight: "bold" }}
                       >
-                        الخدمات السابقة
+                        {t("profile.previous_services")}
                       </Typography>
                       <TextField
-                        placeholder="البحث في الخدمات السابقة..."
+                        placeholder={t("profile.search")}
                         variant="outlined"
                         sx={{
                           backgroundColor: "#ffffff",
@@ -311,7 +318,7 @@ const Profile = () => {
                                 textAlign: "center",
                               }}
                             >
-                              الخدمة
+                              {t("profile.service")}
                             </TableCell>
                             <TableCell
                               sx={{
@@ -320,8 +327,8 @@ const Profile = () => {
                                 textAlign: "center",
                               }}
                             >
-                              الحالة
-                            </TableCell>
+                              {t("profile.statuss")}
+                              </TableCell>
                             <TableCell
                               sx={{
                                 color: "#fff",
@@ -329,8 +336,8 @@ const Profile = () => {
                                 textAlign: "left",
                               }}
                             >
-                              آخر تحديث
-                            </TableCell>
+                              {t("profile.lastupdate")}
+                              </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -424,7 +431,7 @@ const Profile = () => {
                                 align="center"
                                 sx={{ color: "#999", padding: "20px" }}
                               >
-                                لا توجد بيانات
+                             {t("profile.nodata")}
                               </TableCell>
                             </TableRow>
                           )}
@@ -446,13 +453,13 @@ const Profile = () => {
                             fontWeight: "400",
                           }}
                         >
-                          يتم عرض من 1 إلى 5 خدمات من
+                          {t("profile.show")}
                           {Math.min(
                             page * rowsPerPage,
                             filteredRows.length
                           )}{" "}
-                          خدمة
-                        </p>
+                          {t("profile.sinlgeservice")}
+                          </p>
                         <Pagination
                           count={Math.ceil(filteredRows.length / rowsPerPage)}
                           page={page}
@@ -491,7 +498,7 @@ const Profile = () => {
                       </Box>
                     </TableContainer>
                   </>
-                ) : selectedCategory === "رصيد المحفظة" ? (
+                ) : selectedCategory === t("profile.wallet_balance") ? (
                   <Box
                     sx={{
                       padding: "20px",
@@ -510,7 +517,7 @@ const Profile = () => {
                       آخر عملية: إضافة 2000 جنيه بتاريخ 10/02/2023
                     </Typography>
                   </Box>
-                ) : selectedCategory === "معلومات الحساب" ? (
+                ) : selectedCategory === t("profile.account_information") ? (
                   <Box
                     sx={{
                       padding: "20px",
@@ -519,8 +526,11 @@ const Profile = () => {
                       backgroundColor: "#f9f9f9",
                     }}
                   >
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      معلومات الحساب
+                    <Typography
+                      variant="h6"
+                      sx={{ color: "#000", fontWeight: "bold" }}
+                    >
+                      {t("profile.account_information")}
                     </Typography>
                     <UpdateProfile />
                   </Box>

@@ -6,22 +6,23 @@ import axios from "axios";
 import CustomInput from "../shared/CustomInput";
 import CustomButton from "../shared/CustomButton";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const ContactForm = () => {
+    const { i18n, t } = useTranslation();
   const theme = useTheme();
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("الاسم الأول مطلوب"),
-    lastName: Yup.string().required("الاسم الأخير مطلوب"),
+    firstName: Yup.string().required(t("contact.Name is required")),
+    lastName: Yup.string().required(t("contact.last is required")),
     phone: Yup.string()
-    .matches(/^\d{12}$/, "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5")
-    .required("رقم الجوال مطلوب"),
-  
-  
+      .matches(/^\d{12}$/, t("contact.numberlength"))
+      .required(t("contact.Mobile number is required")),
     email: Yup.string()
-      .email("بريد الكتروني غير صالح")
-      .required("الايميل مطلوب"),
-    message: Yup.string().required("الرسالة مطلوبة"),
+      .email(t("contact.Invalid email"))
+      .required(t("contact.Email is required")),
+    message: Yup.string().required(t("contact.Message is required")),
   });
+  
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -43,10 +44,10 @@ const ContactForm = () => {
             message: values.message,
           }
         );
-        toast.success("تم إرسال الرسالة بنجاح!");
+        toast.success(t("contact.successMessage"));
         resetForm();
       } catch (error) {
-        toast.error("حدث خطأ أثناء الإرسال. حاول مرة أخرى.");
+        toast.error(t("contact.errorMessage"));
       }
     },
   });
@@ -66,12 +67,13 @@ const ContactForm = () => {
             mb: 4,
           }}
         >
-          أرسل رسالتك الآن
+          {t("contact.start")}
+         
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <CustomInput
-              label="الاسم الأول"
+              label=   {t("contact.firstname")}
               name="firstName"
               value={formik.values.firstName}
               onChange={formik.handleChange}
@@ -86,7 +88,7 @@ const ContactForm = () => {
           </Grid>
           <Grid item xs={6}>
             <CustomInput
-              label="الاسم الأخير"
+              label=   {t("contact.lastname")}
               name="lastName"
               value={formik.values.lastName}
               onChange={formik.handleChange}
@@ -100,7 +102,7 @@ const ContactForm = () => {
 
           <Grid item xs={12}>
             <CustomInput
-              label="رقم الجوال"
+              label=   {t("contact.Mobile number")}
               name="phone"
               value={formik.values.phone.replace(/^966/, "")}
               onChange={(e) => {
@@ -133,7 +135,7 @@ const ContactForm = () => {
           </Grid>
           <Grid item xs={12}>
             <CustomInput
-              label="الايميل"
+              label=   {t("contact.Email")}
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -146,7 +148,7 @@ const ContactForm = () => {
           </Grid>
           <Grid item xs={12}>
             <CustomInput
-              label="الرسالة"
+              label=   {t("contact.Message")}
               isTextarea
               rows={8}
               name="message"
@@ -164,7 +166,9 @@ const ContactForm = () => {
               type="submit"
               backgroundColor={theme.palette.primary.main}
             >
-              إرسال
+          {t("buttons.send")}
+
+       
             </CustomButton>
           </Grid>
         </Grid>

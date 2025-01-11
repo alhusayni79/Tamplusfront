@@ -22,6 +22,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import PaymentComponent from "./PaymentComponent";
 import LoadingSpinner from "../../shared/LoadingSpinner";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 const PaymentMethod = ({ price, id }) => {
   useEffect(() => {
     const savedDir = localStorage.getItem("dir") || "ltr";
@@ -37,7 +38,7 @@ const PaymentMethod = ({ price, id }) => {
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const [isSubmissionSuccessful, setIsSubmissionSuccessful] = useState(false);
   const { label } = useParams();
-
+  const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const { bankinfo, loading, error } = useSelector((state) => state.bankinfo);
@@ -45,7 +46,7 @@ const PaymentMethod = ({ price, id }) => {
     dispatch(fetchBankInfo());
   }, [dispatch]);
 
- if (loading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
@@ -70,10 +71,8 @@ const PaymentMethod = ({ price, id }) => {
   const handleCopy = (text) => {
     navigator.clipboard
       .writeText(text)
-      .then(() => {
-      })
-      .catch((err) => {
-      });
+      .then(() => {})
+      .catch((err) => {});
   };
 
   const validate = () => {
@@ -118,16 +117,16 @@ const PaymentMethod = ({ price, id }) => {
       setUploadErrorMessage("يجب إرفاق ملف");
       return;
     }
-  
+
     const serviceId = id;
-  
+
     const formData = new FormData();
     formData.append("service_id", serviceId);
     formData.append("receipt", uploadedFile);
-  
+
     try {
       const token = Cookies.get("auth_token");
-  
+
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/user/order/bank-transfer`,
         formData,
@@ -138,17 +137,17 @@ const PaymentMethod = ({ price, id }) => {
           },
         }
       );
-  
+
       setUploadedFile(null);
       setUploadErrorMessage("");
       setIsSubmissionSuccessful(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Failed to submit form:", error);
       setUploadErrorMessage("حدث خطأ أثناء رفع الملف. حاول مجددًا.");
     }
   };
-  
+
   const handleRemoveFile = () => {
     setUploadedFile(null);
     setUploadErrorMessage("");
@@ -168,7 +167,7 @@ const PaymentMethod = ({ price, id }) => {
             <Typography
               sx={{ color: "#155724", fontSize: "16px", fontWeight: "500" }}
             >
-              تم ارسال الطلب بنجاح
+              {t("contact.successMessage")}
             </Typography>
           </Box>
         ) : (
@@ -181,8 +180,8 @@ const PaymentMethod = ({ price, id }) => {
                 mb: 3,
               }}
             >
-              طريقة الدفع
-            </Typography>
+              {t("services.waypay")}
+              </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -233,7 +232,8 @@ const PaymentMethod = ({ price, id }) => {
                     }}
                   />
                 </Box>
-                بطاقة بنكية
+              {t("services.bank")}
+                
               </Button>
               <Button
                 onClick={() => handlePaymentMethodChange("بطاقة بنكية")}
@@ -277,8 +277,8 @@ const PaymentMethod = ({ price, id }) => {
                     }}
                   />
                 </Box>
-                تحويل بنكي
-              </Button>
+                {t("services.trans")}
+                </Button>
             </Box>
 
             {paymentMethod === "تحويل بنكي" && (
@@ -291,11 +291,9 @@ const PaymentMethod = ({ price, id }) => {
                   width: "100%",
                 }}
               >
-               <PaymentComponent id={id}/>
+                <PaymentComponent id={id} />
               </Box>
             )}
-
-           
 
             {paymentMethod === "بطاقة بنكية" && (
               <Box sx={{ mt: 2 }}>
@@ -336,7 +334,8 @@ const PaymentMethod = ({ price, id }) => {
                           color: theme.palette.primary.disabled,
                         }}
                       >
-                        اسم البنك
+                                    {t("services.bankname")}
+
                       </Typography>
                       <Typography
                         variant="body1"
@@ -366,8 +365,8 @@ const PaymentMethod = ({ price, id }) => {
                           color: theme.palette.primary.disabled,
                         }}
                       >
-                        رقم الحساب
-                      </Typography>
+                                    {t("services.banknum")}
+                                    </Typography>
                       <Box
                         sx={{
                           display: "flex",
@@ -462,7 +461,7 @@ const PaymentMethod = ({ price, id }) => {
                           color: theme.palette.primary.disabled,
                         }}
                       >
-                        اسم صاحب الحساب
+                                    {t("services.namebank")}
                       </Typography>
                       <Box
                         sx={{
@@ -536,63 +535,62 @@ const PaymentMethod = ({ price, id }) => {
                                 color: "#378AF6",
                               }}
                             >
-                              إرفاق صورة
-                            </Typography>
+                                    {t("services.image")}
+                                    </Typography>
                           </Box>
                         </Box>
                       </label>
                     </>
                   ) : (
                     <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      minHeight: "20vh", 
-                    }}
-                  >
-                    <Box
                       sx={{
-                        position: "relative",
-                        maxWidth: "40%",
-                        height: "150px",
-                        maxHeight: "150px",
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: "20vh",
                       }}
                     >
                       <Box
-                        component="img"
-                        src={URL.createObjectURL(uploadedFile)}
-                        alt="Selected File"
                         sx={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: 2,
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        onClick={handleRemoveFile}
-                        sx={{
-                          position: "absolute",
-                          top: "-8px",
-                          right: "-6px",
-                          color: "white",
-                          backgroundColor: "red",
-                          border: "3px solid",
-                          "&:hover": {
-                            backgroundColor: "red",
-                          },
+                          position: "relative",
+                          maxWidth: "40%",
+                          height: "150px",
+                          maxHeight: "150px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        <ClearIcon fontSize="small" />
-                      </IconButton>
+                        <Box
+                          component="img"
+                          src={URL.createObjectURL(uploadedFile)}
+                          alt="Selected File"
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            borderRadius: 2,
+                          }}
+                        />
+                        <IconButton
+                          size="small"
+                          onClick={handleRemoveFile}
+                          sx={{
+                            position: "absolute",
+                            top: "-8px",
+                            right: "-6px",
+                            color: "white",
+                            backgroundColor: "red",
+                            border: "3px solid",
+                            "&:hover": {
+                              backgroundColor: "red",
+                            },
+                          }}
+                        >
+                          <ClearIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
                     </Box>
-                  </Box>
-                  
                   )}
 
                   {uploadErrorMessage && (
@@ -606,8 +604,8 @@ const PaymentMethod = ({ price, id }) => {
                       backgroundColor={theme.palette.primary.main}
                       onClick={handleFormSubmit}
                     >
-                      إرسال
-                    </CustomButton>
+                                    {t("buttons.send")}
+                                    </CustomButton>
                   </Box>
                 </Box>
               </Box>

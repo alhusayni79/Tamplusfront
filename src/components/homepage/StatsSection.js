@@ -12,7 +12,7 @@ import { fetchStatisticsData } from "../../redux/Slices/staticsSlice/statisticsS
 import LoadingSpinner from "../shared/LoadingSpinner";
 const StatsSection = () => {
   const theme = useTheme();
-  const { i18n } = useTranslation();
+  const { i18n,t } = useTranslation();
   const locale = i18n.language;
   const dispatch = useDispatch();
   const { statistics, loading, error } = useSelector((state) => state.statistics);
@@ -86,7 +86,7 @@ const StatsSection = () => {
                   fontWeight: "400",
                 }}
               >
-                معدل رضا العملاء
+                {t("home.client")}
               </Typography>
             </Box>
             <img
@@ -129,7 +129,8 @@ const StatsSection = () => {
                 <CountUp end={newOrders} duration={3} suffix="+" />
               </Typography>
               <Typography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                طلب جديد يوميا
+                {t("home.newrequest")}
+
               </Typography>
             </Box>
             <img
@@ -172,7 +173,8 @@ const StatsSection = () => {
                 <CountUp end={completedService} duration={3} separator="," suffix="+" />
               </Typography>
               <Typography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                خدمة مكتملة
+                
+              {t("home.fullservice")}
               </Typography>
             </Box>
             <img
@@ -210,7 +212,8 @@ const StatsSection = () => {
                 <CountUp end={servicesCount} duration={3} suffix="+" />
               </Typography>
               <Typography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                خدمات متنوعة
+               
+              {t("home.difservice")}
               </Typography>
             </Box>
             <img

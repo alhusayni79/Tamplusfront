@@ -44,7 +44,7 @@ const TrustSection = ({ data }) => {
             display: "flex",
             flexDirection: "column",
             alignItems: { xs: "center", md: "flex-start" },
-            textAlign: { xs: "center", md: "left" },
+            textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
           }}
         >
           <Box
@@ -59,9 +59,10 @@ const TrustSection = ({ data }) => {
                 fontWeight: 500,
                 fontSize: { xs: "20px", md: "20px" },
                 color: theme.palette.primary.disabled,
+                textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
               }}
             >
-              من نحن؟
+            {t("about.about!")}
             </Typography>
             {data?.data?.map((item, index) => (
               <Box key={index}>
@@ -72,6 +73,8 @@ const TrustSection = ({ data }) => {
                       fontSize: { xs: "28px", md: "20px", lg: "40px" },
                       color: theme.palette.primary.dark,
                       mb: 3,
+                      textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                     }}
                   >
                     {item?.value[currentLang]}
@@ -85,6 +88,8 @@ const TrustSection = ({ data }) => {
                       fontSize: { xs: "16px", md: "14px", lg: "16px" },
                       color: theme.palette.primary.dark,
                       lineHeight: 1.5,
+                      textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                     }}
                   >
                     {item?.value[currentLang]}

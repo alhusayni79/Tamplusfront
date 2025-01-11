@@ -14,7 +14,7 @@ const Contact = () => {
   const currentLang = i18n.language; 
   return (
     <>
-      <CustomBanner title={" تواصل معنا"} />
+      <CustomBanner title={t("navbar.contactus")} />
       <Box
         sx={{
           
@@ -57,7 +57,7 @@ const Contact = () => {
                   pb: 2,
                 }}
               >
-                فروعنا
+                {t("contact.brach")}
               </Typography>
             </Grid>
           </Grid>

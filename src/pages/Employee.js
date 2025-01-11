@@ -22,14 +22,21 @@ import { fetchReservedRequest } from "../redux/Slices/employeeRequest/reservedRe
 import { fetchCanceledRequest } from "../redux/Slices/employeeRequest/canceledReuwstSlice";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Employee = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
-  const Navigate=useNavigate()
-  const [selectedCategory, setSelectedCategory] = useState("الطلبات");
-  const [selectedSubcategory, setSelectedSubcategory] =
-    useState("الطلبات الجديدة");
-  const [expandedCategory, setExpandedCategory] = useState("الطلبات");
+  const Navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState(
+    t("serviceprovider.requests")
+  );
+  const [selectedSubcategory, setSelectedSubcategory] = useState(
+    t("serviceprovider.new_requests")
+  );
+  const [expandedCategory, setExpandedCategory] = useState(
+    t("serviceprovider.requests")
+  );
 
   const handleExpandClick = (categoryName) => {
     setExpandedCategory(
@@ -39,60 +46,59 @@ const Employee = () => {
 
   const categories = [
     {
-      category: "الطلبات",
+      category: t("serviceprovider.requests"),
       subcategories: [
-        { name: "الطلبات الجديدة", icon: "•" },
-        { name: "الطلبات قيد التنفيذ", icon: "•" },
-        { name: "الطلبات المكتملة", icon: "•" },
-        { name: "الطلبات الملغاة", icon: "•" },
+        { name: t("serviceprovider.new_requests"), icon: "•" },
+        { name: t("serviceprovider.requests_in_progress"), icon: "•" },
+        { name: t("serviceprovider.completed_requests"), icon: "•" },
+        { name: t("serviceprovider.cancelled_requests"), icon: "•" },
       ],
     },
     {
-      category: "معلومات الحساب",
+      category: t("serviceprovider.account_information"),
     },
     {
-      category: "معلومات الدفع",
+      category: t("serviceprovider.paymentway"),
     },
-    { category: " تسجيل الخروج" },
-
+    { category: t("serviceprovider.logout") },
   ];
   const dispatch = useDispatch();
 
-  // Destructure state
   const {
     completedRequest,
     loading: completedLoading,
-    error: completedError
+    error: completedError,
   } = useSelector((state) => state.completedRequest);
-  
+
   const {
     newRequest,
-    loading: newLoading, 
-    error: newError
+    loading: newLoading,
+    error: newError,
   } = useSelector((state) => state.newRequest);
-  
+
   const {
-    reservedRequest, 
-    loading: reservedLoading, 
-    error: reservedError
+    reservedRequest,
+    loading: reservedLoading,
+    error: reservedError,
   } = useSelector((state) => state.reservedRequest);
-  
+
   const {
     canceledRequest,
     loading: canceledLoading,
-    error: canceledError
+    error: canceledError,
   } = useSelector((state) => state.canceledRequest);
-  
+
   useEffect(() => {
     dispatch(fetchCompletedRequest());
     dispatch(fetchNewRequest());
-    dispatch(fetchReservedRequest()); 
-    dispatch(fetchCanceledRequest()); 
+    dispatch(fetchReservedRequest());
+    dispatch(fetchCanceledRequest());
   }, [dispatch]);
-  
+
   if (completedLoading || newLoading || reservedLoading || canceledLoading) {
-    return <LoadingSpinner />;  }
-  
+    return <LoadingSpinner />;
+  }
+
   if (completedError || newError || reservedError || canceledError) {
     return (
       <div>
@@ -104,11 +110,9 @@ const Employee = () => {
     );
   }
   const handleCategoryClick = (category) => {
-    if (category === " تسجيل الخروج") {
-      // Clear auth token cookie
-      document.cookie = "authemployee=;expires=" + new Date(0).toUTCString() + ";path=/";
-  
-      // Clear all cookies
+    if (category === t("serviceprovider.logout")) {
+      document.cookie =
+        "authemployee=;expires=" + new Date(0).toUTCString() + ";path=/";
       document.cookie
         .split(";")
         .forEach(
@@ -117,8 +121,8 @@ const Employee = () => {
               .replace(/^ +/, "")
               .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
         );
-  
-      Navigate("/")
+
+      Navigate("/");
     } else {
       setSelectedCategory(category);
       setSelectedSubcategory(null);
@@ -130,14 +134,12 @@ const Employee = () => {
     setSelectedSubcategory(subcategory);
   };
 
- 
-
   return (
     <Container maxWidth="lg">
       <Box sx={{ mt: "80px", mb: 4, position: "relative" }}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={{ xs: 0, sm: 1, md: 2 }}>
-            <Grid item xs={12} sm={12} md={3} sx={{mbش:{xs:2,sm:0}}}>
+            <Grid item xs={12} sm={12} md={3} sx={{ mbش: { xs: 2, sm: 0 } }}>
               <Paper
                 elevation={1}
                 style={{
@@ -165,7 +167,7 @@ const Employee = () => {
                     right: 0,
                   }}
                 ></Box>
-                <List>
+                <List> 
                   {categories.map((category, index) => (
                     <React.Fragment key={index}>
                       <ListItem
@@ -318,35 +320,37 @@ const Employee = () => {
               </Paper>
             </Grid>
             <Grid item xs={12} sm={12} md={9}>
-              {selectedSubcategory === "الطلبات الجديدة" && (
+              {selectedSubcategory === t("serviceprovider.new_requests") && (
                 <NewRequesttable
                   rows={newRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
-              {selectedSubcategory === "الطلبات قيد التنفيذ" && (
+              {selectedSubcategory ===
+                t("serviceprovider.requests_in_progress") && (
                 <NewRequesttable
                   rows={reservedRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
-              {selectedSubcategory === "الطلبات المكتملة" && (
+              {selectedSubcategory ===
+                t("serviceprovider.completed_requests") && (
                 <NewRequesttable
                   rows={completedRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
-              {selectedSubcategory === "الطلبات الملغاة" && (
+              {selectedSubcategory ===
+                t("serviceprovider.cancelled_requests") && (
                 <NewRequesttable
                   rows={canceledRequest?.response}
                   selectedCategory={selectedSubcategory}
                 />
               )}
-              {selectedCategory === "معلومات الحساب" &&
+              {selectedCategory === t("serviceprovider.account_information") &&
                 !selectedSubcategory && <AccountInfoForm />}
-              {selectedCategory === "معلومات الدفع" && !selectedSubcategory && (
-                <PaymentInfoForm />
-              )}
+              {selectedCategory === t("serviceprovider.paymentway") &&
+                !selectedSubcategory && <PaymentInfoForm />}
             </Grid>
           </Grid>
         </Box>

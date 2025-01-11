@@ -6,7 +6,10 @@
     "services": "خدماتنا",
     "News": "آخر الأخبار",
     "search": "البحث",
-    "reviews": "التقييمات"
+    "reviews": "التقييمات",
+    "profile": "الصفحة الشخصية",
+    "logout": "تسجيل الخروج",
+    "welcome": "مرحباً"
   },
   "customheader": {
     "home": " عن المنصة",
@@ -46,15 +49,13 @@
     "ready_to_start": "جاهز للبدء؟",
     "join_our_clients": "انضم إلى الآلاف من عملائنا الذين سهلنا خدماتهم الحكومية",
     "latest_news": "آخر الأخبار",
-    "helpful_tips": "نصائح مفيدة حول كيفية الاستفادة من منصة تم بلس"
+    "helpful_tips": "نصائح مفيدة حول كيفية الاستفادة من منصة تم بلس",
+    "relatednews": "مقالات ذات صلة"
   },
   "about": {
     "about": "عن المنصة",
     "aboutmore": "أنجز معاملتك الحكومية في أقل من دقيقة!",
-    "about!": "من نحن؟",
-    "fast": "سرعة الإنجاز",
-    "privacy": "السرية والخصوصية",
-    "trust": "الشفافية والمصداقية"
+    "about!": "من نحن؟"
   },
   "contact": {
     "call": "اتصل بالدعم",
@@ -67,17 +68,41 @@
     "madina": "المدينة",
     "choose": "اختر المدينة",
     "choosemore": "لم يتم اختيار مركز خدمة",
+    "mrkz": " المركز المختار",
     "firstname": "الاسم الاول",
     "lastname": "الاسم الاخير",
     "Message": "الرسالة",
-    "Name is required": "الاسم مطلوب",
+    "Name is required": "الاسم الاول  مطلوب",
+    "last is required": "الاسم الاخير  مطلوب",
+    "numberlength": "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5",
     "Email is required": "الإيميل مطلوب",
     "Invalid email": "الإيميل غير صحيح",
-    "Mobile number is required": " الجوال مطلوب",
+    "Mobile number is required": "رقم الجوال مطلوب",
     "Message is required": "الرسالة مطلوبة",
     "successMessage": "تم إرسال الرسالة بنجاح!",
-    "errorMessage": "حدث خطأ أثناء الإرسال. حاول مرة أخرى."
+    "errorMessage": "حدث خطأ أثناء الإرسال. حاول مرة أخرى.",
+    "start": "  أرسل رسالتك الآن"
   },
+
+  "services": {
+    "gain": "الفئة المستفيدة",
+    "ksa": "سعودي",
+    "day": "ايام",
+    "time": "مدة تنفيذ الخدمة",
+    "waypay": "طريقة الدفع",
+    "bank": "بطاقة بنكية",
+    "trans": "تحويل بنكي",
+    "bankname": "اسم البنك",
+    "banknum": " رقم الحساب",
+    "namebank": "اسم صاحب الحساب",
+
+    "image": "ارفاق صورة",
+    "pricebefore": "سعر الخدمة قبل الضريبة",
+    "pricebafter": "سعر الخدمة شامل الضريب",
+    "reyal": "ر.س",
+    "payment": "سداد رسوم الخدمة"
+  },
+
   "buttons": {
     "start_now": "ابدأ الآن",
     "learn_more": "اعرف المزيد",
@@ -90,7 +115,8 @@
     "pay_now": "ادفع الآن",
     "send": "إرسال",
     "add_reply": "إضافة رد",
-    "login": "التسجيل / إنشاء حساب"
+    "login": "التسجيل / إنشاء حساب",
+    "save": "حفظ التغييرات"
   },
   "footer": {
     "All-rights": "جميع الحقوق محفوظة © 2024",
@@ -100,7 +126,8 @@
     "Contact info": "معلومات التواصل",
     "made": "صنع بكل❤️ في ",
     "privacy_policy": "سياسة الخصوصية",
-    "terms_conditions": "الشروط والأحكام"
+    "terms_conditions": "الشروط والأحكام",
+    "statrwithus": "قدم خدماتك معنا"
   },
   "profile": {
     "welcome_message": "مرحباً",
@@ -117,10 +144,19 @@
     "active": "نشطة",
     "closed": "مغلقة",
     "completed": "مكتملة",
-    "archived": "مغلقة"
-   
-
-  },
+    "archived": "مغلقة",
+    "logout": "تسجيل الخروج",
+    "wallet_balance": "رصيد المحفظة",
+    "imageprofile": "الصورة الشخصية",
+    "chooseimage": "اختر صورة",
+    "search":"البحث في الخدمات السابقة...",
+    "service":"الخدمة",
+    "sinlgeservice":"خدمة",
+    "statuss":"الحالة",
+    "lastupdate":"آخر تحديث",
+    "nodata":"لا توجد بيانات",
+    "show":" يتم عرض من 1 إلى 5 خدمات من"
+    },
   "email": "البريد الإلكتروني",
   "subscribeNow": "اشترك الآن",
   "newsletter": {
@@ -129,26 +165,37 @@
     "button": "newsletterButton"
   },
   "serviceprovider": {
-  "welcome_message": "مرحباً",
-  "new_requests": "الطلبات الجديدة",
-  "requests": "الطلبات",
-  "requests_in_progress": "الطلبات قيد التنفيذ",
-  "completed_requests": "الطلبات المكتملة",
-  "cancelled_requests": "الطلبات الملغاة",
-  "account_information": "معلومات الحساب",
-  "service_information": "معلومات الخدمة",
-  "service_request_date": "تاريخ طلب الخدمة",
-  "last_update": "آخر تحديث",
-  "status": "الحالة",
-  "total": "الإجمالي",
-  "client_attachments": "مرفقات العميل",
-  "my_attachments": "مرفقاتي",
-  "no_data": "لا توجد بيانات",
-  "services_displayed_summary": "يتم عرض من 1 إلى 0 خدمات من 0 خدمة",
-  "actions": "الإجراءات",
-  "request": "الطلب",
-  "profile_picture": "الصورة الشخصية",
-  "offer_services_with_us": "قدم خدماتك معنا"
+    "welcome_message": "مرحباً",
+    "new_requests": "الطلبات الجديدة",
+    "requests": "الطلبات",
+    "requests_in_progress": "الطلبات قيد التنفيذ",
+    "completed_requests": "الطلبات المكتملة",
+    "cancelled_requests": "الطلبات الملغاة",
+    "account_information": "معلومات الحساب",
+    "service_information": "معلومات الخدمة",
+    "service_request_date": "تاريخ طلب الخدمة",
+    "last_update": "آخر تحديث",
+    "status": "الحالة",
+    "total": "الإجمالي",
+    "client_attachments": "مرفقات العميل",
+    "my_attachments": "مرفقاتي",
+    "no_data": "لا توجد بيانات",
+    "services_displayed_summary": "يتم عرض من 1 إلى 0 خدمات من 0 خدمة",
+    "actions": "الإجراءات",
+    "request": "الطلب",
+    "profile_picture": "الصورة الشخصية",
+    "offer_services_with_us": "قدم خدماتك معنا",
+    "logout": "تسجيل الخروج",
+    "paymentway": "معلومات الدفع",
+    "imageprofile": "الصورة الشخصية",
+    "chooseimage": "اختر صورة",
+    "search":"البحث في الخدمات السابقة...",
+    "service":"الخدمة",
+    "sinlgeservice":"خدمة",
+    "statuss":"الحالة",
+    "lastupdate":"آخر تحديث",
+    "nodata":"لا توجد بيانات",
+    "show":" يتم عرض من 1 إلى 5 خدمات من"
+  }
 }
-
-}
+ 

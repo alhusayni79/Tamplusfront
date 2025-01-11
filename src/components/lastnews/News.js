@@ -8,12 +8,13 @@ import frambanner from "../../assets/image/frambanner.png";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { t } from "i18next";
 
 const News = () => {
   const theme = useTheme();
   const location = useLocation();
   const { id } = location.state || {}; 
-  const { i18n } = useTranslation();
+  const { i18n ,t} = useTranslation();
   const currentLang = i18n.language;
 
   const { blogs } = useSelector((state) => state.blogs);
@@ -40,7 +41,7 @@ const News = () => {
     <>
       <CustomBanner
         title={localizedData.title}
-        pageTitle="آخر الأخبار"
+        pageTitle={t("home.latest_news")}
         service={localizedData.title}
         image={localizedData.image}
       />
@@ -80,7 +81,7 @@ const News = () => {
         <PromoBanner />
         <Box sx={{ pt: "64px", pb: "80px" }}>
           <Box sx={{ p: "24px" }}>
-            <Heading text="مقالات ذات صلة" />
+            <Heading text={t("home.relatednews")} />
           </Box>
           <LastNewsComponent displayCount={3} />
         </Box>

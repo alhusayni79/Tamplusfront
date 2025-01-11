@@ -17,11 +17,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDesignData } from "../redux/Slices/home/homeSlice";
 import fram111 from "../assets/image/Frame111.png";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.design);
-
 
   useEffect(() => {
     dispatch(fetchDesignData());
@@ -103,8 +104,8 @@ const Home = () => {
       </Box>
       <Box sx={{ pt: "5px", position: "relative", overflow: "hidden" }}>
         <MainHaeder
-          title={"استكشف خدماتنا"}
-          subtitle={"اكتشف الخدمات المقدمة عبر مختلف القطاعات الحكومية"}
+          title={t("home.discover")}
+          subtitle={t("home.discovermore")}
         />
         <Box
           sx={{
@@ -146,7 +147,7 @@ const Home = () => {
               border={true}
               sx={{ zIndex: 100 }}
             >
-              تصفح كل الخدمات{" "}
+              {t("buttons.browse_all_services")}
             </CustomButton>
           </Box>
         </Box>
@@ -162,8 +163,8 @@ const Home = () => {
         }}
       >
         <MainHaeder
-          title={" كيف يعمل تم بلس"}
-          subtitle={"خمس خطوات بسيطة لإنجاز خدماتك"}
+          title={t("home.howwork")}
+          subtitle={t("home.5steps")}
         />
         <Box
           sx={{
@@ -191,7 +192,7 @@ const Home = () => {
               border={true}
               sx={{ zIndex: 100 }}
             >
-              ابدأ خطوتك الأولى الآن
+              {t("buttons.take_first_step")}
             </CustomButton>
           </Box>
           <Box
@@ -225,8 +226,8 @@ const Home = () => {
         id="reviews"
       >
         <MainHaeder
-          title={"ماذا يقول عملاؤنا"}
-          subtitle={"آلاف المستخدمين الراضين أكملوا طلباتهم بنجاح"}
+          title={t("home.review")}
+          subtitle={t("home.reviewmore")}
         />
         <Box
           sx={{
@@ -252,8 +253,8 @@ const Home = () => {
         }}
       >
         <MainHaeder
-          title={"آخر الأخبار"}
-          subtitle={"نصائح مفيدة حول كيفية  الاستفادة من منصة تم بلس"}
+          title={t("home.news")}
+          subtitle={t("home.newsmore")}
         />
         <LastNewsComponent displayCount={3} />
         <Box
@@ -271,7 +272,7 @@ const Home = () => {
             border={true}
             sx={{ zIndex: 100 }}
           >
-            المزيد من المقالات{" "}
+            {t("buttons.more_articles")}
           </CustomButton>
         </Box>
       </Box>

@@ -4,8 +4,11 @@ import checkImage from "../assets/image/check.png";
 import trustImage from "../assets/image/trustimage.png";
 import { useTranslation } from "react-i18next";
 
-const iconData = ["الشفافية والمصداقية", "السرية والخصوصية", "سرعة الإنجاز"];
-
+const iconData = [
+  { ar: "الشفافية والمصداقية", en: "Transparency & Credibility" },
+  { ar: "السرية والخصوصية", en: "Confidentiality & Privacy" },
+  { ar: "سرعة الإنجاز", en: "Fast Processing" },
+];
 const VisionMissionValuesSection = ({ data }) => {
   const theme = useTheme();
   const { i18n, t } = useTranslation();
@@ -25,7 +28,7 @@ const VisionMissionValuesSection = ({ data }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: { xs: "center", md: "flex-start" },
-          textAlign: { xs: "center", md: "left" },
+          textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
         }}
       >
         <Box
@@ -44,6 +47,8 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontSize: "32px",
                     color: theme.palette.primary.dark,
                     mb: 2,
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                   }}
                 >
                   {item.value[currentLang]}
@@ -55,6 +60,8 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontWeight: 400,
                     fontSize: "16px",
                     color: theme.palette.primary.dark,
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                   }}
                 >
                   {item.value[currentLang]}
@@ -71,6 +78,8 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontSize: "32px",
                     color: theme.palette.primary.dark,
                     mb: 2,
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                   }}
                 >
                   {item.value[currentLang]}
@@ -82,6 +91,8 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontWeight: 400,
                     fontSize: "16px",
                     color: theme.palette.primary.dark,
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                   }}
                 >
                   {item.value[currentLang]}
@@ -98,6 +109,8 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontSize: "32px",
                     color: theme.palette.primary.dark,
                     mb: 2,
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                   }}
                 >
                   {item.value[currentLang]}
@@ -109,6 +122,8 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontWeight: 400,
                     fontSize: "16px",
                     color: theme.palette.primary.dark,
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
+
                   }}
                 >
                   {item.value[currentLang]}
@@ -134,10 +149,10 @@ const VisionMissionValuesSection = ({ data }) => {
                     fontSize: { xs: "11px", sm: "14px", md: "14px" },
                     fontWeight: 500,
                     color: theme.palette.primary.dark,
-                    textAlign: "right",
+                    textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
                   }}
                 >
-                  {text}
+                  {text?.[currentLang]}
                 </Typography>
               </Box>
             ))}

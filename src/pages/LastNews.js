@@ -5,11 +5,13 @@ import LastNewsComponent from "../components/homepage/LastNewsComponent";
 import PromoBanner from "../components/shared/PromoBanner";
 import CustomBanner from "../components/layout/CustomBanner";
 import frambanner from "../assets/image/frambanner.png";
+import { useTranslation } from "react-i18next";
 
 const LastNews = () => {
+  const {t}=useTranslation();
   return (
     <>
-      <CustomBanner title={"آخر الأخبار"} />
+      <CustomBanner title={t("navbar.News")} />
       <Box
         sx={{
           mt: "290px",

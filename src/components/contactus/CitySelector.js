@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { fetchFooter } from "../../redux/Slices/FooterData/footerSlice";
 import Map from "./Map";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
- import LoadingSpinner from "../../components/shared/LoadingSpinner.js"
+import LoadingSpinner from "../../components/shared/LoadingSpinner.js";
 const CitySelector = () => {
   const [city, setCity] = useState("");
   const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
@@ -42,7 +42,7 @@ const CitySelector = () => {
     dispatch(fetchFooter());
   }, [dispatch]);
 
- if (loading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
@@ -112,7 +112,7 @@ const CitySelector = () => {
                 pb: 2,
               }}
             >
-              طريقك لإيجاد أقرب مركز خدمة
+              {t("contact.roadto")}
             </Typography>
 
             <FormControl fullWidth style={{ maxWidth: "300px" }} dir="rtl">
@@ -125,7 +125,7 @@ const CitySelector = () => {
                   pb: 1,
                 }}
               >
-                المدينة
+                {t("contact.madina")}
               </Typography>
               <Select
                 labelId="city-select-label"
@@ -135,13 +135,13 @@ const CitySelector = () => {
                 displayEmpty
                 renderValue={(selected) => {
                   if (selected.length === 0) {
-                    return <em>اختر المدينة</em>;
+                    return <em>{t("contact.choose")}</em>;
                   }
                   return selected;
                 }}
               >
                 <MenuItem value="">
-                  <em>اختر المدينة</em>
+                  <em>{t("contact.choose")}</em>{" "}
                 </MenuItem>
                 {cities.map((city) => (
                   <MenuItem key={city.id} value={city.name[currentLang]}>
@@ -176,7 +176,9 @@ const CitySelector = () => {
           }}
         />
         <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "500" }}>
-          {city ? `المركز المختار: ${city}` : "لم يتم اختيار مركز خدمة"}{" "}
+          {city
+            ? `${t("contact.mrkz")}: ${city}`
+            : `${t("contact.choosemore")}`}
         </Typography>
       </Box>
     </>

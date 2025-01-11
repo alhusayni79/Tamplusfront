@@ -3,10 +3,12 @@ import CustomBanner from "../components/layout/CustomBanner";
 import ServicesList from "../../src/components/services/ServicesList";
 import { Box, Container } from "@mui/material";
 import frambanner from "../assets/image/frambanner.png";
+import { useTranslation } from "react-i18next";
 const Servicess = () => {
+  const {t}=useTranslation()
   return (
     <>
-      <CustomBanner title="جميع الخدمات" />
+      <CustomBanner title={t("navbar.services")} />
       <Box
         sx={{
          

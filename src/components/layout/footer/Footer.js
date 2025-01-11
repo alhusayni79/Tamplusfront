@@ -39,7 +39,7 @@ export default function ResponsiveFooter() {
     dispatch(fetchFooter());
   }, [dispatch, currentLang]);
 
- if (loading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
@@ -132,7 +132,8 @@ export default function ResponsiveFooter() {
                   textAlign: currentLang === "ar" ? "right" : "left",
                 }}
               >
-                السجل التجاري: {footer?.response?.commercial_register}
+                {t("footer.Commercial-Registration")}{" "}
+                {footer?.response?.commercial_register}
               </Typography>
               <Typography
                 sx={{
@@ -141,7 +142,8 @@ export default function ResponsiveFooter() {
                   textAlign: currentLang === "ar" ? "right" : "left",
                 }}
               >
-                الرقم الضريبي: {footer?.response?.vat_registeration_number}
+                {t("footer.Tax-Number")}{" "}
+                {footer?.response?.vat_registeration_number}
               </Typography>
             </Box>
           </Box>
@@ -173,7 +175,7 @@ export default function ResponsiveFooter() {
               color: theme.palette.primary.dark,
             }}
           >
-            معلومات التواصل
+            {t("footer.Contact info")}
           </Typography>
           <Box
             sx={{ display: "flex", alignItems: "center", marginTop: 1, gap: 1 }}
@@ -267,7 +269,7 @@ export default function ResponsiveFooter() {
               color: theme.palette.primary.dark,
             }}
           >
-            مصادر اخرى
+            {t("footer.Other resources")}
           </Typography>
           <>
             {authEmployeeCookie && (
@@ -280,7 +282,7 @@ export default function ResponsiveFooter() {
                   cursor: "pointer",
                 }}
               >
-                قدم خدماتك معنا
+                {t("footer.statrwithus")}
               </Typography>
             )}
             <Typography
@@ -388,7 +390,7 @@ export default function ResponsiveFooter() {
             fontSize: "16px",
           }}
         >
-          جميع الحقوق محفوظة © 2024
+          {t("footer.All-rights")}
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 4 }}>
           <img
@@ -426,7 +428,7 @@ export default function ResponsiveFooter() {
             rel="noopener noreferrer"
             style={{ textDecoration: "none" }}
           >
-            صنع بكل ❤️ بواسطة
+            {t("footer.made")}
           </Typography>
           <img
             src={Wazin}

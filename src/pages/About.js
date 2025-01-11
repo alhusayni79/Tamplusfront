@@ -11,7 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDesignData } from "../redux/Slices/home/homeSlice";
 import frambanner from "../assets/image/frambanner.png";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
+import { useTranslation } from "react-i18next";
+
 const About = () => {
+  const {t}=useTranslation();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.design);
 
@@ -26,11 +29,15 @@ const About = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+
+  const trustData = data?.response?.[3] || {};
+  const teamData = data?.response?.[5] || {};
+
   return (
     <>
       <CustomBanner
-        title={"عن المنصة"}
-        service={"أنجز معاملتك الحكومية في أقل من دقيقة!"}
+        title={t("about.about")}
+        service={t("about.aboutmore")}
       />
       <Box sx={{ position: "relative" }}>
         <Box
@@ -41,13 +48,9 @@ const About = () => {
             mb: 4,
           }}
         >
-          <TrustSection data={data?.response[3]} />
+          <TrustSection data={trustData} />
         </Box>
-        <Box
-          sx={{
-            backgroundColor: "#042B5D",
-          }}
-        >
+        <Box sx={{ backgroundColor: "#042B5D" }}>
           <StatsSection />
         </Box>
         <Box
@@ -57,14 +60,13 @@ const About = () => {
             pt: "88px",
           }}
         >
-          <VisionMissionValuesSection data={data?.response[4]} />
+          <VisionMissionValuesSection data={data?.response?.[4]} />
         </Box>
         <Box
           sx={{
             pr: { xs: 1, sm: 3, md: 18 },
             pl: { xs: 1, sm: 3, md: 18 },
             mt: "88px",
-
             mb: "88px",
           }}
         >
@@ -72,18 +74,13 @@ const About = () => {
         </Box>
         <Box
           sx={{
-            background:
-              "linear-gradient(to bottom, #DDEBFD1F 12%, #DDEBFD 100%)",
+            background: "linear-gradient(to bottom, #DDEBFD1F 12%, #DDEBFD 100%)",
             py: 4,
           }}
         >
-          <TeamSection data={data?.response[5]} />
+          <TeamSection data={teamData} />
         </Box>
-        <Box
-          sx={{
-            py: 6,
-          }}
-        >
+        <Box sx={{ py: 6 }}>
           <SubBanner />
         </Box>
         <img

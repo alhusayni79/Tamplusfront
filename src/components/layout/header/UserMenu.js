@@ -3,8 +3,10 @@ import { Menu, MenuItem, Typography, IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const UserMenu = ({ user, handleUserRoute, isSpecialUser }) => {
+  const {t}=useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -80,8 +82,8 @@ const UserMenu = ({ user, handleUserRoute, isSpecialUser }) => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={handleProfile}>الصفحة الشخصية</MenuItem>
-        <MenuItem onClick={handleLogout}>تسجيل الخروج</MenuItem>
+        <MenuItem onClick={handleProfile}> {t("navbar.profile")}</MenuItem>
+        <MenuItem onClick={handleLogout}> {t("navbar.logout")}</MenuItem>
       </Menu>
     </div>
   );

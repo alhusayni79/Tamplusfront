@@ -71,7 +71,7 @@ const ContactInfo = () => {
             pt: 2,
           }}
         >
-          اتصل بالدعم
+          {t("contact.call")}
         </Typography>
         <Box
           sx={{
@@ -102,7 +102,7 @@ const ContactInfo = () => {
                   mt: "-5px",
                 }}
               >
-                رقم الجوال
+                {t("contact.Mobile number")}
               </Typography>
               <Typography
                 component="a"
@@ -138,7 +138,7 @@ const ContactInfo = () => {
                   mt: "-5px",
                 }}
               >
-                الإيميل{" "}
+                {t("contact.Email")}
               </Typography>
               <Typography
                 component="a"
@@ -174,7 +174,7 @@ const ContactInfo = () => {
                   mt: "-5px",
                 }}
               >
-                الموقع{" "}
+                {t("contact.Location")}
               </Typography>
               <Typography
                 component="a"
@@ -204,7 +204,8 @@ const ContactInfo = () => {
             pb: 2,
           }}
         >
-          مواقع التواصل
+                          {t("contact.Social media")}
+
         </Typography>
         <Box
           sx={{

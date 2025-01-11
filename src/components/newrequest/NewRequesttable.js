@@ -18,8 +18,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import StatusChip from "../shared/getStatusStyles";
+import { useTranslation } from "react-i18next";
 
 const NewRequesttable = ({ rows, selectedCategory }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
@@ -66,29 +68,6 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
   const filteredRows = transformedRows.filter((row) =>
     row.serviceDescription.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // const getStatusStyles = (status) => {
-  //   const statusMap = {
-  //     "مكتملة": {
-  //       bg: "#D1ECF1",
-  //       color: "#0C5460"
-  //     },
-  //     "نشطة": {
-  //       bg: "#E2FAE0",
-  //       color: "#114C0B"
-  //     },
-  //     "قيد الانتظار": {
-  //       bg: "#FFF3CD",
-  //       color: "#856404"
-  //     },
-  //     "تم الإلغاء": {
-  //       bg: "#F8D7DA",
-  //       color: "#721C24"
-  //     }
-  //   };
-  //   return statusMap[status] || { bg: "#FAE1E0", color: "#6E1311" };
-  // };
-
   return (
     <>
       <Box
@@ -115,7 +94,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
         </Typography>
 
         <TextField
-          placeholder="البحث في الخدمات السابقة..."
+          placeholder={t("profile.search")}
           variant="outlined"
           sx={{
             backgroundColor: "#ffffff",
@@ -179,7 +158,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                   textAlign: "center",
                 }}
               >
-                الطلب
+                {t("profile.service")}{" "}
               </TableCell>
               <TableCell
                 sx={{
@@ -188,7 +167,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                   textAlign: "center",
                 }}
               >
-                الحالة
+                {t("profile.statuss")}
               </TableCell>
               <TableCell
                 sx={{
@@ -197,7 +176,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                   textAlign: "center",
                 }}
               >
-                الإجمالي{" "}
+                {t("serviceprovider.total")}
               </TableCell>
               <TableCell
                 sx={{
@@ -206,7 +185,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                   textAlign: "left",
                 }}
               >
-                الإجراءات
+                {t("serviceprovider.actions")}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -270,17 +249,6 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                           index % 2 === 0 ? "transparent" : "#F4F5F6",
                       }}
                     >
-                      {/* <Button
-                        variant="contained"
-                        sx={{
-                          borderRadius: "16px",
-                          padding: "4px 12px",
-                          backgroundColor: getStatusStyles(row.status).bg,
-                          color: getStatusStyles(row.status).color,
-                        }}
-                      >
-                        {row.status}
-                      </Button> */}
                       <StatusChip Status={row.status} />
                     </TableCell>
                     <TableCell
@@ -329,7 +297,7 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
                   align="center"
                   sx={{ color: "#999", padding: "20px" }}
                 >
-                  لا توجد بيانات
+                  {t("profile.nodata")}
                 </TableCell>
               </TableRow>
             )}
@@ -351,8 +319,9 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
               fontWeight: "400",
             }}
           >
-            يتم عرض من 1 إلى {Math.min(rowsPerPage, filteredRows.length)} خدمات
-            من {filteredRows.length} خدمة
+            {t("profile.show")}
+            {Math.min(rowsPerPage, filteredRows.length)}
+            {filteredRows.length} {t("profile.sinlgeservice")}
           </p>
           <Pagination
             count={Math.ceil(filteredRows.length / rowsPerPage)}

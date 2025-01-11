@@ -8,22 +8,23 @@ import { Box, Typography, Paper, Button } from "@mui/material";
 import CustomInput from "../shared/CustomInput";
 import CustomButton from "../shared/CustomButton";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function UpdateProfile() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user);
   const [imagePreview, setImagePreview] = useState(null);
   const baseURL = process.env.REACT_APP_BASE_URL;
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("الاسم الأول مطلوب"),
-    lastName: Yup.string().required("الاسم الأخير مطلوب"),
-    phone: Yup.string()
-      .matches(/^\d{12}$/, "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5")
-      .required("رقم الجوال مطلوب"),
-
-    email: Yup.string()
-      .email("البريد الإلكتروني غير صحيح")
-      .required("البريد الإلكتروني مطلوب"),
+      firstName: Yup.string().required(t("contact.Name is required")),
+       lastName: Yup.string().required(t("contact.last is required")),
+       phone: Yup.string()
+         .matches(/^\d{12}$/, t("contact.numberlength"))
+         .required(t("contact.Mobile number is required")),
+       email: Yup.string()
+         .email(t("contact.Invalid email"))
+         .required(t("contact.Email is required")),
   });
 
   const formik = useFormik({
@@ -100,8 +101,7 @@ function UpdateProfile() {
         >
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="الاسم الأول"
-              // placeholder="سيف"
+              label=   {t("contact.firstname")}
               name="firstName"
               value={formik.values.firstName}
               onChange={formik.handleChange}
@@ -120,8 +120,7 @@ function UpdateProfile() {
           </Box>
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="الاسم الأخير"
-              // placeholder="الخطابي"
+              label=   {t("contact.lastname")}
               name="lastName"
               value={formik.values.lastName}
               onChange={formik.handleChange}
@@ -138,7 +137,7 @@ function UpdateProfile() {
           </Box>
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="رقم الجوال"
+              label=   {t("contact.Mobile number")}
               name="phone"
               value={formik.values.phone.replace(/^966/, "")}
               onChange={(e) => {
@@ -167,8 +166,7 @@ function UpdateProfile() {
           </Box>
           <Box sx={{ mb: "10px" }}>
             <CustomInput
-              label="البريد الإلكتروني"
-              // placeholder="example@info.com"
+              label=   {t("contact.Email")}
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -185,8 +183,7 @@ function UpdateProfile() {
           </Box>
           <Box sx={{ mb: "32px", textAlign: "center" }}>
             <Typography sx={{ mb: 2, textAlign: "right" }}>
-              الصورة الشخصية
-            </Typography>
+            {t("profile.chooseimage")}            </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -231,8 +228,8 @@ function UpdateProfile() {
                   },
                 }}
               >
-                اختر صورة
-                <input
+              {t("profile.chooseimage")}
+              <input
                   type="file"
                   accept="image/*"
                   hidden
@@ -252,8 +249,8 @@ function UpdateProfile() {
             margin: "0 auto",
           }}
         >
-          حفظ التغييرات
-        </CustomButton>
+            {t("buttons.save")}
+            </CustomButton>
       </form>
     </Box>
   );

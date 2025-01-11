@@ -4,10 +4,11 @@ import CustomButton from "./CustomButton";
 import frame20 from "../../assets/image/frame20.png";
 import frame19 from "../../assets/image/fram19.png";
 import linesBackground from "../../assets/image/lines.png";
+import { useTranslation } from "react-i18next";
 
 const PromoBanner = () => {
   const theme = useTheme();
-
+ const {  t } = useTranslation();
   return (
     <Container maxWidth="lg">
       <Box
@@ -42,7 +43,7 @@ const PromoBanner = () => {
             mb: { xs: 1, md: 2 },
           }}
         >
-          جاهز للبدء؟
+          {t("home.ready")}
         </Typography>
 
         <Typography
@@ -56,7 +57,7 @@ const PromoBanner = () => {
             lineHeight: 1.3,
           }}
         >
-          انضم إلى الآلاف من عملائنا الذين سهلنا خدماتهم الحكومية
+          {t("home.readymore")}
         </Typography>
 
         <CustomButton
@@ -70,7 +71,7 @@ const PromoBanner = () => {
             fontSize: { xs: "14px", sm: "16px", md: "18px" },
           }}
         >
-          انضم الآن
+          {t("buttons.join_now")}
         </CustomButton>
 
         <Box

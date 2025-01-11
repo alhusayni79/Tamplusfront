@@ -30,7 +30,7 @@ const TeamSection = ({ data }) => {
                       fontSize: "16px",
                       fontWeight: 400,
                       color: "#1E2124",
-                      textAlign: "right",
+                      textAlign: { xs: "center", md: currentLang === "ar" ? "right" : "left" }
                     }}
                   >
                     {item?.value?.[currentLang]}

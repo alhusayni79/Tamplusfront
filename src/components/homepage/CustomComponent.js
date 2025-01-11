@@ -63,7 +63,7 @@ const CustomComponent = ({ data }) => {
                 mb: 2,
               }}
             >
-              لماذا تختار تم بلس؟
+              {t("home.why")}
             </Typography>
             <Typography
               sx={{
@@ -74,7 +74,7 @@ const CustomComponent = ({ data }) => {
                 pb: { md: 2, lg: 4 },
               }}
             >
-              إليك سبب ثقة الآلاف من المستخدمين في منصتنا
+              {t("home.whychoose")}
             </Typography>
 
             <Box

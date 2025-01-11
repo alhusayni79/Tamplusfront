@@ -229,7 +229,7 @@ export default function ServicePage() {
                       color: theme.palette.primary.body,
                     }}
                   >
-                    الفئة المستفيدة
+                   {t("services.gain")}
                   </Typography>
                   <Typography
                     sx={{
@@ -238,8 +238,8 @@ export default function ServicePage() {
                       color: theme.palette.primary.dark,
                     }}
                   >
-                    سعودي
-                  </Typography>
+                   {t("services.ksa")}
+                   </Typography>
                 </Box>
               </Box>
               <Box
@@ -268,8 +268,8 @@ export default function ServicePage() {
                       color: theme.palette.primary.body,
                     }}
                   >
-                    مدة تنفيذ الخدمة
-                  </Typography>
+                   {t("services.time")}
+                   </Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -293,8 +293,8 @@ export default function ServicePage() {
                         color: theme.palette.primary.dark,
                       }}
                     >
-                      ايام
-                    </Typography>
+                   {t("services.day")}
+                   </Typography>
                   </Box>
                 </Box>
               </Box>
@@ -360,8 +360,8 @@ export default function ServicePage() {
                 width="100%"
                 onClick={validateAndOpenModal}
               >
-                ابدأ الخدمة الآن
-              </CustomButton>
+                   {t("buttons.start_service")}
+                   </CustomButton>
 
               <RequiredDataModal
                 open={openModal}

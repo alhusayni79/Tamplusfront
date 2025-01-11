@@ -32,7 +32,7 @@ export default function Payment() {
             color: theme.palette.primary.dark,
           }}
         >
-          سداد رسوم الخدمة
+          {t("services.payment")}
         </Typography>
         <img src={tampluslogo} width={80} height={64} alt="tam" />
       </Box>
@@ -71,8 +71,8 @@ export default function Payment() {
                   mb: 2,
                 }}
               >
-                سعر الخدمة قبل الضريبة
-              </Typography>
+          {t("services.pricebefore")}
+          </Typography>
 
               <Box sx={{ mb: 2 }}>
                 <Typography
@@ -84,16 +84,16 @@ export default function Payment() {
                 >
                   {price_without_vat}
                   <Typography
-                    component="span"
-                    variant="subtitle2"
-                    sx={{
-                      color: "#595F69",
-                      mr: 1,
-                      fontSize: "16px",
-                    }}
+                   component="span"
+                   variant="subtitle2"
+                   sx={{
+                     color: "#595F69",
+                     mr: 1,
+                     fontSize: "20px",
+                   }}
                   >
-                    ر.س
-                  </Typography>
+          {t("services.reyal")}
+          </Typography>
                 </Typography>
               </Box>
 
@@ -107,8 +107,8 @@ export default function Payment() {
                     mb: 2,
                   }}
                 >
-                  سعر الخدمة شامل الضريبة
-                </Typography>
+          {t("services.pricebafter")}
+          </Typography>
                 <Typography
                   sx={{
                     fontSize: "14px",
@@ -134,8 +134,8 @@ export default function Payment() {
                       fontSize: "20px",
                     }}
                   >
-                    ر.س
-                  </Typography>
+          {t("services.reyal")}
+          </Typography>
                 </Typography>
               </Box>
             </Card>

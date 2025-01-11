@@ -8,8 +8,10 @@ import CustomInput from "../shared/CustomInput";
 import CustomButton from "../shared/CustomButton";
 import { toast } from "react-toastify";
 import { fetchEmpolyeeUData } from "../../redux/Slices/empolyeeData/empolyeeSlice";
+import { useTranslation } from "react-i18next";
 
 function AccountInfoForm() {
+  const {t}=useTranslation();
   const dispatch = useDispatch();
   const  employeeData = useSelector((state) => state.empolyee);
   
@@ -17,15 +19,16 @@ function AccountInfoForm() {
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   const validationSchema = Yup.object({
-    first_name: Yup.string().required("الاسم الأول مطلوب"),
-    last_name: Yup.string().required("الاسم الأخير مطلوب"),
-    phone: Yup.string()
-        .matches(/^\d{12}$/, "رقم الجوال يجب أن يحتوي على 12 رقمًا ويبدأ بـ 5")
-        .required("رقم الجوال مطلوب"),
-    email: Yup.string()
-      .email("البريد الإلكتروني غير صحيح")
-      .required("البريد الإلكتروني مطلوب"),
+      firstName: Yup.string().required(t("contact.Name is required")),
+       lastName: Yup.string().required(t("contact.last is required")),
+       phone: Yup.string()
+         .matches(/^\d{12}$/, t("contact.numberlength"))
+         .required(t("contact.Mobile number is required")),
+       email: Yup.string()
+         .email(t("contact.Invalid email"))
+         .required(t("contact.Email is required")),
   });
+
 
   const formik = useFormik({
     initialValues: {
@@ -103,7 +106,7 @@ function AccountInfoForm() {
         >
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="الاسم الأول"
+              label=   {t("contact.firstname")}
               placeholder="أدخل الاسم الأول"
               name="first_name"
               value={formik.values.first_name}
@@ -122,8 +125,7 @@ function AccountInfoForm() {
 
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="الاسم الأخير"
-              placeholder="أدخل الاسم الأخير"
+              label=   {t("contact.lastname")}
               name="last_name"
               value={formik.values.last_name}
               onChange={formik.handleChange}
@@ -141,7 +143,7 @@ function AccountInfoForm() {
 
           <Box sx={{ mb: "32px" }}>
           <CustomInput
-              label="رقم الجوال"
+              label=   {t("contact.Mobile number")}
               name="phone"
               value={formik.values.phone.replace(/^966/, "")}
               onChange={(e) => {
@@ -171,8 +173,7 @@ function AccountInfoForm() {
 
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label="البريد الإلكتروني"
-              placeholder="example@info.com"
+              label=   {t("contact.Email")}
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -190,8 +191,7 @@ function AccountInfoForm() {
 
           <Box sx={{ mb: "32px", textAlign: "center" }}>
             <Typography sx={{ mb: 2, textAlign: "right" }}>
-               الصورة الشخصية
-            </Typography>
+            {t("profile.chooseimage")}            </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -236,8 +236,7 @@ function AccountInfoForm() {
                   },
                 }}
               >
-                اختر صورة
-                <input
+ {t("profile.chooseimage")}                <input
                   type="file"
                   accept="image/*"
                   hidden
@@ -257,7 +256,8 @@ function AccountInfoForm() {
             margin: "0 auto",
           }}
         >
-          {formik.isSubmitting ? "جاري الحفظ..." : "حفظ التغييرات"}
+           {t("buttons.save")}
+          {/* {formik.isSubmitting ? "جاري الحفظ..." : "حفظ التغييرات"} */}
         </CustomButton>
       </form>
     </Box>
