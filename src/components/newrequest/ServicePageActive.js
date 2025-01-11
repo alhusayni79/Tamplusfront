@@ -28,13 +28,15 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { CloudUpload } from "@mui/icons-material";
 import { CancelOrderButton } from "./employee/CancelOrderButton";
+import { useTranslation } from "react-i18next";
 
 const RequestDetails = ({ rowData, handleAcceptServiceClick, orderId }) => {
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [newComment, setNewComment] = useState("");
-
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const { allMessage, messageLoading, messageError } = useSelector(
     (state) => state.allMessage
   );
@@ -198,11 +200,11 @@ const ServicePageActive = () => {
   const rowData = location.state;
   const dispatch = useDispatch();
   const orderId = rowData?.id;
-
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const [selectedFile, setSelectedFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [newComment, setNewComment] = useState("");
-
   const { allMessage, messageLoading, messageError } = useSelector(
     (state) => state.allMessage
   );
@@ -341,7 +343,7 @@ const ServicePageActive = () => {
                 fontWeight: "700",
               }}
             >
-              معلومات الخدمة
+              {t("serviceprovider.service_information")}
             </Typography>
             <Grid
               container
@@ -362,7 +364,7 @@ const ServicePageActive = () => {
                     mt: 1,
                   }}
                 >
-                  العميل
+                  {t("serviceprovider.client")}
                 </Typography>
                 <Typography
                   sx={{
@@ -387,7 +389,7 @@ const ServicePageActive = () => {
                     color: theme.palette.primary.disabled,
                   }}
                 >
-                  تاريخ طلب الخدمة
+                  {t("serviceprovider.service_request_date")}
                 </Typography>
                 <Typography
                   sx={{
@@ -411,7 +413,7 @@ const ServicePageActive = () => {
                     color: theme.palette.primary.disabled,
                   }}
                 >
-                  آخر تحديث
+                  {t("serviceprovider.last_update")}
                 </Typography>
                 <Typography
                   sx={{
@@ -436,18 +438,18 @@ const ServicePageActive = () => {
                     pb: 2,
                   }}
                 >
-                  الحالة
+                  {t("serviceprovider.status")}
                 </Typography>
                 <StatusChip Status={rowData.status} />
               </Grid>
             </Grid>
           </Card>
-                  
+
           <Paper
             elevation={0}
             sx={{ padding: "32px", textAlign: "center", borderRadius: "8px" }}
           >
-            <Typography variant="h6">الإجمالي</Typography>
+            <Typography variant="h6"> {t("serviceprovider.total")}</Typography>
 
             <Typography
               sx={{
@@ -462,7 +464,7 @@ const ServicePageActive = () => {
                 variant="subtitle2"
                 sx={{ color: "#595F69" }}
               >
-                ر.س
+                {t("serviceprovider.currency")}
               </Typography>
             </Typography>
           </Paper>
@@ -490,7 +492,7 @@ const ServicePageActive = () => {
                 width: "100%",
               }}
             >
-              مرفقات العميل
+              {t("serviceprovider.client_attachments")}
             </Typography>
             <Box
               sx={{
@@ -554,7 +556,7 @@ const ServicePageActive = () => {
                   width: "100%",
                 }}
               >
-                مرفقاتي{" "}
+                {t("serviceprovider.my_attachments")}
               </Typography>
               {fileNamesEmpolyee.map((fileName, index) => (
                 <Typography
@@ -583,7 +585,7 @@ const ServicePageActive = () => {
               textColor="#07489D"
               onClick={handleAddReply}
             >
-              إضافة رد
+              {t("buttons.add_reply")}
             </CustomButton>
           </Box>
 
@@ -591,7 +593,7 @@ const ServicePageActive = () => {
         </Grid>
       </Grid>
       <Dialog open={openDialog} onClose={handleDialogClose} fullWidth>
-        <DialogTitle>إضافة رد</DialogTitle>
+        <DialogTitle>{t("buttons.add_reply")} </DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
@@ -599,7 +601,7 @@ const ServicePageActive = () => {
             rows={4}
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="اكتب تعليقك هنا..."
+            placeholder={t("dialogchat.commentPlaceholder")}
           />
           <Box sx={{ mt: 2, dir: "rtl" }}>
             <Button
@@ -613,7 +615,7 @@ const ServicePageActive = () => {
                 gap: "12px",
               }}
             >
-              اختر ملفاً
+              {t("dialogchat.chooseFile")}
               <input
                 type="file"
                 onChange={handleFileChange}
@@ -631,9 +633,9 @@ const ServicePageActive = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose}>إلغاء</Button>
+          <Button onClick={handleDialogClose}>{t("dialogchat.cancel")}</Button>
           <Button onClick={handleSaveReply} color="primary" variant="contained">
-            حفظ
+            {t("dialogchat.save")}
           </Button>
         </DialogActions>
       </Dialog>

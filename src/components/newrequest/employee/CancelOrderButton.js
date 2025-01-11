@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
 
 const cancelOrder = async (orderId, reason) => {
   try {
@@ -48,7 +49,8 @@ const CancelOrderButton = ({ orderId, onSuccess, onError }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [reason, setReason] = useState("");
-
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const handleCancel = async () => {
     setIsLoading(true);
     try {
@@ -81,37 +83,42 @@ const CancelOrderButton = ({ orderId, onSuccess, onError }) => {
         border={true}
         onClick={() => setIsOpen(true)}
       >
-        إلغاء الخدمة
+        {t("dialogchat.cancelService")}
       </CustomButton>
 
       <Dialog open={isOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ textAlign: "right" }}>سبب الإلغاء</DialogTitle>
+        <DialogTitle
+          sx={{ textAlign: currentLang === "ar" ? "right" : "left" }}
+        >
+          {" "}
+          {t("dialogchat.cancellationReason")}
+        </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <FormControl fullWidth>
-              
               <Input
                 id="reason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="اكتب سبب الإلغاء"
+                placeholder={t("dialogchat.cancelReasonPlaceholder")}
                 fullWidth
                 multiline
                 rows={3}
-                sx={{ textAlign: "right" }}
+                sx={{ textAlign: currentLang === "ar" ? "right" : "left" }}
               />
             </FormControl>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "flex-start", p: 2 }}>
           <CustomButton
-         
-          backgroundColor="#DDEBFD"
-          textColor="#07489D"
+            backgroundColor="#DDEBFD"
+            textColor="#07489D"
             onClick={handleCancel}
             disabled={isLoading || !reason.trim()}
           >
-            {isLoading ? "جاري الإلغاء..." : "تأكيد الإلغاء"}
+            {isLoading
+              ? t("dialogchat.cancelInProgress")
+              : t("dialogchat.cancelConfirmation")}
           </CustomButton>
         </DialogActions>
       </Dialog>

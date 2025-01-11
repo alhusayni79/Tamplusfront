@@ -91,9 +91,10 @@
     "pay_now": "Pay Now",
     "send": "Send",
     "add_reply": "Add Reply",
+    "cancelService": "Cancel Service",
+
     "login": "Login / Register",
     "save": "Save Changes"
-
   },
   "services": {
     "gain": "Beneficiary Category",
@@ -151,8 +152,7 @@
     "lastupdate": "Last Update",
     "nodata": "No Data Available",
     "show": "Displaying 1 to 5 services out of "
-}
-,
+  },
   "email": "Email",
   "subscribeNow": "Subscribe Now",
   "newsletter": {
@@ -163,7 +163,7 @@
     "welcome_message": "Welcome",
     "new_requests": "New Requests",
     "requests": "Requests",
-    "requests_in_progress": "Requests in Progress",
+    "requests_in_progress": "Requests In Progress",
     "completed_requests": "Completed Requests",
     "cancelled_requests": "Cancelled Requests",
     "account_information": "Account Information",
@@ -175,15 +175,63 @@
     "client_attachments": "Client Attachments",
     "my_attachments": "My Attachments",
     "no_data": "No Data",
-    "services_displayed_summary": "Showing 1 to 0 services of 0 total services",
+    "services_displayed_summary": "Displaying 1 to 0 services of 0 total services",
     "actions": "Actions",
     "request": "Request",
     "profile_picture": "Profile Picture",
-    "offer_services_with_us": "Offer Your Services With Us"
+    "offer_services_with_us": "Offer Your Services With Us",
+    "logout": "Logout",
+    "paymentway": "Payment Information",
+    "imageprofile": "Profile Picture",
+    "chooseimage": "Choose Image",
+    "search": "Search in previous services...",
+    "service": "Service",
+    "sinlgeservice": "Single Service",
+    "statuss": "Status",
+    "lastupdate": "Last Update",
+    "nodata": "No Data",
+    "show": "Displaying 1 to 5 services from",
+    "currency": "SAR",
+    "client": "Client",
+    "conversation": "Conversation"
+
+
   },
   "about": {
     "about": " About the Tam Plus",
     "aboutmore": " Complete your government transaction in less than a minute!",
     "about!": "Who are we?"
-  }
+  },
+  "login": {
+    "loginTitle": "Login",
+    "phonePlaceholder": "Enter your phone number",
+    "verifyButton": "Verify",
+    "otpLabel": "OTP Code",
+    "resendOtp": "Resend OTP",
+    "noAccount": "Don't have an account?",
+    "noresendOtp": "Didn't receive the OTP?",
+
+    "createAccount": "Create a new account",
+    "incorrectOtp": "Incorrect OTP. Please try again.",
+    "sendOtpError": "An error occurred while sending OTP. Please try again.",
+    "loading": "Loading...",
+    "serviceRequester": "Service Requester",
+    "serviceProvider": "Service Provider"
+  },
+  "dialogchat": {
+  "commentPlaceholder": "Write your comment here...",
+  "chooseFile": "Choose a file",
+  "save": "Save",
+  "cancel":"cancel",
+  "cancelService": "Cancel Service",
+  "cancelReasonPlaceholder": "Write the reason for cancellation",
+"cancelConfirmation": "Confirm Cancellation",
+"cancelInProgress": "Cancelling in progress...",
+"cancellationReason": "Cancellation Reason"
+
+
+
+
+}
+
 }

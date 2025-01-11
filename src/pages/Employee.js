@@ -25,8 +25,9 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const Employee = () => {
-  const { t } = useTranslation();
-  const theme = useTheme();
+  const {i18n, t } = useTranslation();
+  const currentLang = i18n.language;
+ const theme = useTheme();
   const Navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(
     t("serviceprovider.requests")
@@ -167,7 +168,7 @@ const Employee = () => {
                     right: 0,
                   }}
                 ></Box>
-                <List> 
+                <List>
                   {categories.map((category, index) => (
                     <React.Fragment key={index}>
                       <ListItem
@@ -178,6 +179,7 @@ const Employee = () => {
                             : handleCategoryClick(category.category)
                         }
                         sx={{
+                          textAlign:"center",
                           backgroundColor:
                             selectedCategory === category.category
                               ? theme.palette.primary.main
@@ -195,15 +197,13 @@ const Employee = () => {
                         <ListItemText
                           primary={
                             <Typography
-                              sx={{
-                                fontSize: "16px",
-                                color:
-                                  selectedCategory === category.category
-                                    ? "white"
-                                    : "#3D4148",
-                                fontWeight: 500,
-                                textAlign: "right",
-                              }}
+                            sx={{
+                              fontSize: "16px",
+                              color: selectedCategory === category.category ? "white" : "#3D4148",
+                              fontWeight: 500,
+                              textAlign: currentLang === "ar" ? "right" : "left",
+                            }}
+                            
                             >
                               {category.category}
                             </Typography>
@@ -275,7 +275,9 @@ const Employee = () => {
                                         <Typography
                                           component="span"
                                           sx={{
-                                            pl: 2,
+                                            pl: 1.5,
+                                            pr: 1.5,
+
                                             fontSize: "x-large",
                                             color:
                                               selectedSubcategory ===
@@ -349,8 +351,8 @@ const Employee = () => {
               )}
               {selectedCategory === t("serviceprovider.account_information") &&
                 !selectedSubcategory && <AccountInfoForm />}
-              {selectedCategory === t("serviceprovider.paymentway") &&
-                !selectedSubcategory && <PaymentInfoForm />}
+              {/* {selectedCategory === t("serviceprovider.paymentway") &&
+                !selectedSubcategory && <PaymentInfoForm />} */}
             </Grid>
           </Grid>
         </Box>

@@ -16,7 +16,7 @@ const Chat = ({ cardsData = [] }) => {
   return (
     <Card sx={{ p: { xs: 1.5, sm: 4 } }}>
       <Typography sx={{ mb: 4, fontSize: "16px", fontWeight: "500" }}>
-        المحادثة
+       {t("serviceprovider.conversation")}
       </Typography>
       {(cardsData || []).map((card, index) => (
         <Grid item xs={12} key={card.id}>

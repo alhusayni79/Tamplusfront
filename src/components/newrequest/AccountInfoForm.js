@@ -11,24 +11,24 @@ import { fetchEmpolyeeUData } from "../../redux/Slices/empolyeeData/empolyeeSlic
 import { useTranslation } from "react-i18next";
 
 function AccountInfoForm() {
-  const {t}=useTranslation();
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const dispatch = useDispatch();
-  const  employeeData = useSelector((state) => state.empolyee);
-  
+  const employeeData = useSelector((state) => state.empolyee);
+
   const [imagePreview, setImagePreview] = useState(null);
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   const validationSchema = Yup.object({
-      firstName: Yup.string().required(t("contact.Name is required")),
-       lastName: Yup.string().required(t("contact.last is required")),
-       phone: Yup.string()
-         .matches(/^\d{12}$/, t("contact.numberlength"))
-         .required(t("contact.Mobile number is required")),
-       email: Yup.string()
-         .email(t("contact.Invalid email"))
-         .required(t("contact.Email is required")),
+    firstName: Yup.string().required(t("contact.Name is required")),
+    lastName: Yup.string().required(t("contact.last is required")),
+    phone: Yup.string()
+      .matches(/^\d{12}$/, t("contact.numberlength"))
+      .required(t("contact.Mobile number is required")),
+    email: Yup.string()
+      .email(t("contact.Invalid email"))
+      .required(t("contact.Email is required")),
   });
-
 
   const formik = useFormik({
     initialValues: {
@@ -91,8 +91,12 @@ function AccountInfoForm() {
 
   return (
     <Box minHeight="auto">
-      <Typography variant="h6" align="right" sx={{ mb: 2 }}>
-        معلومات الحساب
+      <Typography
+        variant="h6"
+        align={currentLang === "ar" ? "right" : "left"}
+        sx={{ mb: 2 }}
+      >
+        {t("serviceprovider.account_information")}
       </Typography>
       <form onSubmit={formik.handleSubmit}>
         <Paper
@@ -106,13 +110,15 @@ function AccountInfoForm() {
         >
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label=   {t("contact.firstname")}
+              label={t("contact.firstname")}
               placeholder="أدخل الاسم الأول"
               name="first_name"
               value={formik.values.first_name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+              error={
+                formik.touched.first_name && Boolean(formik.errors.first_name)
+              }
               helperText={formik.touched.first_name && formik.errors.first_name}
               sx={{
                 "& .MuiFormHelperText-root": {
@@ -125,12 +131,14 @@ function AccountInfoForm() {
 
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label=   {t("contact.lastname")}
+              label={t("contact.lastname")}
               name="last_name"
               value={formik.values.last_name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+              error={
+                formik.touched.last_name && Boolean(formik.errors.last_name)
+              }
               helperText={formik.touched.last_name && formik.errors.last_name}
               sx={{
                 "& .MuiFormHelperText-root": {
@@ -142,8 +150,8 @@ function AccountInfoForm() {
           </Box>
 
           <Box sx={{ mb: "32px" }}>
-          <CustomInput
-              label=   {t("contact.Mobile number")}
+            <CustomInput
+              label={t("contact.Mobile number")}
               name="phone"
               value={formik.values.phone.replace(/^966/, "")}
               onChange={(e) => {
@@ -173,7 +181,7 @@ function AccountInfoForm() {
 
           <Box sx={{ mb: "32px" }}>
             <CustomInput
-              label=   {t("contact.Email")}
+              label={t("contact.Email")}
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -190,8 +198,11 @@ function AccountInfoForm() {
           </Box>
 
           <Box sx={{ mb: "32px", textAlign: "center" }}>
-            <Typography sx={{ mb: 2, textAlign: "right" }}>
-            {t("profile.chooseimage")}            </Typography>
+            <Typography
+              sx={{ mb: 2, textAlign: currentLang === "ar" ? "right" : "left" }}
+            >
+              {t("profile.chooseimage")}
+            </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -236,7 +247,8 @@ function AccountInfoForm() {
                   },
                 }}
               >
- {t("profile.chooseimage")}                <input
+                {t("profile.chooseimage")}{" "}
+                <input
                   type="file"
                   accept="image/*"
                   hidden
@@ -256,7 +268,7 @@ function AccountInfoForm() {
             margin: "0 auto",
           }}
         >
-           {t("buttons.save")}
+          {t("buttons.save")}
           {/* {formik.isSubmitting ? "جاري الحفظ..." : "حفظ التغييرات"} */}
         </CustomButton>
       </form>

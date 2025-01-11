@@ -7,6 +7,7 @@ import PaymentSuccess from "../components/shared/PaymentSuccess";
 import PaymentFailed from "../components/shared/PaymentFailed";
 import OrderReview from "../components/shared/OrderReview";
 import WebsiteReview from "../components/shared/WebsiteReview";
+import EmployeeRegister from "../components/newrequest/employee/EmployeeRegister";
 
 function PublicRoutes() {
   return (
@@ -19,6 +20,8 @@ function PublicRoutes() {
       <Route path="/maintenance" element={<Maintenance />} />
       <Route path="payment/paymentSuccess" element={<PaymentSuccess />} />
       <Route path="payment/paymentFailed" element={<PaymentFailed />} />
+      <Route path="employee/register" element={<EmployeeRegister />} />
+
     </>
   );
 }

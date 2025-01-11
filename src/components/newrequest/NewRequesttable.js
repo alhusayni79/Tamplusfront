@@ -21,7 +21,8 @@ import StatusChip from "../shared/getStatusStyles";
 import { useTranslation } from "react-i18next";
 
 const NewRequesttable = ({ rows, selectedCategory }) => {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
@@ -36,17 +37,14 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
 
     if (originalRow && originalRow.service) {
       if (originalRow.status === "Reserved") {
-        navigate(
-          `/employee/${originalRow.serviceDescription}/servicePageActive`,
-          {
-            state: {
-              ...originalRow,
-              selectedCategory,
-            },
-          }
-        );
+        navigate(`/employee/${originalRow?.id}/servicePageActive`, {
+          state: {
+            ...originalRow,
+            selectedCategory,
+          },
+        });
       } else {
-        navigate(`/employee/${originalRow.service.title.ar}`, {
+        navigate(`/employee/${originalRow?.id}`, {
           state: {
             ...originalRow,
             selectedCategory,
@@ -61,7 +59,9 @@ const NewRequesttable = ({ rows, selectedCategory }) => {
     serviceNumber: row.service?.id || "",
     serviceDescription: row.service?.title?.ar || "",
     status: row.status,
-    price: `${row.total} ${row.currency?.ar || "ر.س"}`,
+    price: `${row.total} ${
+      row.currency?.[currentLang] || t("serviceprovider.currency")
+    }`,
     created_at: row.created_at,
   }));
 

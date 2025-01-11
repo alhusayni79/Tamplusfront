@@ -115,6 +115,7 @@
     "pay_now": "ادفع الآن",
     "send": "إرسال",
     "add_reply": "إضافة رد",
+    "cancelService": "إلغاء الخدمة",
     "login": "التسجيل / إنشاء حساب",
     "save": "حفظ التغييرات"
   },
@@ -149,14 +150,14 @@
     "wallet_balance": "رصيد المحفظة",
     "imageprofile": "الصورة الشخصية",
     "chooseimage": "اختر صورة",
-    "search":"البحث في الخدمات السابقة...",
-    "service":"الخدمة",
-    "sinlgeservice":"خدمة",
-    "statuss":"الحالة",
-    "lastupdate":"آخر تحديث",
-    "nodata":"لا توجد بيانات",
-    "show":" يتم عرض من 1 إلى 5 خدمات من"
-    },
+    "search": "البحث في الخدمات السابقة...",
+    "service": "الخدمة",
+    "sinlgeservice": "خدمة",
+    "statuss": "الحالة",
+    "lastupdate": "آخر تحديث",
+    "nodata": "لا توجد بيانات",
+    "show": " يتم عرض من 1 إلى 5 خدمات من"
+  },
   "email": "البريد الإلكتروني",
   "subscribeNow": "اشترك الآن",
   "newsletter": {
@@ -189,13 +190,45 @@
     "paymentway": "معلومات الدفع",
     "imageprofile": "الصورة الشخصية",
     "chooseimage": "اختر صورة",
-    "search":"البحث في الخدمات السابقة...",
-    "service":"الخدمة",
-    "sinlgeservice":"خدمة",
-    "statuss":"الحالة",
-    "lastupdate":"آخر تحديث",
-    "nodata":"لا توجد بيانات",
-    "show":" يتم عرض من 1 إلى 5 خدمات من"
+    "search": "البحث في الخدمات السابقة...",
+    "service": "الخدمة",
+    "sinlgeservice": "خدمة",
+    "statuss": "الحالة",
+    "lastupdate": "آخر تحديث",
+    "nodata": "لا توجد بيانات",
+    "show": " يتم عرض من 1 إلى 5 خدمات من",
+    "client": "العميل",
+    "currency": "ر.س",
+    "conversation": "المحادثة"
+
+
+
+  },
+  "login": {
+    "loginTitle": "تسجيل الدخول",
+    "phonePlaceholder": "أدخل رقم هاتفك",
+    "verifyButton": "تأكيد",
+    "otpLabel": "رمز التحقق",
+    "resendOtp": "إعادة إرسال الكود",
+    "noresendOtp": "لم يصلك كود التحقق؟",
+    "noAccount": "لا تمتلك حساب بعد؟",
+    "createAccount": "أنشئ حساب جديد",
+    "incorrectOtp": "OTP غير صحيح. حاول مرة أخرى.",
+    "sendOtpError": "حدث خطأ أثناء إرسال OTP. حاول مرة أخرى.",
+    "loading": "جارٍ التحميل...",
+    "serviceRequester": "طالب خدمة",
+    "serviceProvider": "مقدم خدمة"
+  },
+  "dialogchat": {
+    "commentPlaceholder": "اكتب تعليقك هنا...",
+    "chooseFile": "اختر ملفاً",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "cancelService": "إلغاء الخدمة",
+    "cancelReasonPlaceholder": "اكتب سبب الإلغاء",
+    "cancelConfirmation": "تأكيد الإلغاء",
+    "cancelInProgress": "جاري الإلغاء...",
+    "cancellationReason": "سبب الإلغاء"
+
   }
 }
- 

@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEmpolyeeUData } from "../../redux/Slices/empolyeeData/empolyeeSlice";
 import LoadingSpinner from "../shared/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 const CustomHeader = () => {
+    const {i18n, t } = useTranslation();
+    const currentLang = i18n.language;
   const isSmallScreen = useMediaQuery("(max-width:600px)");
   const dispatch = useDispatch();
   const { empolyee, loading, error } = useSelector((state) => state.empolyee);
@@ -51,7 +54,7 @@ const CustomHeader = () => {
           ml: 1,
         }}
       >
-        مرحباً, {empolyee?.response?.first_name}
+        {t("serviceprovider.welcome_message")}, {empolyee?.response?.first_name}
       </Typography>
       <LanguageToggleButton backgroundColor="#DDEBFD" />
     </Box>

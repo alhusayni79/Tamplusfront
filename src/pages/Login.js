@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import CustomInput from "../components/shared/CustomInput";
 import CustomButton from "../components/shared/CustomButton";
 import Tamplus from "../../src/assets/image/tampluslogo.png";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const theme = useTheme();
@@ -33,7 +34,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [phoneInput, setPhoneInput] = useState("");
-
+  const { i18n, t } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   useEffect(() => {
@@ -61,19 +63,21 @@ const Login = () => {
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!phone || !/^\+?[0-9]{10,15}$/.test(phone)) {
       setError("يرجى إدخال رقم هاتف صالح");
       return;
     }
-  
+
     setError("");
     setLoading(true);
-  
+
     try {
       const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
-      await axios.post(`${process.env.REACT_APP_BASE_URL}${endpoint}`, { phone });
-  
+      await axios.post(`${process.env.REACT_APP_BASE_URL}${endpoint}`, {
+        phone,
+      });
+
       setPhoneSubmitted(true);
       toast.success("تم إرسال OTP بنجاح!");
     } catch (error) {
@@ -83,7 +87,7 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
+
   const handlePhoneChange = (e) => {
     let value = e.target.value;
     value = value.replace(/[^0-9]/g, "");
@@ -104,17 +108,17 @@ const Login = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-  
+
     const enteredOtp = otp.join("");
-  
+
     if (enteredOtp.length < 4) {
       setError("يرجى إدخال OTP كاملاً");
       return;
     }
-  
+
     setError("");
     setLoading(true);
-  
+
     try {
       const endpoint = selectedTab === 0 ? "/user/login" : "/employee/login";
       const response = await axios.post(
@@ -124,15 +128,15 @@ const Login = () => {
           otp: enteredOtp,
         }
       );
-  
+
       const { token } = response.data.response;
       if (!token) {
         throw new Error("Token not found in response");
       }
-  
+
       const cookieName = selectedTab === 0 ? "auth_token" : "authemployee";
       Cookies.set(cookieName, token, { expires: 7 });
-        toast.success("تم التحقق بنجاح! سيتم توجيهك الآن.");
+      toast.success("تم التحقق بنجاح! سيتم توجيهك الآن.");
       if (selectedTab === 0) {
         navigate("/");
       } else {
@@ -140,14 +144,14 @@ const Login = () => {
       }
     } catch (error) {
       setError("OTP غير صحيح. حاول مرة أخرى.");
-  
+
       // Error Alert
       toast.error("OTP غير صحيح. حاول مرة أخرى.");
     } finally {
       setLoading(false);
     }
   };
-  
+
   const handleOtpChange = (index, value, event) => {
     if (!/^\d*$/.test(value)) {
       return;
@@ -209,7 +213,7 @@ const Login = () => {
     >
       <Box
         sx={{
-          width: "380px",
+          width: "auto",
           boxShadow: 3,
           backgroundColor: "#fff",
           textAlign: "center",
@@ -234,7 +238,7 @@ const Login = () => {
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography sx={{ fontSize: "18px", fontWeight: "500" }}>
-                  رمز التحقق
+                  {t("login.otpLabel")}
                 </Typography>
                 <IconButton onClick={() => setPhoneSubmitted(false)}>
                   <ArrowForwardIcon sx={{ color: "#000" }} />
@@ -261,7 +265,7 @@ const Login = () => {
                   fontWeight: "500",
                 }}
               >
-                تسجيل الدخول
+                {t("login.loginTitle")}
               </Typography>
             </>
           )}
@@ -280,8 +284,8 @@ const Login = () => {
                 },
               }}
             >
-              <Tab label="طالب خدمة" />
-              <Tab label="مقدم خدمة" />
+              <Tab label={t("login.serviceRequester")} />
+              <Tab label={t("login.serviceProvider")} />
             </Tabs>
             <Divider sx={{ marginY: 2 }} />
           </>
@@ -333,7 +337,7 @@ const Login = () => {
                     التحقق...
                   </>
                 ) : (
-                  "تأكيد"
+                  t("login.verifyButton")
                 )}
               </CustomButton>
             </Box>
@@ -345,7 +349,7 @@ const Login = () => {
                 type="tel"
                 value={phoneInput}
                 onChange={handlePhoneChange}
-                placeholder="أدخل رقم هاتفك"
+                placeholder={t("login.phonePlaceholder")}
                 fullWidth
                 margin="normal"
                 required
@@ -398,7 +402,7 @@ const Login = () => {
                   {loading ? (
                     <CircularProgress size={24} color="white" />
                   ) : (
-                    "تسجيل الدخول"
+                    t("login.loginTitle")
                   )}
                 </CustomButton>
               </Box>
@@ -406,7 +410,7 @@ const Login = () => {
 
             {selectedTab === 1 && (
               <Typography sx={{ my: 2, fontSize: "18px", fontWeight: "400" }}>
-                لا تمتلك حساب بعد؟{" "}
+                {t("login.noAccount")}
                 <Link
                   sx={{
                     color: "#07489D",
@@ -414,7 +418,7 @@ const Login = () => {
                   }}
                   href="/employee/register"
                 >
-                  أنشئ حساب جديد
+                  {t("login.createAccount")}
                 </Link>
               </Typography>
             )}
@@ -430,7 +434,8 @@ const Login = () => {
               color: "#1E2124",
             }}
           >
-            لم يصلك كود التحقق؟{" "}
+            {t("login.noresendOtp")}
+
             <Link
               href="#"
               onClick={(e) => {
@@ -442,7 +447,7 @@ const Login = () => {
                 fontWeight: "600",
               }}
             >
-              إعادة إرسال الكود
+              {t("login.resendOtp")}
             </Link>
           </Typography>
         )}
